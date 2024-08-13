@@ -1,0 +1,151 @@
+﻿<Application x:Class="Manual.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:Manual"
+             xmlns:Core="clr-namespace:Manual.Core"
+             xmlns:Editors="clr-namespace:Manual.Editors"
+             xmlns:API="clr-namespace:Manual.API"
+             xmlns:Obj="clr-namespace:Manual.Objects"
+             xmlns:ObjUI="clr-namespace:Manual.Objects.UI"
+             xmlns:MUI="clr-namespace:Manual.MUI"
+             xmlns:Nodes="clr-namespace:Manual.Core.Nodes"
+             xmlns:launcher="clr-namespace:Manual.Editors.Displays.Launcher">
+    
+    <Application.Resources>
+
+        <ResourceDictionary>
+
+            <ResourceDictionary.MergedDictionaries>
+                <!--DISABLED RELEASE: themes-->
+                <!--color palette-->
+                <ResourceDictionary Source="pack://application:,,,/ManualToolkit;component/Themes/ColorThemes/HumbleTheme.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/ManualToolkit;component/Themes/IconsStyle.xaml" />
+
+                <!-- Referencia al Style.xaml del proyecto ManualToolkit -->
+                <ResourceDictionary Source="pack://application:,,,/ManualToolkit;component/Themes/Style.xaml" />
+                <ResourceDictionary Source="MUI/MUIStyle.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+
+            
+            
+            <!--window-->
+            <Style TargetType="{x:Type Window}">
+                <Setter Property="Background" Value="Black"/>
+            </Style>
+           
+
+            <DataTemplate DataType="{x:Type Core:WorkspaceRow}">
+                <Core:WorkspaceControlRow/>
+            </DataTemplate>
+            
+            <DataTemplate DataType="{x:Type Core:WorkspaceColumn}">
+                <Core:WorkspaceControlColumn/>
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type Core:WorkspaceSingle}">
+                <Core:WorkspaceControlSingle/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type Core:WorkspaceEditor}">
+                <Core:EditorWindow/>
+            </DataTemplate>
+
+            
+            <!--#region EDITORS-->
+
+            <DataTemplate DataType="{x:Type Editors:ED_Output}">
+                <Editors:OutputView/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type Editors:ED_Tools}">
+                <Editors:Tools/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type Editors:ED_ToolProperties}">
+                <Editors:ToolProperties/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type Editors:ED_CanvasView}">
+                <Editors:CanvasView/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type Editors:ED_LayerView}">
+                <Editors:LayerView/>
+            </DataTemplate>
+            
+
+            <!--#region TIMELINE EDITOR-->
+            <DataTemplate DataType="{x:Type Editors:ED_TimelineView}">
+                <Editors:TimelineView/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type Core:Keyframe}">
+                <Obj:KeyframeView/>
+            </DataTemplate>
+            <!--#endregion-->
+            
+            
+            
+
+            <DataTemplate DataType="{x:Type Editors:ED_History}">
+                <Editors:History/>
+            </DataTemplate>
+
+
+            <DataTemplate DataType="{x:Type Editors:ED_CodeEditorView}">
+                <Editors:CodeEditorView/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type Editors:ED_LatentNodes}">
+                <Editors:LatentNodesView/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type Editors:ED_Control}">
+                <Editors:EditorControl/>
+            </DataTemplate>
+            <!--#endregion-->
+
+
+
+            <!--#region TOOLSPACES-->
+
+            <DataTemplate DataType="{x:Type API:ToolSpaceContainer}">
+                <API:ToolSpaceContainerView/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type Nodes:NodeBase}">
+                <Nodes:M_NodeVisualizerView/>
+            </DataTemplate>
+            
+            <DataTemplate DataType="{x:Type Nodes:NodeOption}">
+                <Nodes:M_NodeOptionVisualizerView/>
+            </DataTemplate>
+            <!--#endregion-->
+
+
+
+            <DataTemplate DataType="{x:Type Obj:Effect}">
+                <Obj:EffectView/>
+            </DataTemplate>
+
+
+
+            <DataTemplate DataType="{x:Type Obj:PromptTag}">
+                <Obj:PromptTagView/>
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type Obj:GroupTag}">
+                <Obj:GroupTagView/>
+            </DataTemplate>
+
+            
+            
+            
+            <!--LAUNCHER-->
+            <DataTemplate DataType="{x:Type launcher:DownloadItem}">
+                <launcher:DownloadItemView/>
+            </DataTemplate>
+
+
+        </ResourceDictionary>
+        
+    </Application.Resources>
+</Application>

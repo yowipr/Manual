@@ -1,0 +1,72 @@
+﻿<UserControl x:Class="Manual.Editors.Displays.Launcher.DownloadItemView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Manual.Editors.Displays.Launcher" 
+             
+             xmlns:themes="clr-namespace:ManualToolkit.Themes;assembly=ManualToolkit"
+             xmlns:core="clr-namespace:Manual.Core"
+             
+             mc:Ignorable="d" 
+             
+              d:DataContext="{d:DesignInstance Type=local:DownloadItem}"
+            
+             
+             Height="50" d:DesignWidth="200"
+             MouseEnter="UserControl_MouseEnter" MouseLeave="UserControl_MouseLeave">
+
+    <UserControl.ContextMenu>
+        <ContextMenu>
+            <ContextMenu.Resources>
+                <Style TargetType="MenuItem">
+                    <EventSetter Event="Click" Handler="MenuItem_Click"/>
+                </Style>
+            </ContextMenu.Resources>
+            
+            <MenuItem Header="Open Folder"/>
+            
+        </ContextMenu>
+    </UserControl.ContextMenu>
+    
+    <Border>
+
+        <Grid>
+
+            <Grid Margin="4">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="60"/>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+ 
+            
+            <Image Source="{StaticResource document-text}" Width="30" HorizontalAlignment="Center" VerticalAlignment="Center" RenderOptions.BitmapScalingMode="HighQuality"/>
+                <TextBlock Text="\" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="45" Margin="0 -3 0 0" Visibility="{core:VisibilityBinding Cancelled}"/>
+
+                <Grid Grid.Column="1" Margin="0 -5 0 5">
+                <TextBlock d:Text="Download Item" Text="{Binding Name}" VerticalAlignment="Center"/>
+                    <TextBlock d:Text="4.0 GB" Text="{Binding Description}" VerticalAlignment="Bottom" Opacity="0.56" FontSize="10" Margin="0 0 0 0" Visibility="{core:VisibilityBinding Completed, Invert=True}"/>
+                    <TextBlock Text="Cancelled" VerticalAlignment="Bottom" Opacity="0.56" FontSize="10" Margin="0 0 0 0" Visibility="{core:VisibilityBinding Cancelled}"/>
+                    <TextBlock Text="Completed" VerticalAlignment="Bottom" Opacity="0.56" FontSize="10" Margin="0 0 0 0" Visibility="{core:VisibilityBinding Completed}"/>
+
+
+                </Grid>
+                <!--CANCEL-->
+                <Button x:Name="cancelButton" Grid.Column="2" Command="{Binding CancelCommand}" Content="✖" HorizontalAlignment="Right" VerticalAlignment="Center" Background="Transparent"/>
+
+                <themes:Loader Visibility="{core:VisibilityBinding Loading}"/>
+
+            </Grid>
+
+            
+            <ProgressBar d:Value="50" Value="{Binding RealProgress, Mode=OneWay}" Maximum="100" Minimum="0" IsHitTestVisible="False" Visibility="{core:VisibilityBinding Completed, Invert=True}"/>
+
+            
+            <Border Background="{StaticResource log_error}" Opacity="0.3" Visibility="{core:VisibilityBinding Error}" IsHitTestVisible="false"/>
+
+        </Grid>
+    
+    </Border>
+    
+</UserControl>

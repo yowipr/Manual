@@ -1,0 +1,146 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0-windows7.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Assets\BlenderPro-Bold.ttf" />
+    <None Remove="Assets\BlenderPro-Book.ttf" />
+    <None Remove="Assets\BlenderPro-Heavy.ttf" />
+    <None Remove="Assets\BlenderPro-Medium.ttf" />
+    <None Remove="Assets\BlenderPro-Thin.ttf" />
+    <None Remove="Assets\BLKCHCRY.TTF" />
+    <None Remove="Assets\Branding\logo.png" />
+    <None Remove="Assets\Branding\manuallogo.ico" />
+    <None Remove="Assets\Branding\manuallogo.png" />
+    <None Remove="Assets\Branding\manuallogo2.png" />
+    <None Remove="Assets\Branding\manuallogo3.png" />
+    <None Remove="Assets\Branding\manuallogo4.png" />
+    <None Remove="Assets\Branding\manuallogoIcon.png" />
+    <None Remove="Assets\Branding\manuallogoIcon2.png" />
+    <None Remove="Assets\Branding\manuallogoIcon3.png" />
+    <None Remove="Assets\ebrima-bold.ttf" />
+    <None Remove="Assets\ebrima.ttf" />
+    <None Remove="Assets\Icons\alpha-mask.png" />
+    <None Remove="Assets\Icons\archive-box.png" />
+    <None Remove="Assets\Icons\arrow-top-right-on-square.png" />
+    <None Remove="Assets\Icons\arrow-uturn-left.png" />
+    <None Remove="Assets\Icons\arrow-uturn-righ.png" />
+    <None Remove="Assets\Icons\arrow-uturn-right.png" />
+    <None Remove="Assets\Icons\backward.png" />
+    <None Remove="Assets\Icons\bars-3.png" />
+    <None Remove="Assets\Icons\bell.png" />
+    <None Remove="Assets\Icons\block-alpha.png" />
+    <None Remove="Assets\Icons\block.png" />
+    <None Remove="Assets\Icons\camera.png" />
+    <None Remove="Assets\Icons\chevron-up.png" />
+    <None Remove="Assets\Icons\clock.png" />
+    <None Remove="Assets\Icons\cog-6-tooth.png" />
+    <None Remove="Assets\Icons\document-text.png" />
+    <None Remove="Assets\Icons\ellipsis-vertical.png" />
+    <None Remove="Assets\Icons\exclamation-triangle.png" />
+    <None Remove="Assets\Icons\eye-slash.png" />
+    <None Remove="Assets\Icons\eye.png" />
+    <None Remove="Assets\Icons\folder-open.png" />
+    <None Remove="Assets\Icons\forward.png" />
+    <None Remove="Assets\Icons\forward_keyframe.png" />
+    <None Remove="Assets\Icons\ghost.png" />
+    <None Remove="Assets\Icons\globe-alt.png" />
+    <None Remove="Assets\Icons\grid.png" />
+    <None Remove="Assets\Icons\link.png" />
+    <None Remove="Assets\Icons\magnifying-glass-minus.png" />
+    <None Remove="Assets\Icons\magnifying-glass-plus.png" />
+    <None Remove="Assets\Icons\Objects\adjustment-layer.png" />
+    <None Remove="Assets\Icons\Objects\text.png" />
+    <None Remove="Assets\Icons\onion.png" />
+    <None Remove="Assets\Icons\paint-brush.png" />
+    <None Remove="Assets\Icons\photo.png" />
+    <None Remove="Assets\Icons\play.png" />
+    <None Remove="Assets\Icons\plus.png" />
+    <None Remove="Assets\Icons\save.png" />
+    <None Remove="Assets\Icons\snap.png" />
+    <None Remove="Assets\Icons\sparkles.png" />
+    <None Remove="Assets\Icons\stop.png" />
+    <None Remove="Assets\Icons\tag.png" />
+    <None Remove="Assets\Icons\trash.png" />
+    <None Remove="Assets\Icons\user-circle.png" />
+    <None Remove="Assets\Icons\video-camera.png" />
+    <None Remove="Assets\Icons\view.png" />
+    <None Remove="Assets\Icons\wrench-screwdriver.png" />
+    <None Remove="Assets\Roboto-Regular.ttf" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Clowd.Squirrel" Version="2.9.42" />
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
+    <PackageReference Include="LibGit2Sharp" Version="0.30.0" />
+    <PackageReference Include="MetadataExtractor" Version="2.8.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="SevenZipExtractor" Version="1.0.17" />
+    <PackageReference Include="SharpCompress" Version="0.36.0" />
+    <PackageReference Include="SkiaSharp.Svg" Version="1.60.0" />
+    <PackageReference Include="Squircle.WPF" Version="5.0.0" />
+    <PackageReference Include="Svg" Version="3.4.5" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Assets\BlenderPro-Bold.ttf" />
+    <Resource Include="Assets\BlenderPro-Book.ttf" />
+    <Resource Include="Assets\BlenderPro-Heavy.ttf" />
+    <Resource Include="Assets\BlenderPro-Medium.ttf" />
+    <Resource Include="Assets\BlenderPro-Thin.ttf" />
+    <Resource Include="Assets\BLKCHCRY.TTF" />
+    <Resource Include="Assets\Branding\manuallogo3.png" />
+    <Resource Include="Assets\Branding\manuallogoIcon3.png" />
+    <Resource Include="Assets\Icons\alpha-mask.png" />
+    <Resource Include="Assets\Icons\archive-box.png" />
+    <Resource Include="Assets\Icons\arrow-top-right-on-square.png" />
+    <Resource Include="Assets\Icons\arrow-uturn-left.png" />
+    <Resource Include="Assets\Icons\arrow-uturn-right.png" />
+    <Resource Include="Assets\Icons\backward.png" />
+    <Resource Include="Assets\Icons\bars-3.png" />
+    <Resource Include="Assets\Icons\bell.png" />
+    <Resource Include="Assets\Icons\block-alpha.png" />
+    <Resource Include="Assets\Icons\block.png" />
+    <Resource Include="Assets\Icons\camera.png" />
+    <Resource Include="Assets\Icons\chevron-up.png" />
+    <Resource Include="Assets\Icons\clock.png" />
+    <Resource Include="Assets\Icons\cog-6-tooth.png" />
+    <Resource Include="Assets\Icons\document-text.png" />
+    <Resource Include="Assets\Icons\ellipsis-vertical.png" />
+    <Resource Include="Assets\Icons\exclamation-triangle.png" />
+    <Resource Include="Assets\Icons\eye-slash.png" />
+    <Resource Include="Assets\Icons\eye.png" />
+    <Resource Include="Assets\Icons\folder-open.png" />
+    <Resource Include="Assets\Icons\forward.png" />
+    <Resource Include="Assets\Icons\forward_keyframe.png" />
+    <Resource Include="Assets\Icons\ghost.png" />
+    <Resource Include="Assets\Icons\globe-alt.png" />
+    <Resource Include="Assets\Icons\grid.png" />
+    <Resource Include="Assets\Icons\link.png" />
+    <Resource Include="Assets\Icons\magnifying-glass-minus.png" />
+    <Resource Include="Assets\Icons\magnifying-glass-plus.png" />
+    <Resource Include="Assets\Icons\Objects\adjustment-layer.png" />
+    <Resource Include="Assets\Icons\Objects\text.png" />
+    <Resource Include="Assets\Icons\onion.png" />
+    <Resource Include="Assets\Icons\paint-brush.png" />
+    <Resource Include="Assets\Icons\photo.png" />
+    <Resource Include="Assets\Icons\play.png" />
+    <Resource Include="Assets\Icons\plus.png" />
+    <Resource Include="Assets\Icons\save.png" />
+    <Resource Include="Assets\Icons\snap.png" />
+    <Resource Include="Assets\Icons\sparkles.png" />
+    <Resource Include="Assets\Icons\stop.png" />
+    <Resource Include="Assets\Icons\tag.png" />
+    <Resource Include="Assets\Icons\trash.png" />
+    <Resource Include="Assets\Icons\user-circle.png" />
+    <Resource Include="Assets\Icons\video-camera.png" />
+    <Resource Include="Assets\Icons\view.png" />
+    <Resource Include="Assets\Icons\wrench-screwdriver.png" />
+    <Resource Include="Assets\Roboto-Regular.ttf" />
+  </ItemGroup>
+
+</Project>

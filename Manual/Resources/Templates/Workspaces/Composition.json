@@ -1,0 +1,113 @@
+{
+  "fullScreen": false,
+  "tool": "Image Generator",
+  "FloatingEditors": [],
+  "Id": 3,
+  "Name": "Composition",
+  "Length0": 1.0,
+  "Length1": 1.0,
+  "Space0": {
+    "$type": "Manual.Core.WorkspaceEditor, Manual",
+    "RegisteredEditors": [
+      {
+        "Name": "Tools",
+        "EditorObject": {
+          "$type": "Manual.Editors.ED_Tools, Manual"
+        }
+      },
+      {
+        "Name": "Canvas",
+        "EditorObject": {
+          "$type": "Manual.Editors.ED_CanvasView, Manual",
+          "ID": "1f0f8f16-c66c-40ad-83c0-f1ad48661ce8",
+          "EnableGrid": true,
+          "TopSection": false,
+          "CanvasMatrix": "0.6806640625,0,0,0.6806640625,719.8864583333334,378.28401585204756",
+          "ShowOverlays": true,
+          "GridWidth": 1440.0,
+          "GridHeight": 757.0
+        }
+      },
+      {
+        "Name": "Layers",
+        "EditorObject": {
+          "$type": "Manual.Editors.ED_LayerView, Manual"
+        }
+      },
+      {
+        "Name": "Timeline",
+        "EditorObject": {
+          "$type": "Manual.Editors.ED_TimelineView, Manual",
+          "loaded": false,
+          "GridWidth": 0.0,
+          "GridHeight": 0.0,
+          "CanvasScaleX": 14.15,
+          "CanvasScaleY": 0.28,
+          "CanvasMatrix": "1,0,0,1,19,97",
+          "TimelineMode": 0,
+          "LeftSection": 100.0,
+          "RightSection": 170.0
+        }
+      },
+      {
+        "Name": "History 5D",
+        "EditorObject": {
+          "$type": "Manual.Editors.ED_History, Manual"
+        }
+      },
+      {
+        "Name": "Properties",
+        "EditorObject": {
+          "$type": "Manual.Editors.ED_ToolProperties, Manual",
+          "EnablePalette": true,
+          "SwitchPaletteCommand": {
+            "$type": "CommunityToolkit.Mvvm.Input.RelayCommand, CommunityToolkit.Mvvm"
+          }
+        }
+      },
+      {
+        "Name": "Code Editor",
+        "EditorObject": {
+          "$type": "Manual.Editors.ED_CodeEditorView, Manual"
+        }
+      },
+      {
+        "Name": "Output",
+        "EditorObject": {
+          "$type": "Manual.Editors.ED_Output, Manual",
+          "SectionIndex": 0
+        }
+      },
+      {
+        "Name": "Latent Nodes Editor",
+        "EditorObject": {
+          "$type": "Manual.Editors.ED_LatentNodes, Manual",
+          "loaded": false,
+          "GridWidth": 0.0,
+          "GridHeight": 0.0,
+          "CanvasMatrix": "0.5504406007549368,0,0,0.5504406007549368,-37.35635516230254,-2.601580860260915"
+        }
+      },
+      {
+        "Name": "UndoRedo History",
+        "EditorObject": {
+          "$type": "Plugins.ED_UndoRedoHistory, Manual"
+        }
+      }
+    ],
+    "SelectedEditor": {
+      "Name": "Canvas",
+      "EditorObject": {
+        "$type": "Manual.Editors.ED_CanvasView, Manual",
+        "ID": "1f0f8f16-c66c-40ad-83c0-f1ad48661ce8",
+        "EnableGrid": true,
+        "TopSection": false,
+        "CanvasMatrix": "0.6806640625,0,0,0.6806640625,719.8864583333334,378.28401585204756",
+        "ShowOverlays": true,
+        "GridWidth": 1440.0,
+        "GridHeight": 757.0
+      }
+    }
+  },
+  "Space1": null
+}

@@ -1,0 +1,640 @@
+{
+  "fullScreen": false,
+  "tool": "Inspector",
+  "FloatingEditors": [],
+  "Id": 4,
+  "Name": "Video Editing",
+  "Length0": 1.0,
+  "Length1": 1.0,
+  "Space0": {
+    "$type": "Manual.Core.WorkspaceRow, Manual",
+    "Length0": 570.9999999999991,
+    "Length1": 241.0000000000009,
+    "Space0": {
+      "$type": "Manual.Core.WorkspaceColumn, Manual",
+      "Length0": 709.9999999999999,
+      "Length1": 730.0000000000001,
+      "Space0": {
+        "$type": "Manual.Core.WorkspaceColumn, Manual",
+        "Length0": 249.00000000000034,
+        "Length1": 530.9999999999993,
+        "Space0": {
+          "$type": "Manual.Core.WorkspaceEditor, Manual",
+          "RegisteredEditors": [
+            {
+              "Name": "Tools",
+              "EditorObject": {
+                "$type": "Manual.Editors.ED_Tools, Manual"
+              }
+            },
+            {
+              "Name": "Canvas",
+              "EditorObject": {
+                "$type": "Manual.Editors.ED_CanvasView, Manual",
+                "ID": "c835d9ca-52c6-41d6-83de-4baa1be20867",
+                "EnableGrid": true,
+                "TopSection": true,
+                "CanvasMatrix": "Identity",
+                "ShowOverlays": true,
+                "GridWidth": 0.0,
+                "GridHeight": 0.0
+              }
+            },
+            {
+              "Name": "Layers",
+              "EditorObject": {
+                "$type": "Manual.Editors.ED_LayerView, Manual"
+              }
+            },
+            {
+              "Name": "Timeline",
+              "EditorObject": {
+                "$type": "Manual.Editors.ED_TimelineView, Manual",
+                "loaded": false,
+                "GridWidth": 0.0,
+                "GridHeight": 0.0,
+                "CanvasScaleX": 14.15,
+                "CanvasScaleY": 0.28,
+                "CanvasMatrix": "1,0,0,1,19,97",
+                "TimelineMode": 0,
+                "LeftSection": 100.0,
+                "RightSection": 170.0
+              }
+            },
+            {
+              "Name": "History 5D",
+              "EditorObject": {
+                "$type": "Manual.Editors.ED_History, Manual"
+              }
+            },
+            {
+              "Name": "Properties",
+              "EditorObject": {
+                "$type": "Manual.Editors.ED_ToolProperties, Manual",
+                "EnablePalette": false,
+                "SwitchPaletteCommand": {
+                  "$type": "CommunityToolkit.Mvvm.Input.RelayCommand, CommunityToolkit.Mvvm"
+                }
+              }
+            },
+            {
+              "Name": "Code Editor",
+              "EditorObject": {
+                "$type": "Manual.Editors.ED_CodeEditorView, Manual"
+              }
+            },
+            {
+              "Name": "Output",
+              "EditorObject": {
+                "$type": "Manual.Editors.ED_Output, Manual",
+                "SectionIndex": 0
+              }
+            },
+            {
+              "Name": "Latent Nodes Editor",
+              "EditorObject": {
+                "$type": "Manual.Editors.ED_LatentNodes, Manual",
+                "loaded": false,
+                "GridWidth": 0.0,
+                "GridHeight": 0.0,
+                "CanvasMatrix": "0.5504406007549368,0,0,0.5504406007549368,-37.35635516230254,-2.601580860260915"
+              }
+            },
+            {
+              "Name": "UndoRedo History",
+              "EditorObject": {
+                "$type": "Plugins.ED_UndoRedoHistory, Manual"
+              }
+            }
+          ],
+          "SelectedEditor": {
+            "Name": "Properties",
+            "EditorObject": {
+              "$type": "Manual.Editors.ED_ToolProperties, Manual",
+              "EnablePalette": false,
+              "SwitchPaletteCommand": {
+                "$type": "CommunityToolkit.Mvvm.Input.RelayCommand, CommunityToolkit.Mvvm"
+              }
+            }
+          }
+        },
+        "Space1": {
+          "$type": "Manual.Core.WorkspaceEditor, Manual",
+          "RegisteredEditors": [
+            {
+              "Name": "Tools",
+              "EditorObject": {
+                "$type": "Manual.Editors.ED_Tools, Manual"
+              }
+            },
+            {
+              "Name": "Canvas",
+              "EditorObject": {
+                "$type": "Manual.Editors.ED_CanvasView, Manual",
+                "ID": "be4c2a10-0ceb-449f-81d0-b9abb18df547",
+                "EnableGrid": true,
+                "TopSection": true,
+                "CanvasMatrix": "Identity",
+                "ShowOverlays": true,
+                "GridWidth": 0.0,
+                "GridHeight": 0.0
+              }
+            },
+            {
+              "Name": "Layers",
+              "EditorObject": {
+                "$type": "Manual.Editors.ED_LayerView, Manual"
+              }
+            },
+            {
+              "Name": "Timeline",
+              "EditorObject": {
+                "$type": "Manual.Editors.ED_TimelineView, Manual",
+                "loaded": false,
+                "GridWidth": 0.0,
+                "GridHeight": 0.0,
+                "CanvasScaleX": 14.15,
+                "CanvasScaleY": 0.28,
+                "CanvasMatrix": "1,0,0,1,19,97",
+                "TimelineMode": 0,
+                "LeftSection": 100.0,
+                "RightSection": 170.0
+              }
+            },
+            {
+              "Name": "History 5D",
+              "EditorObject": {
+                "$type": "Manual.Editors.ED_History, Manual"
+              }
+            },
+            {
+              "Name": "Properties",
+              "EditorObject": {
+                "$type": "Manual.Editors.ED_ToolProperties, Manual",
+                "EnablePalette": true,
+                "SwitchPaletteCommand": {
+                  "$type": "CommunityToolkit.Mvvm.Input.RelayCommand, CommunityToolkit.Mvvm"
+                }
+              }
+            },
+            {
+              "Name": "Code Editor",
+              "EditorObject": {
+                "$type": "Manual.Editors.ED_CodeEditorView, Manual"
+              }
+            },
+            {
+              "Name": "Output",
+              "EditorObject": {
+                "$type": "Manual.Editors.ED_Output, Manual",
+                "SectionIndex": 0
+              }
+            },
+            {
+              "Name": "Latent Nodes Editor",
+              "EditorObject": {
+                "$type": "Manual.Editors.ED_LatentNodes, Manual",
+                "loaded": false,
+                "GridWidth": 0.0,
+                "GridHeight": 0.0,
+                "CanvasMatrix": "0.5504406007549368,0,0,0.5504406007549368,-37.35635516230254,-2.601580860260915"
+              }
+            },
+            {
+              "Name": "UndoRedo History",
+              "EditorObject": {
+                "$type": "Plugins.ED_UndoRedoHistory, Manual"
+              }
+            }
+          ],
+          "SelectedEditor": {
+            "Name": "Timeline",
+            "EditorObject": {
+              "$type": "Manual.Editors.ED_TimelineView, Manual",
+              "loaded": false,
+              "GridWidth": 0.0,
+              "GridHeight": 0.0,
+              "CanvasScaleX": 14.15,
+              "CanvasScaleY": 0.28,
+              "CanvasMatrix": "1,0,0,1,19,97",
+              "TimelineMode": 0,
+              "LeftSection": 100.0,
+              "RightSection": 170.0
+            }
+          }
+        }
+      },
+      "Space1": {
+        "$type": "Manual.Core.WorkspaceRow, Manual",
+        "Length0": 529.7804328870938,
+        "Length1": 41.21956711290534,
+        "Space0": {
+          "$type": "Manual.Core.WorkspaceEditor, Manual",
+          "RegisteredEditors": [
+            {
+              "Name": "Tools",
+              "EditorObject": {
+                "$type": "Manual.Editors.ED_Tools, Manual"
+              }
+            },
+            {
+              "Name": "Canvas",
+              "EditorObject": {
+                "$type": "Manual.Editors.ED_CanvasView, Manual",
+                "ID": "9ab7d1ba-bc97-48d8-b133-2a08d03a219c",
+                "EnableGrid": true,
+                "TopSection": false,
+                "CanvasMatrix": "0.47137880316590625,0,0,0.47137880316590625,372.53711300507797,232.28680570678947",
+                "ShowOverlays": true,
+                "GridWidth": 730.0000000000001,
+                "GridHeight": 474.78043288709375
+              }
+            },
+            {
+              "Name": "Layers",
+              "EditorObject": {
+                "$type": "Manual.Editors.ED_LayerView, Manual"
+              }
+            },
+            {
+              "Name": "Timeline",
+              "EditorObject": {
+                "$type": "Manual.Editors.ED_TimelineView, Manual",
+                "loaded": false,
+                "GridWidth": 0.0,
+                "GridHeight": 0.0,
+                "CanvasScaleX": 14.15,
+                "CanvasScaleY": 0.28,
+                "CanvasMatrix": "1,0,0,1,19,97",
+                "TimelineMode": 0,
+                "LeftSection": 100.0,
+                "RightSection": 170.0
+              }
+            },
+            {
+              "Name": "History 5D",
+              "EditorObject": {
+                "$type": "Manual.Editors.ED_History, Manual"
+              }
+            },
+            {
+              "Name": "Properties",
+              "EditorObject": {
+                "$type": "Manual.Editors.ED_ToolProperties, Manual",
+                "EnablePalette": true,
+                "SwitchPaletteCommand": {
+                  "$type": "CommunityToolkit.Mvvm.Input.RelayCommand, CommunityToolkit.Mvvm"
+                }
+              }
+            },
+            {
+              "Name": "Code Editor",
+              "EditorObject": {
+                "$type": "Manual.Editors.ED_CodeEditorView, Manual"
+              }
+            },
+            {
+              "Name": "Output",
+              "EditorObject": {
+                "$type": "Manual.Editors.ED_Output, Manual",
+                "SectionIndex": 0
+              }
+            },
+            {
+              "Name": "Latent Nodes Editor",
+              "EditorObject": {
+                "$type": "Manual.Editors.ED_LatentNodes, Manual",
+                "loaded": false,
+                "GridWidth": 0.0,
+                "GridHeight": 0.0,
+                "CanvasMatrix": "0.5504406007549368,0,0,0.5504406007549368,-37.35635516230254,-2.601580860260915"
+              }
+            },
+            {
+              "Name": "UndoRedo History",
+              "EditorObject": {
+                "$type": "Plugins.ED_UndoRedoHistory, Manual"
+              }
+            }
+          ],
+          "SelectedEditor": {
+            "Name": "Canvas",
+            "EditorObject": {
+              "$type": "Manual.Editors.ED_CanvasView, Manual",
+              "ID": "9ab7d1ba-bc97-48d8-b133-2a08d03a219c",
+              "EnableGrid": true,
+              "TopSection": false,
+              "CanvasMatrix": "0.47137880316590625,0,0,0.47137880316590625,372.53711300507797,232.28680570678947",
+              "ShowOverlays": true,
+              "GridWidth": 730.0000000000001,
+              "GridHeight": 474.78043288709375
+            }
+          }
+        },
+        "Space1": {
+          "$type": "Manual.Core.WorkspaceEditor, Manual",
+          "RegisteredEditors": [
+            {
+              "Name": "Tools",
+              "EditorObject": {
+                "$type": "Manual.Editors.ED_Tools, Manual"
+              }
+            },
+            {
+              "Name": "Canvas",
+              "EditorObject": {
+                "$type": "Manual.Editors.ED_CanvasView, Manual",
+                "ID": "271fd063-6063-45b8-8ac4-107eb76c0cf3",
+                "EnableGrid": true,
+                "TopSection": true,
+                "CanvasMatrix": "Identity",
+                "ShowOverlays": true,
+                "GridWidth": 0.0,
+                "GridHeight": 0.0
+              }
+            },
+            {
+              "Name": "Layers",
+              "EditorObject": {
+                "$type": "Manual.Editors.ED_LayerView, Manual"
+              }
+            },
+            {
+              "Name": "Timeline",
+              "EditorObject": {
+                "$type": "Manual.Editors.ED_TimelineView, Manual",
+                "loaded": false,
+                "GridWidth": 0.0,
+                "GridHeight": 0.0,
+                "CanvasScaleX": 14.15,
+                "CanvasScaleY": 0.28,
+                "CanvasMatrix": "1,0,0,1,19,97",
+                "TimelineMode": 0,
+                "LeftSection": 100.0,
+                "RightSection": 170.0
+              }
+            },
+            {
+              "Name": "History 5D",
+              "EditorObject": {
+                "$type": "Manual.Editors.ED_History, Manual"
+              }
+            },
+            {
+              "Name": "Properties",
+              "EditorObject": {
+                "$type": "Manual.Editors.ED_ToolProperties, Manual",
+                "EnablePalette": true,
+                "SwitchPaletteCommand": {
+                  "$type": "CommunityToolkit.Mvvm.Input.RelayCommand, CommunityToolkit.Mvvm"
+                }
+              }
+            },
+            {
+              "Name": "Code Editor",
+              "EditorObject": {
+                "$type": "Manual.Editors.ED_CodeEditorView, Manual"
+              }
+            },
+            {
+              "Name": "Output",
+              "EditorObject": {
+                "$type": "Manual.Editors.ED_Output, Manual",
+                "SectionIndex": 0
+              }
+            },
+            {
+              "Name": "Latent Nodes Editor",
+              "EditorObject": {
+                "$type": "Manual.Editors.ED_LatentNodes, Manual",
+                "loaded": false,
+                "GridWidth": 0.0,
+                "GridHeight": 0.0,
+                "CanvasMatrix": "0.5504406007549368,0,0,0.5504406007549368,-37.35635516230254,-2.601580860260915"
+              }
+            },
+            {
+              "Name": "UndoRedo History",
+              "EditorObject": {
+                "$type": "Plugins.ED_UndoRedoHistory, Manual"
+              }
+            }
+          ],
+          "SelectedEditor": {
+            "Name": "Tools",
+            "EditorObject": {
+              "$type": "Manual.Editors.ED_Tools, Manual"
+            }
+          }
+        }
+      }
+    },
+    "Space1": {
+      "$type": "Manual.Core.WorkspaceColumn, Manual",
+      "Length0": 210.00000000000045,
+      "Length1": 1229.9999999999995,
+      "Space0": {
+        "$type": "Manual.Core.WorkspaceEditor, Manual",
+        "RegisteredEditors": [
+          {
+            "Name": "Tools",
+            "EditorObject": {
+              "$type": "Manual.Editors.ED_Tools, Manual"
+            }
+          },
+          {
+            "Name": "Canvas",
+            "EditorObject": {
+              "$type": "Manual.Editors.ED_CanvasView, Manual",
+              "ID": "17783642-38cb-493b-991f-35a6494272cf",
+              "EnableGrid": true,
+              "TopSection": true,
+              "CanvasMatrix": "Identity",
+              "ShowOverlays": true,
+              "GridWidth": 0.0,
+              "GridHeight": 0.0
+            }
+          },
+          {
+            "Name": "Layers",
+            "EditorObject": {
+              "$type": "Manual.Editors.ED_LayerView, Manual"
+            }
+          },
+          {
+            "Name": "Timeline",
+            "EditorObject": {
+              "$type": "Manual.Editors.ED_TimelineView, Manual",
+              "loaded": false,
+              "GridWidth": 0.0,
+              "GridHeight": 0.0,
+              "CanvasScaleX": 14.15,
+              "CanvasScaleY": 0.28,
+              "CanvasMatrix": "1,0,0,1,19,97",
+              "TimelineMode": 0,
+              "LeftSection": 100.0,
+              "RightSection": 170.0
+            }
+          },
+          {
+            "Name": "History 5D",
+            "EditorObject": {
+              "$type": "Manual.Editors.ED_History, Manual"
+            }
+          },
+          {
+            "Name": "Properties",
+            "EditorObject": {
+              "$type": "Manual.Editors.ED_ToolProperties, Manual",
+              "EnablePalette": true,
+              "SwitchPaletteCommand": {
+                "$type": "CommunityToolkit.Mvvm.Input.RelayCommand, CommunityToolkit.Mvvm"
+              }
+            }
+          },
+          {
+            "Name": "Code Editor",
+            "EditorObject": {
+              "$type": "Manual.Editors.ED_CodeEditorView, Manual"
+            }
+          },
+          {
+            "Name": "Output",
+            "EditorObject": {
+              "$type": "Manual.Editors.ED_Output, Manual",
+              "SectionIndex": 0
+            }
+          },
+          {
+            "Name": "Latent Nodes Editor",
+            "EditorObject": {
+              "$type": "Manual.Editors.ED_LatentNodes, Manual",
+              "loaded": false,
+              "GridWidth": 0.0,
+              "GridHeight": 0.0,
+              "CanvasMatrix": "0.5504406007549368,0,0,0.5504406007549368,-37.35635516230254,-2.601580860260915"
+            }
+          },
+          {
+            "Name": "UndoRedo History",
+            "EditorObject": {
+              "$type": "Plugins.ED_UndoRedoHistory, Manual"
+            }
+          }
+        ],
+        "SelectedEditor": {
+          "Name": "Layers",
+          "EditorObject": {
+            "$type": "Manual.Editors.ED_LayerView, Manual"
+          }
+        }
+      },
+      "Space1": {
+        "$type": "Manual.Core.WorkspaceEditor, Manual",
+        "RegisteredEditors": [
+          {
+            "Name": "Tools",
+            "EditorObject": {
+              "$type": "Manual.Editors.ED_Tools, Manual"
+            }
+          },
+          {
+            "Name": "Canvas",
+            "EditorObject": {
+              "$type": "Manual.Editors.ED_CanvasView, Manual",
+              "ID": "e78ed4c2-d5f1-4024-960f-b3a029bb1715",
+              "EnableGrid": true,
+              "TopSection": true,
+              "CanvasMatrix": "Identity",
+              "ShowOverlays": true,
+              "GridWidth": 0.0,
+              "GridHeight": 0.0
+            }
+          },
+          {
+            "Name": "Layers",
+            "EditorObject": {
+              "$type": "Manual.Editors.ED_LayerView, Manual"
+            }
+          },
+          {
+            "Name": "Timeline",
+            "EditorObject": {
+              "$type": "Manual.Editors.ED_TimelineView, Manual",
+              "loaded": false,
+              "GridWidth": 0.0,
+              "GridHeight": 0.0,
+              "CanvasScaleX": 4.817279833068191,
+              "CanvasScaleY": 0.39984639845867326,
+              "CanvasMatrix": "1,0,0,1,48.77462001966725,146",
+              "TimelineMode": 1,
+              "LeftSection": 100.0,
+              "RightSection": 170.0
+            }
+          },
+          {
+            "Name": "History 5D",
+            "EditorObject": {
+              "$type": "Manual.Editors.ED_History, Manual"
+            }
+          },
+          {
+            "Name": "Properties",
+            "EditorObject": {
+              "$type": "Manual.Editors.ED_ToolProperties, Manual",
+              "EnablePalette": true,
+              "SwitchPaletteCommand": {
+                "$type": "CommunityToolkit.Mvvm.Input.RelayCommand, CommunityToolkit.Mvvm"
+              }
+            }
+          },
+          {
+            "Name": "Code Editor",
+            "EditorObject": {
+              "$type": "Manual.Editors.ED_CodeEditorView, Manual"
+            }
+          },
+          {
+            "Name": "Output",
+            "EditorObject": {
+              "$type": "Manual.Editors.ED_Output, Manual",
+              "SectionIndex": 0
+            }
+          },
+          {
+            "Name": "Latent Nodes Editor",
+            "EditorObject": {
+              "$type": "Manual.Editors.ED_LatentNodes, Manual",
+              "loaded": false,
+              "GridWidth": 0.0,
+              "GridHeight": 0.0,
+              "CanvasMatrix": "0.5504406007549368,0,0,0.5504406007549368,-37.35635516230254,-2.601580860260915"
+            }
+          },
+          {
+            "Name": "UndoRedo History",
+            "EditorObject": {
+              "$type": "Plugins.ED_UndoRedoHistory, Manual"
+            }
+          }
+        ],
+        "SelectedEditor": {
+          "Name": "Timeline",
+          "EditorObject": {
+            "$type": "Manual.Editors.ED_TimelineView, Manual",
+            "loaded": false,
+            "GridWidth": 0.0,
+            "GridHeight": 0.0,
+            "CanvasScaleX": 4.817279833068191,
+            "CanvasScaleY": 0.39984639845867326,
+            "CanvasMatrix": "1,0,0,1,48.77462001966725,146",
+            "TimelineMode": 1,
+            "LeftSection": 100.0,
+            "RightSection": 170.0
+          }
+        }
+      }
+    }
+  },
+  "Space1": null
+}

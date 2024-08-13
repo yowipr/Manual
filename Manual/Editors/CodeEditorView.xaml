@@ -1,0 +1,136 @@
+﻿<UserControl x:Class="Manual.Editors.CodeEditorView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Manual.Editors"
+             xmlns:ViewModel="clr-namespace:Manual.API"
+             xmlns:themes="clr-namespace:ManualToolkit.Themes;assembly=ManualToolkit"
+             xmlns:avalonedit="http://icsharpcode.net/sharpdevelop/avalonedit"
+             d:DataContext="{d:DesignInstance Type=ViewModel:ScriptingManager}"
+             mc:Ignorable="d" 
+             d:DesignHeight="906.562" d:DesignWidth="376.438"
+             Width="Auto" Height="Auto" >
+
+    <Grid Style="{x:Null}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="{StaticResource EditorHeaderHeight}"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+
+
+        <!--nav bar-->
+        <Grid Grid.Row="0" d:Background="{DynamicResource bg}">
+            <StackPanel Style="{x:Null}" Orientation="Horizontal" HorizontalAlignment="left" Margin="40,5,0,5" VerticalAlignment="Center">
+
+                <!--<ComboBox ItemsSource="{Binding Scripts}"
+                          SelectedItem="{Binding SelectedScript}" DisplayMemberPath="DisplayName" Drop="ScrollViewer_Drop" AllowDrop="True"/>-->
+                <themes:IconButton IconSource="{StaticResource save}" Command="{Binding SaveScriptCommand}"/>
+
+                <themes:IconButton IconSource="{StaticResource plus}" Command="{Binding AddScriptCommand}" FontSize="16"/>
+
+                <themes:IconButton IconSource="{StaticResource play}" Command="{Binding CompileCommand}"
+                                   Padding="2 0 0 0"  Width="25"/>
+
+                <themes:IconButton IconSource="{StaticResource play}" Command="{Binding CompileLightCommand}"
+                         Padding="2 0 0 0"  Width="15" ToolTip="Compile light"/>
+
+                <Menu>
+                    <Menu.Resources>
+                        <Style TargetType="{x:Type MenuItem}" BasedOn="{StaticResource {x:Type MenuItem}}">
+                            <EventSetter Event="Click" Handler="MenuItem_Click"/>
+                        </Style>
+                    </Menu.Resources>
+                    
+                    <MenuItem Style="{x:Null}" Header="Add">
+                        <MenuItem Header="Y Script"/>
+                        <MenuItem Header="C# Script"/>
+                        <MenuItem Header="Templates" ItemsSource="{Binding ScriptTemplates}" DisplayMemberPath="Name">
+                            <MenuItem.ItemContainerStyle>
+                                <Style TargetType="{x:Type MenuItem}" BasedOn="{StaticResource {x:Type MenuItem}}">
+                                    <EventSetter Event="Click" Handler="MenuItem_Click_Templates"/>
+                                </Style>
+                            </MenuItem.ItemContainerStyle>
+                        </MenuItem>
+                        
+                    </MenuItem>
+                    
+                    <MenuItem Style="{x:Null}" Header="View">
+                        <MenuItem Header="Refresh"/>
+                        <MenuItem Header="Testing"/>
+                    </MenuItem>
+                    
+                </Menu>
+
+                <TextBox Text="{Binding SelectedScript.Name}" Margin="0" VerticalAlignment="Center"/>
+                
+            </StackPanel>
+            <Button FontSize="10" Width="30" Height="30" Content="⬖" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="5,3,20,3" Background="{x:Null}" Click="Button_Click"/>
+        </Grid>
+
+
+        <!--Content-->
+        <Grid Grid.Row="1" Margin="20 5 0 5">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+
+            <Grid>
+                <Grid>
+                    <StackPanel
+                         Grid.Row="1"
+                         Background="Transparent"
+                         Orientation="Horizontal"
+                         Style="{x:Null}">
+                        <TabControl
+                             x:Name="shotsTab"
+                             Grid.RowSpan="2"
+                             Margin="15,0,0,-4"
+                             VerticalAlignment="Center"
+                             Background="{StaticResource fg_high2}"
+                             BorderBrush="{x:Null}"
+                             ItemsSource="{Binding Scripts}"
+                             SelectedItem="{Binding SelectedScript, Mode=TwoWay}"
+                             DisplayMemberPath="DisplayName">           
+
+                            <TabControl.ContentTemplate>
+                                <DataTemplate>
+                                    <ContentControl Content="{Binding ShotsCollection}" />
+                                </DataTemplate>
+
+                            </TabControl.ContentTemplate>
+
+                        </TabControl>
+                        <Button
+                             Width="20"
+                             Height="20"
+                             Margin="0,0,0,0"
+                             Padding="0"
+                             Background="{x:Null}"
+                             BorderBrush="{x:Null}"
+                             Command="{Binding AddScriptCommand}"
+                             Content="➕"
+                             FontSize="8"
+                             Foreground="White"
+                             Style="{StaticResource SubButton}" />      
+
+                    </StackPanel>
+                    <Rectangle Width="Auto" Height="2" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Fill="{DynamicResource fg2}" Margin="12 0 12 -1"/>
+                </Grid>
+
+            </Grid>
+
+            <Border Grid.Row="1" DataContext="{Binding SelectedScript}">
+                <Grid>
+                    <avalonedit:TextEditor x:Name="textEditor" Drop="ScrollViewer_Drop" PreviewTextInput="TextEditor_PreviewTextInput"
+                                       Document="{Binding CodeDocument}" Padding="5" ShowLineNumbers="True" LineNumbersForeground="Gray"
+                                       Background="{DynamicResource bg}" Foreground="{DynamicResource fg}" FontFamily="Consolas" />
+                </Grid>
+            </Border>
+                
+        </Grid>
+        
+    </Grid>
+    
+</UserControl>

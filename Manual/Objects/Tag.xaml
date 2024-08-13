@@ -1,0 +1,44 @@
+﻿<UserControl x:Class="Manual.Objects.PromptTagView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Manual.Objects"
+             mc:Ignorable="d" 
+             Foreground="White"
+             Height="18" Width="Auto"
+			 Style="{x:Null}"
+		 	 Margin="3 0 3 4" Opacity="1">
+    
+  
+    <UserControl.ToolTip>
+        <ToolTip Content="{Binding TagName}"/>
+    </UserControl.ToolTip>
+
+
+    <!--#343542-->
+    <Border  Style="{x:Null}" x:Name="colorBorder" CornerRadius="10">
+        <Grid>
+            <Border BorderThickness="1" CornerRadius="10" BorderBrush="#BFFFFFFF" Opacity="0.3" Visibility="Collapsed" IsHitTestVisible="False" Background="{x:Null}"/>
+            <Border CornerRadius="10" Opacity="0.5" Visibility="Visible" IsHitTestVisible="False"  d:Background="#343542" Background="{Binding ColorTypeBrush}"/>
+            <Grid Style="{x:Null}" >
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" Style="{x:Null}" />
+                    <ColumnDefinition Width="Auto" Style="{x:Null}" />
+                </Grid.ColumnDefinitions>
+                <Label
+                   Padding="1 0 1 2" x:Name="token" d:Content="masterpiece" 
+                   Content="{Binding Prompt}"
+                   Margin="12,0,0,0" Foreground="White" VerticalAlignment="Center"/>
+                <!--<Button Style="{x:Null}" Width="20" Height="20" Content="✕" Grid.Column="1" Margin="0,5,0,5" Background="Transparent" BorderBrush="Transparent" Foreground="White" FontWeight="Bold"/>-->
+
+                <Button Padding="0" Margin="0" Grid.Column="1" x:Name="closeBtn" Style="{StaticResource SubButton}" Click="Close_Click" VerticalAlignment="Center" Visibility="Hidden">
+                    <Label Padding="0 0 0 0" Panel.ZIndex="10" Grid.Column="1" FontSize="10" Content="✕" Foreground="White" VerticalAlignment="Center"/>
+                </Button>
+            </Grid>
+
+          
+        </Grid>
+    </Border>
+
+</UserControl>

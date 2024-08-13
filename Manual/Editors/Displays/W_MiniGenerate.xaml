@@ -1,0 +1,57 @@
+﻿<local:W_WindowContent x:Class="Manual.Editors.Displays.W_MiniGenerate"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Manual.Editors.Displays"
+                       xmlns:mui="clr-namespace:Manual.MUI"
+                       
+                      xmlns:themes="clr-namespace:ManualToolkit.Themes;assembly=ManualToolkit"
+                       mc:Ignorable="d" 
+             Height="Auto" Width="Auto"
+          Loaded="W_MiniGenerate_Loaded">
+    
+    <Grid Margin="0 10 0 0">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="170"/>
+            </Grid.ColumnDefinitions>
+            <mui:M_PromptBox x:Name="promptBox" Text="{Binding Prompt}"
+                             Header="Prompt (optional)"
+                             MinHeight="30" Height="66" Padding="0" Grid.Column="0" Margin="2"
+                             Background="{StaticResource bg_full}"
+                             Placeholder="{Binding PromptPlaceholder}" 
+                             Visibility="{Binding IsPromptEnabled, Converter={StaticResource boolToVisibilityConverter}}"/>
+            
+            
+            <!--<mui:GeneratorButton Grid.Column="1"/>-->
+            <Button Style="{StaticResource ButtonBig}" Grid.Column="1" Height="66" Width="Auto" Click="Button_Click"
+                    themes:CustomFields.CornerRadius="33" 
+                    Foreground="{StaticResource fg}" Background="{StaticResource fg_high2}">
+                <themes:IconText Texto="{Binding HeaderButton}" IconSource="{StaticResource sparkles}"/>
+            </Button>
+
+        </Grid>
+
+
+        
+        <StackPanel Grid.Row="1" Margin="0 10 0 0">
+            
+            <StackPanel.Resources>
+                <!-- Estilo para todos los controles hijos del StackPanel -->
+                <Style TargetType="FrameworkElement">
+                    <Setter Property="Margin" Value="0 3"/>
+                </Style>
+            </StackPanel.Resources>
+            
+            <ContentControl Content="{Binding Body}"/>
+        </StackPanel>
+        
+        
+    </Grid>
+</local:W_WindowContent>

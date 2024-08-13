@@ -1,0 +1,197 @@
+﻿DISABLEADOS:
+
+DISABLED RELEASE: effects
+
+DISABLED RELEASE: animation
+templates workflows disableados:
+    animatediff 2 frame interpolation
+    dynami interpolation
+    linear interpolation
+
+DISABLED RELEASE: code
+
+DISABLED RELEASE: themes
+
+DISABLED RELEASE: shot
+
+DISABLED RELEASE: workspaces
+templates disableados:
+    todos menos Default
+
+
+
+PLUS (significa que se añadió algo y puede servir para manual debug)
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+                                                                                KEYWORDS
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+//TODO - to do
+
+//DEPRECATED - old code
+
+//DISABLED {comment}
+
+
+
+//DISABLED RELEASE {type}
+
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+PASOS PARA COMPILAR:
+
+<IsPublishable>false</IsPublishable>     para el MLauncher
+
+Comando original para compilar en powershell de visual studio:
+
+dotnet publish -c Release -o ".\publish"
+Set-Alias Squirrel ($env:USERPROFILE + "\.nuget\packages\clowd.squirrel\2.9.42\tools\Squirrel.exe");
+Squirrel pack --framework net6,vcredist143-x86  --packId "Manual"  --packVersion "1.0.2"  --packAuthors "ManualStudio"  --packDir ".\publish" --allowUnaware
+
+
+notas:
+carpeta publish y Release deben estar en el Repo, LaunchView.xaml.cs usa el nombre de las carpetas para borrarlas, igual no pasa nada si no las encuentra
+
+--------------------------------------------------------------------------------------------------------------------------------------------
+
+COSAS A TENER EN CUENTA:
+
+csproj cambié esto: <Version>$(AssemblyVersion)</Version>
+
+Manual/publisher.bat es para compilar nuevas versiones release con squirrel
+
+si mlauncher o manual no abren, puede que sea porque tengan el mismo Mutex, recuerda que si encuentra un mutex con el mismo nombre, el otro no se abre
+
+si por check updates o update peta, probablemente sea por esto:  IPCManager.SendMessageToRunningApp($"Updater:{progress}"); porque no hay un servidor abierto
+
+UPDATE
+si la versión local supera la de la web, lo toma como actualizado
+Manual-0.7.9-full.nupkg el nombre de este archivo parece no importar, sin embargo si cambias RELEASE sí importa (almenos sin delta update)
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------
+
+publish.bat:
+
+@echo off
+
+:: Variables
+set VERSION=0.7.7
+
+dotnet publish -c Release -o ".\publish"
+set SQUIRREL="%USERPROFILE%\.nuget\packages\clowd.squirrel\2.9.42\tools\Squirrel.exe"
+%SQUIRREL% pack --framework net6,vcredist143-x86  --packId "Manual"  --packVersion "%VERSION%"  --packAuthors "Manual Team"  --packDir ".\publish" --allowUnaware
+
+color 0A
+echo ^|--------------------------------------------------^|
+echo ^|                                                  ^|
+echo ^|         Compilacion completada exitosamente!     ^|
+echo ^|                                                  ^|
+echo ^|--------------------------------------------------^|
+color
+
+
+
+
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+                                                                                CÓDIGO REUTILIZABLE
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+  <IsPublishable>false</IsPublishable> 
+
+
+  d:DataContext="{d:DesignInstance Type=local:Launch}"
+
+
+   Application.Current.Dispatcher.Invoke(() =>
+        {
+            ManualAPI.SetProgressBar100(progress);
+        });
+
+
+
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------------------------------------------------------------------
+
+   PARA USAR APPMODEL STATIC EN CUALQUIER LADO
+
+ DataContext="{x:Static Core:AppModel.userManager}"
+                       Text="{Binding User.Name}"
+
+
+
+  DataContext="{x:Static Core:AppModel.userManager}"
+  Visibility="{Binding User, Converter={StaticResource proToVisibilityConverter}}"
+
+
+
+   <ContextMenu.Visibility>
+        <MultiBinding Converter="{StaticResource ProUserToVisibilityConverter}">
+            <Binding Path="IsProUser" />
+            <Binding Path="DataContext" RelativeSource="{RelativeSource Self}" />
+        </MultiBinding>
+    </ContextMenu.Visibility>
+
+
+
+
+    --------------------------------------------------------------------------------------------------------------------------------------------
+
+    BORDES REDONDEADOS
+
+     
+           <!--  Content  -->
+        <Grid Grid.Row="2" Background="{DynamicResource bg}">
+            <Border x:Name="maskBorder" CornerRadius="16" Background="{DynamicResource bg}" ClipToBounds="True"/>
+            <Grid>
+                <Grid.OpacityMask>
+                    <VisualBrush Visual="{Binding ElementName=maskBorder}"/>
+                </Grid.OpacityMask>
+
+                <!--content here-->
+                <objects:CanvasArea
+                  x:Name="canvas"
+                  d:Visibility="Collapsed"
+                  CanvasTransform="{Binding DataContext.CanvasMatrix, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                  DataContext="{Binding SelectedShot}" >
+                </objects:CanvasArea>
+
+
+
+            </Grid>
+        </Grid>
+
+
+
+
+
+
+
+
+
+
+    --------------------------------------------------------------------------------------------------------------------------------------------
+    CIVITAI METADATA IMAGE
+
+
+        {[PNG-tEXt] Textual Data - parameters: anime screencap, 1girl, solo, long hair, black hair, hair ornament, thighhighs, dress, holding, standing, full body, from behind, star (symbol), arm up, high heels, two side up, microphone, star hair ornament, idol, crowd, stage, stage lights, glowstick, concert, audience
+Negative prompt: (worst quality, low quality, extra digits:1.4)
+
+Steps: 20, Sampler: DPM++ SDE Karras, CFG scale: 5, Seed: 4283964006, Size: 640x960, Model hash: 42fe180b0b, Model: AnimeScreencap_v1.2, Denoising strength: 0.57, Hires upscale: 2, Hires upscaler: Latent (nearest-exact), Version: v1.5.1}
+
+
+
+
+
+
+    --------------------------------------------------------------------------------------------------------------------------------------------
+
+Dispatcher.InvokeAsync(() =>
+{
+    // Realiza el segundo cálculo que depende de la UI actualizada aquí
+}, DispatcherPriority.Render);

@@ -1,0 +1,58 @@
+﻿<UserControl x:Class="Manual.MUI.ScrollbarArea"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Manual.MUI"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+
+    <UserControl.Resources>
+        <local:ScaleMultiConverter x:Key="ScaleMultiConverter"/>
+
+        <ControlTemplate x:Key="ThumbTemplate">
+            <Ellipse Fill="Gray" Stroke="Black" StrokeThickness="1"/>
+        </ControlTemplate>
+        
+        <ControlTemplate x:Key="HorizontalScrollBarTemplate" TargetType="ScrollBar">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <!-- Botón de desplazamiento a la izquierda (oculto) -->
+                <RepeatButton Command="ScrollBar.LineLeftCommand" Width="0" Content=" "/>
+                <!-- Pista del ScrollBar -->
+                <Track Name="PART_Track" Grid.Column="1"
+                       IsDirectionReversed="False"
+                       Focusable="False">
+                    <Track.DecreaseRepeatButton>
+                        <RepeatButton Command="ScrollBar.PageLeftCommand" Width="0" Content=" "/>
+                    </Track.DecreaseRepeatButton>
+                    <Track.IncreaseRepeatButton>
+                        <RepeatButton Command="ScrollBar.PageRightCommand" Width="0" Content=" "/>
+                    </Track.IncreaseRepeatButton>
+                    <Track.Thumb>
+                        <Thumb Background="LightGray" BorderBrush="White" BorderThickness="1" Height="10"/>
+                    </Track.Thumb>
+                </Track>
+                <!-- Botón de desplazamiento a la derecha (oculto) -->
+                <RepeatButton Command="ScrollBar.LineRightCommand" Width="0" Content=" "/>
+            </Grid>
+        </ControlTemplate>
+
+    </UserControl.Resources>
+
+    <Grid>
+        <ScrollBar Template="{DynamicResource HorizontalScrollBarTemplate}"
+                   Style="{x:Null}" Orientation="Horizontal"
+                   ViewportSize="1000"
+                   Maximum="100"/>
+        
+        <!-- Controles de Zoom en los extremos -->
+        <Thumb Template="{StaticResource ThumbTemplate}" Name="ZoomLeft" Visibility="Collapsed" HorizontalAlignment="Left" VerticalAlignment="Center" Width="10" Height="10" DragDelta="ZoomLeft_DragDelta" Cursor="Hand"/>
+        <Thumb Template="{StaticResource ThumbTemplate}" Name="ZoomRight" Visibility="Collapsed" HorizontalAlignment="Right" VerticalAlignment="Center" Width="10" Height="10" DragDelta="ZoomRight_DragDelta" Cursor="Hand"/>
+   
+    </Grid>
+</UserControl>

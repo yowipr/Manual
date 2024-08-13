@@ -1,0 +1,36 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!--__________________ PALETTE 242424_________________-->
+    
+    <SolidColorBrush x:Key="fg" Color="#FFD1D6DD" />
+    <SolidColorBrush x:Key="fg2" Color="#454545" />
+    <SolidColorBrush x:Key="fg_high" Color="#343CAD" />
+    <SolidColorBrush x:Key="fg_high2" Color="#343CAD" />
+    <SolidColorBrush x:Key="fg_sub" Color="#FF5E42E2" />
+
+    <SolidColorBrush x:Key="bg" Color="#3B3B3B" />
+    <SolidColorBrush x:Key="bg2" Color="#3D3D3D" />
+    <SolidColorBrush x:Key="bg3" Color="#343434" />
+    <SolidColorBrush x:Key="bg4" Color="#161616" />
+    <SolidColorBrush x:Key="bg5" Color="#222222" />
+
+    <SolidColorBrush x:Key="log_error" Color="#B22222" />
+    <SolidColorBrush x:Key="log_warning" Color="#DAA520" />
+    <SolidColorBrush x:Key="log_success" Color="#4682B4" />
+
+    
+    <SolidColorBrush x:Key="bg_full" Color="black"/>
+    <SolidColorBrush x:Key="fg_full" Color="white"/>
+
+    <SolidColorBrush x:Key="neutral" Color="Gray" />
+
+    <!--__________________ FONTS _________________-->
+    <FontFamily x:Key="span">pack://application:,,,/ManualToolkit;component/Assets/#Roboto</FontFamily>
+    <FontFamily x:Key="h1">pack://application:,,,/ManualToolkit;component/Assets/#BlenderPro</FontFamily>
+    <FontFamily x:Key="h2">pack://application:,,,/ManualToolkit;component/Assets/#BlackChancery</FontFamily>
+
+
+
+
+</ResourceDictionary>

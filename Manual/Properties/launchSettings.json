@@ -1,0 +1,16 @@
+{
+  "profiles": {
+    "Manual": {
+      "commandName": "Project"
+    },
+    "OPENFILE": {
+      "commandName": "Project",
+      "commandLineArgs": "\"C:\\Users\\YO\\Desktop\\things\\AI\\portfolio ai\\m2old\\1.0\\3.png\"",
+      "workingDirectory": "C:\\Users\\YO\\Desktop\\things\\AI\\portfolio ai\\m2old\\1.0"
+    },
+    "OnInstalled": {
+      "commandName": "Project",
+      "commandLineArgs": "--firstrun"
+    }
+  }
+}

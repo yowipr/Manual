@@ -1,0 +1,78 @@
+﻿<UserControl x:Class="Manual.MUI.GeneratorButton"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Manual.MUI"
+             xmlns:themes="clr-namespace:ManualToolkit.Themes;assembly=ManualToolkit"
+             xmlns:nodes="clr-namespace:Manual.Core.Nodes"
+             mc:Ignorable="d" 
+             d:DesignHeight="80" d:DesignWidth="180"
+             d:DataContext="{d:DesignInstance Type=nodes:GenerationManager}" ClipToBounds="False"
+             Cursor="Hand" RenderTransformOrigin="0.5 0.5">
+    
+    <Grid>
+
+        <Border x:Name="borderOver" CornerRadius="28" Background="{StaticResource fg_high2}" RenderTransformOrigin="0.5 0.5" Opacity="0" IsHitTestVisible="False">
+            <Border.Effect>
+                <BlurEffect Radius="30" KernelType="Box"/>
+            </Border.Effect>
+
+        </Border>
+
+        <Grid Visibility="{Binding Realtime, Converter={StaticResource boolToVisibilityConverterInverse}}">
+
+            <themes:Squircle Curvature="4" Background="{DynamicResource fg_high2}" Margin="4 2 6 2" Height="56"/>
+            <!--generate button-->
+            <Button x:Name="generateButton" Height="56" Click="Generate" Background="Transparent" d:Background="{DynamicResource fg_high2}"
+                 VerticalAlignment="Stretch" Visibility="{Binding IsProcessingImages, Converter={StaticResource boolToVisibilityConverterInverse}}"
+                 themes:CustomFields.CornerRadius="28">
+
+                <themes:IconText IconSource="{StaticResource sparkles}" Texto=""/>
+            </Button>
+
+
+            <!--queue-->
+            <Grid  Visibility="{Binding IsProcessingImages, Converter={StaticResource boolToVisibilityConverter}}" Margin="0 0 3 3">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="0.6*"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+
+                <!--queue button-->
+                <Button Grid.Column="1" Height="56" Margin="0" Click="Generate" Background="{DynamicResource fg_high2}" VerticalAlignment="Stretch" FontSize="12"
+                        themes:CustomFields.CornerRadius="0 28 28 0">
+                    <themes:IconText IconSource="{StaticResource sparkles}" Texto=""/>
+                </Button>
+
+                <!--interrupt button-->
+                <Button Height="56" FontSize="10" Margin="0" Click="Interrupt" Background="{DynamicResource neutral}"
+                VerticalAlignment="Stretch"
+                themes:CustomFields.CornerRadius="28 0 0 28"
+                Content="✖"/>
+                
+            </Grid>
+        </Grid>
+
+        <!--realtime button-->
+        <Grid d:Visibility="Collapsed" Visibility="{Binding Realtime, Converter={StaticResource boolToVisibilityConverter}}" Opacity="0.7">
+            <Button Height="56" Click="Generate" Background="{DynamicResource fg_sub}" VerticalAlignment="Stretch"
+                    themes:CustomFields.CornerRadius="28">
+                <themes:IconText IconSource="{StaticResource video-camera}" Texto=""/>
+            </Button>
+
+        </Grid>
+
+
+        <Border x:Name="borderOver2" Height="56" CornerRadius="28" Margin="4 0" Background="{StaticResource fg_sub}" Opacity="0" IsHitTestVisible="False">
+            <Border.OpacityMask>
+                <LinearGradientBrush StartPoint="0, 0" EndPoint="0, 1">
+                    <GradientStop Color="Transparent" Offset="0"/>
+                    <GradientStop Color="black" Offset="1"/>
+                </LinearGradientBrush>
+            </Border.OpacityMask>
+        </Border>
+
+    </Grid>
+    
+</UserControl>

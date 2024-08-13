@@ -1,0 +1,42 @@
+﻿<local:W_WindowContent x:Class="Manual.Editors.Displays.W_Login"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Manual.Editors.Displays"
+             mc:Ignorable="d" 
+             xmlns:core="clr-namespace:Manual.Core"
+                       
+             Height="350" Width="300">
+    <Grid>
+
+        <StackPanel VerticalAlignment="Top" Margin="0 30 0 0">
+
+            <Image Source="{StaticResource manuallogo2}" Height="100" RenderOptions.BitmapScalingMode="HighQuality"/>
+            <TextBlock Text="Sign In for better experience." HorizontalAlignment="Center" FontSize="16" Opacity="0.8"/>
+        </StackPanel>
+
+        <Grid HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0 100 0 0">
+            <!--SIGN IN BUTTON-->
+            <Button Style="{StaticResource ButtonBig}"
+                Foreground="{StaticResource fg}" Background="{StaticResource fg_high}"
+                Click="Button_Click">
+                <StackPanel>
+                <TextBlock Text="Sign In" HorizontalAlignment="Center" FontSize="16" />
+                <TextBlock Text="or register" HorizontalAlignment="Center" Margin="0 -3 0 0" FontSize="8" Opacity="0.56"/>
+                </StackPanel>
+            </Button>
+
+        </Grid>
+
+
+        <Button x:Name="closeBtn" Style="{StaticResource SubButton}" VerticalAlignment="Bottom" Margin="0 0 0 30" Cursor="Hand" Click="Close_Click"
+                d:Visibility="Visible" Visibility="Collapsed">
+            <TextBlock TextDecorations="Underline">Close Manual</TextBlock>
+        </Button>
+
+
+
+    </Grid>
+</local:W_WindowContent>
+   

@@ -1,0 +1,867 @@
+{
+  "last_node_id": 1,
+  "last_link_id": 1,
+  "nodes": [
+    {
+      "bgcolor": "#FF7E544C",
+      "id": 7,
+      "title": "Negative Prompt",
+      "type": "CLIPTextEncode",
+      "pos": [
+        320.39975,
+        383.47162
+      ],
+      "size": {
+        "0": 518.9002,
+        "1": 222.20819
+      },
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 18
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "links": [
+            4
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CLIPTextEncode"
+      },
+      "widgets_values": [
+        "(low quality, worst quality), EasyNegativeV2"
+      ]
+    },
+    {
+      "bgcolor": "#FF7E544C",
+      "id": 6,
+      "title": "Positive Prompt",
+      "type": "CLIPTextEncode",
+      "pos": [
+        323.78186,
+        147.30139
+      ],
+      "size": {
+        "0": 515.1317,
+        "1": 228.23364
+      },
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 17
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "links": [
+            3
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CLIPTextEncode"
+      },
+      "widgets_values": [
+        "yoneyama mai, with a serious look on her face, black ong hair, grey eyes, 8k portrait of beautiful intricate, elegant, highly detailed, majestic, digital photography, art by artgerm and solo, 1girl,multicolored eyes, portrait, floating hair,long hair, grey background, shadow, purple eyes, eyelashes, blurry, upper body, flower,white flower, blue flower,bare shoulders,multicolored hair, dynamic pose, perspective, wind"
+      ]
+    },
+    {
+      "bgcolor": "#FF553333",
+      "id": 9,
+      "title": "Differential Diffusion",
+      "type": "DifferentialDiffusion",
+      "pos": [
+        450.68414,
+        5.2245684
+      ],
+      "size": {
+        "0": 200.0,
+        "1": 97.0
+      },
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 1
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            5
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "DifferentialDiffusion"
+      }
+    },
+    {
+      "id": 3,
+      "type": "ToBasicPipe",
+      "pos": [
+        892.3977,
+        131.1073
+      ],
+      "size": {
+        "0": 200.0,
+        "1": 217.0
+      },
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 5
+        },
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 19
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": 16
+        },
+        {
+          "name": "positive",
+          "type": "CONDITIONING",
+          "link": 3
+        },
+        {
+          "name": "negative",
+          "type": "CONDITIONING",
+          "link": 4
+        }
+      ],
+      "outputs": [
+        {
+          "name": "basic_pipe",
+          "type": "BASIC_PIPE",
+          "links": [
+            6
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ToBasicPipe"
+      }
+    },
+    {
+      "bgcolor": "#FF553355",
+      "id": 11,
+      "title": "MaskDetailer (pipe)",
+      "type": "MaskDetailerPipe",
+      "pos": [
+        1142.208,
+        120.04036
+      ],
+      "size": {
+        "0": 250.48244,
+        "1": 778.29504
+      },
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "link": 9
+        },
+        {
+          "name": "mask",
+          "type": "MASK",
+          "link": 8
+        },
+        {
+          "name": "basic_pipe",
+          "type": "BASIC_PIPE",
+          "link": 6
+        },
+        {
+          "name": "refiner_basic_pipe_opt",
+          "type": "BASIC_PIPE",
+          "link": null
+        },
+        {
+          "name": "detailer_hook",
+          "type": "DETAILER_HOOK",
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "links": [
+            7
+          ],
+          "slot_index": 0
+        },
+        {
+          "name": "cropped_refined",
+          "type": "IMAGE",
+          "links": null
+        },
+        {
+          "name": "cropped_enhanced_alpha",
+          "type": "IMAGE",
+          "links": null
+        },
+        {
+          "name": "basic_pipe",
+          "type": "BASIC_PIPE",
+          "links": null
+        },
+        {
+          "name": "refiner_basic_pipe_opt",
+          "type": "BASIC_PIPE",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "MaskDetailerPipe"
+      },
+      "widgets_values": [
+        384,
+        true,
+        1024,
+        true,
+        2118632915744264040,
+        "randomize",
+        4.0,
+        1.5,
+        "lcm",
+        "sgm_uniform",
+        0.5,
+        5,
+        3.0,
+        10,
+        0.2,
+        1,
+        1,
+        true,
+        20
+      ]
+    },
+    {
+      "bgcolor": "#FF335533",
+      "id": 12,
+      "title": "Convert Image to Mask",
+      "type": "ImageToMask",
+      "pos": [
+        843.7002,
+        682.97485
+      ],
+      "size": {
+        "0": 229.69554,
+        "1": 121.0
+      },
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "link": 11
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": [
+            8
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ImageToMask"
+      },
+      "widgets_values": [
+        "red"
+      ]
+    },
+    {
+      "bgcolor": "#FF553355",
+      "id": 13,
+      "title": "Upscale Image",
+      "type": "ImageScale",
+      "pos": [
+        865.74066,
+        459.43884
+      ],
+      "size": {
+        "0": 200.0,
+        "1": 193.0
+      },
+      "flags": {},
+      "order": 6,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "link": 10
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            9
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ImageScale"
+      },
+      "widgets_values": [
+        "bilinear",
+        512,
+        512,
+        "disabled"
+      ]
+    },
+    {
+      "bgcolor": "#FF553333",
+      "id": 4,
+      "title": "Load Checkpoint",
+      "type": "CheckpointLoaderSimple",
+      "pos": [
+        -718.129,
+        295.97348
+      ],
+      "size": {
+        "0": 332.5389,
+        "1": 151.0
+      },
+      "flags": {},
+      "order": 7,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            15
+          ],
+          "slot_index": 0
+        },
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "links": [
+            2
+          ],
+          "slot_index": 1
+        },
+        {
+          "name": "VAE",
+          "type": "VAE",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CheckpointLoaderSimple"
+      },
+      "widgets_values": [
+        "counterfeitV3.safetensors"
+      ]
+    },
+    {
+      "bgcolor": "#FF665533",
+      "id": 10,
+      "title": "CLIP Set Last Layer",
+      "type": "CLIPSetLastLayer",
+      "pos": [
+        -579.8903,
+        143.81403
+      ],
+      "size": {
+        "0": 200.0,
+        "1": 121.0
+      },
+      "flags": {},
+      "order": 8,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 2
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "links": [
+            14
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CLIPSetLastLayer"
+      },
+      "widgets_values": [
+        -2.0
+      ]
+    },
+    {
+      "bgcolor": "#FF553333",
+      "id": 15,
+      "title": "Load VAE",
+      "type": "VAELoader",
+      "pos": [
+        -353.45908,
+        384.229
+      ],
+      "size": {
+        "0": 233.78412,
+        "1": 92.29939
+      },
+      "flags": {},
+      "order": 9,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "VAE",
+          "type": "VAE",
+          "links": [
+            16
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VAELoader"
+      },
+      "widgets_values": [
+        "anything-v4.0.vae.pt"
+      ]
+    },
+    {
+      "bgcolor": "#FF553333",
+      "id": 14,
+      "title": "Load LoRA",
+      "type": "LoraLoader",
+      "pos": [
+        -334.81757,
+        125.85838
+      ],
+      "size": {
+        "0": 269.00745,
+        "1": 230.21066
+      },
+      "flags": {},
+      "order": 10,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 15
+        },
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 14
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            12
+          ],
+          "slot_index": 0
+        },
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "links": [
+            13,
+            17,
+            18,
+            19
+          ],
+          "slot_index": 1
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoraLoader"
+      },
+      "widgets_values": [
+        "yoneyama_mai.safetensors",
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "bgcolor": "#FF553333",
+      "id": 2,
+      "title": "Load LoRA",
+      "type": "LoraLoader",
+      "pos": [
+        -2.0431008,
+        -48.25375
+      ],
+      "size": {
+        "0": 309.22525,
+        "1": 229.0
+      },
+      "flags": {},
+      "order": 11,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 12
+        },
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 13
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            1
+          ],
+          "slot_index": 0
+        },
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoraLoader"
+      },
+      "widgets_values": [
+        "lcm15.safetensors",
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "bgcolor": "#FF443366",
+      "id": 8,
+      "title": "Layer (Mask)",
+      "type": "M_Layer",
+      "pos": [
+        556.6722,
+        723.32806
+      ],
+      "size": {
+        "0": 200.0,
+        "1": 417.39337
+      },
+      "flags": {},
+      "order": 12,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "Layer",
+          "type": "LAYER",
+          "links": [
+            11
+          ],
+          "slot_index": 0
+        },
+        {
+          "name": "Alpha",
+          "type": "MASK",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "M_Layer"
+      },
+      "widgets_values": [
+        "Mask",
+        true,
+        true,
+        false,
+        false,
+        0
+      ]
+    },
+    {
+      "bgcolor": "#FF443366",
+      "id": 5,
+      "title": "Layer (Square)",
+      "type": "M_Layer",
+      "pos": [
+        278.2219,
+        685.3575
+      ],
+      "size": {
+        "0": 200.0,
+        "1": 417.39337
+      },
+      "flags": {},
+      "order": 13,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "Layer",
+          "type": "LAYER",
+          "links": [
+            10
+          ],
+          "slot_index": 0
+        },
+        {
+          "name": "Alpha",
+          "type": "MASK",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "M_Layer"
+      },
+      "widgets_values": [
+        "Output",
+        true,
+        true,
+        false,
+        false,
+        0
+      ]
+    },
+    {
+      "bgcolor": "#FF443366",
+      "id": 1,
+      "title": "Output",
+      "type": "M_Output",
+      "pos": [
+        1461.2656,
+        163.82417
+      ],
+      "size": {
+        "0": 247.73558,
+        "1": 317.09207
+      },
+      "flags": {},
+      "order": 14,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "Result",
+          "type": "IMAGE",
+          "link": 7
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "M_Output"
+      },
+      "widgets_values": [
+        "Output"
+      ]
+    }
+  ],
+  "links": [
+    [
+      1,
+      2,
+      0,
+      9,
+      0,
+      "MODEL"
+    ],
+    [
+      2,
+      4,
+      1,
+      10,
+      0,
+      "CLIP"
+    ],
+    [
+      3,
+      6,
+      0,
+      3,
+      3,
+      "CONDITIONING"
+    ],
+    [
+      4,
+      7,
+      0,
+      3,
+      4,
+      "CONDITIONING"
+    ],
+    [
+      5,
+      9,
+      0,
+      3,
+      0,
+      "MODEL"
+    ],
+    [
+      6,
+      3,
+      0,
+      11,
+      2,
+      "BASIC_PIPE"
+    ],
+    [
+      7,
+      11,
+      0,
+      1,
+      0,
+      "IMAGE"
+    ],
+    [
+      8,
+      12,
+      0,
+      11,
+      1,
+      "MASK"
+    ],
+    [
+      9,
+      13,
+      0,
+      11,
+      0,
+      "IMAGE"
+    ],
+    [
+      10,
+      5,
+      0,
+      13,
+      0,
+      "LAYER"
+    ],
+    [
+      11,
+      8,
+      0,
+      12,
+      0,
+      "LAYER"
+    ],
+    [
+      12,
+      14,
+      0,
+      2,
+      0,
+      "MODEL"
+    ],
+    [
+      13,
+      14,
+      1,
+      2,
+      1,
+      "CLIP"
+    ],
+    [
+      14,
+      10,
+      0,
+      14,
+      1,
+      "CLIP"
+    ],
+    [
+      15,
+      4,
+      0,
+      14,
+      0,
+      "MODEL"
+    ],
+    [
+      16,
+      15,
+      0,
+      3,
+      2,
+      "VAE"
+    ],
+    [
+      17,
+      14,
+      1,
+      6,
+      0,
+      "CLIP"
+    ],
+    [
+      18,
+      14,
+      1,
+      7,
+      0,
+      "CLIP"
+    ],
+    [
+      19,
+      14,
+      1,
+      3,
+      1,
+      "CLIP"
+    ]
+  ],
+  "groups": [],
+  "config": {},
+  "extra": {
+    "manual_config": {
+      "preset_name": "realtime inpainting",
+      "canvas_position": "0.6091930060662465,0,0,0.6091930060662465,385.7386921254423,82.33242566898588"
+    }
+  },
+  "version": 0.4
+}

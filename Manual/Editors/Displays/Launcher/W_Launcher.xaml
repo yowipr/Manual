@@ -1,0 +1,430 @@
+﻿<displays:W_WindowContent x:Class="Manual.Editors.Displays.Launcher.W_Launcher"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Manual.Editors.Displays.Launcher" 
+                       
+             xmlns:core="clr-namespace:Manual.Core"
+                       
+             d:DataContext="{d:DesignInstance Type=local:LauncherModel}"
+                       
+             xmlns:themes="clr-namespace:ManualToolkit.Themes;assembly=ManualToolkit"
+                       xmlns:displays="clr-namespace:Manual.Editors.Displays"
+                       
+                       mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+
+    <displays:W_WindowContent.Resources>
+
+        <!--<DataTemplate DataType="{x:Type local:L_Store}">
+            <local:L_StoreView/>
+        </DataTemplate>-->
+        
+    </displays:W_WindowContent.Resources>
+
+    <Grid Margin="5 5 5 5">
+
+
+        <!--ASSETS-->
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="40"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+
+            <!--header-->
+            <Image Source="{StaticResource manuallogo2}" RenderOptions.BitmapScalingMode="HighQuality" HorizontalAlignment="Left" Height="40" Margin="20 -40 0 0"/>
+            
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="20 0">
+
+                <!--DOWNLOADS-->
+                <Button x:Name="downloadMenu" Background="Transparent" Click="downloadMenu_Click" d:Opacity="1" Opacity="1"
+                        HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10 0">
+                    <!-- ContextMenu abre al hacer clic derecho, para abrir al hacer clic normal, ver paso 3 -->  
+                    <Grid>
+                        <themes:IconText IconSource="{StaticResource arrow-top-right-on-square}" Texto="Downloads"/>
+                        <TextBlock d:Text="9" Text="{Binding Downloads.Count}" HorizontalAlignment="Right" Margin="0 0 -3 0" FontSize="11" Opacity="0.7"/>
+                    </Grid>
+                    
+                </Button>
+
+                <Popup x:Name="downloadPopup" Placement="Bottom" HorizontalOffset="-200" AllowsTransparency="True"
+                       StaysOpen="False" IsOpen="False" PlacementTarget="{Binding ElementName=downloadMenu}">
+                    <Border x:Name="borderdownloadPopup" Width="300" Height="400" Background="{StaticResource bg4}" CornerRadius="22">
+                        <ScrollViewer Margin="5">
+                        <ItemsControl ItemsSource="{Binding Downloads}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel Orientation="Vertical"/>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                        <local:DownloadItemView Margin="0 1"/>
+                                    </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                        </ScrollViewer>
+                    </Border>
+                </Popup>
+                
+                
+
+
+                <!--USER-->
+                <Grid  x:Name="userIcon" d:Opacity="1" Opacity="1">
+                    <themes:ImageBorder ImageSource="{StaticResource user-circle}" CornerRadius="20" ToolTip="You"
+                       Width="40" Height="40" />
+                    <themes:ImageBorder d:ImageSource="{StaticResource user-circle}" ImageSource="{Binding User.ImageSource}" CornerRadius="20" ToolTip="{Binding User.Name}"
+                                      Width="40" Height="40"/>
+                </Grid>
+                
+
+
+            </StackPanel>
+
+            
+            <!--CONTENT SECTION-->
+            <Grid x:Name="sectionGrid" Grid.Row="1" d:Visibility="Visible" Opacity="1">
+                <ContentPresenter Content="{Binding CurrentSection}"/>
+            </Grid>
+            
+        </Grid>
+        
+
+        
+        
+        
+        <!--SETUP-->
+
+        <Grid x:Name="allSetupGrid">
+            
+            <!--setup-->
+        <Grid x:Name="setupGrid" d:Visibility="Collapsed" Visibility="Collapsed">
+            <themes:Loader Opacity="0.2"/>
+            <TextBlock x:Name="mainText" Text="Preparing..."  Opacity="0.95" VerticalAlignment="Center" HorizontalAlignment="Center" RenderOptions.BitmapScalingMode="HighQuality"
+                       FontSize="31">
+                <TextBlock.Effect>
+                    <DropShadowEffect BlurRadius="30" ShadowDepth="0" Direction="0" 
+                                      Color="White" Opacity="0.2"/>
+                </TextBlock.Effect>
+            </TextBlock>
+        </Grid>
+        
+
+            <!--sign in-->
+        <Grid x:Name="setupGrid_signIn" d:Visibility="Collapsed" Visibility="Collapsed">
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="0.3*"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0">
+                <TextBlock x:Name="mainText_signIn" Text="Welcome to Manual Beta" Opacity="0.95"
+                       VerticalAlignment="Center" HorizontalAlignment="Center"
+                       RenderOptions.BitmapScalingMode="HighQuality"
+                 FontSize="31">
+                <TextBlock.Effect>
+                    <DropShadowEffect BlurRadius="30" ShadowDepth="0" Direction="0" 
+                                Color="White" Opacity="0.1"/>
+                </TextBlock.Effect>
+                </TextBlock>
+
+                <TextBlock x:Name="mainText_signIn2" Text="Sign In for better experience." FontSize="20" Opacity="0.7" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0 70 0 0"/>
+            </Grid>
+
+            <Grid x:Name="signIn_grid" Grid.Row="1">
+                <StackPanel Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center"
+                            RenderTransformOrigin="0.5 0.5">
+                    <StackPanel.RenderTransform>
+                        <ScaleTransform ScaleX="1.28" ScaleY="1.28"/>
+                    </StackPanel.RenderTransform>
+
+
+
+                    <Button x:Name="loginBtn" Width="200" Height="50" Background="{StaticResource fg_high}" Margin="0 -50 0 0"
+                HorizontalAlignment="Center" VerticalAlignment="Center" Click="Button_ClickLogin" themes:CustomFields.CornerRadius="25">
+
+                        <Button.Effect>
+                            <DropShadowEffect BlurRadius="50" ShadowDepth="0" Color="blue" Opacity="0.2"/>
+                        </Button.Effect>
+                        
+                        <StackPanel Margin="0 -9 0 0">
+                            <Label FontWeight="Bold" Margin="0, -2" FontSize="18" Content="Sign In" HorizontalAlignment="Center"/>
+                            <Label Opacity="0.7" FontSize="11" Margin="0, -10" Content="or register" HorizontalAlignment="Center"/>
+                        </StackPanel>
+
+                    </Button>
+
+                    <StackPanel x:Name="loginLoading" Visibility="Collapsed" HorizontalAlignment="Center">
+                        <themes:Loader/>
+                        <Label FontSize="16" Content="login via web browser..."/>
+                    </StackPanel>
+
+                    <Button Opacity="0.7" Margin="0 20 0 5" x:Name="btnLink" d:Visibility="Visible" Visibility="Collapsed" Cursor="Hand" Click="Button_Click_Link" Background="Transparent" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Bottom">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock>if you browser hasn't opened, you can</TextBlock>
+                            <TextBlock Margin="5 0" TextDecorations="Underline">copy the URL 📋</TextBlock>
+                            </StackPanel>
+                    </Button>
+                        <Button Opacity="0.6" Margin="0 0 0 5" x:Name="btnToken" d:Visibility="Visible" Visibility="Collapsed" Cursor="Hand" Click="Button_Click_Token" Background="Transparent" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Bottom">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock></TextBlock>
+                                <TextBlock Margin="5 0" TextDecorations="Underline">Paste token 📋</TextBlock>
+                            </StackPanel>
+                            <Button.RenderTransform>
+                                <ScaleTransform ScaleX="0.8" ScaleY="0.8"/>
+                            </Button.RenderTransform>
+                        </Button>
+                        <TextBlock x:Name="copiedText" d:Visibility="Visible" Visibility="Collapsed" Opacity="0.6" Text="Copied to Clipboard!" HorizontalAlignment="Center"/>
+
+                    
+      
+                </StackPanel>
+
+                
+                <Button x:Name="maybeLaterLoginBtn" Cursor="Hand" Click="Button_Skip" Background="Transparent" Grid.Row="1" Margin="0, 20" HorizontalAlignment="Center" VerticalAlignment="Bottom">
+                    <TextBlock TextDecorations="Underline" >maybe later</TextBlock>
+                </Button>
+
+            </Grid>
+
+         
+            
+        </Grid>
+
+        
+        
+        <!--comfy-->
+            <Grid x:Name="setupGrid_comfy" d:Visibility="Collapsed" Visibility="Collapsed">
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="0.3*"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+
+                <Grid Grid.Row="0">
+                    <TextBlock x:Name="mainText_comfy" Text="Manual needs ComfyUI to work with AI" Opacity="0.95"
+                  VerticalAlignment="Center" HorizontalAlignment="Center"
+                  RenderOptions.BitmapScalingMode="HighQuality"
+            FontSize="31">
+                        <TextBlock.Effect>
+                            <DropShadowEffect BlurRadius="30" ShadowDepth="0" Direction="0" 
+                           Color="White" Opacity="0.1"/>
+                        </TextBlock.Effect>
+                    </TextBlock>
+
+                    <TextBlock x:Name="mainText_comfy2" Text="you can click on Locate if you already have it." FontSize="20" Opacity="0.7" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0 70 0 0"/>
+                </Grid>
+
+                <Grid x:Name="comfy_grid" Grid.Row="1">
+                    <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center"
+                       RenderTransformOrigin="0.5 0.5">
+                        <StackPanel.RenderTransform>
+                            <ScaleTransform ScaleX="1.28" ScaleY="1.28"/>
+                        </StackPanel.RenderTransform>
+
+
+                        <Button Width="170" x:Name="downloadComfyBtn" Click="Click_comfyDownload" Style="{StaticResource ButtonBig}" Height="40">
+
+                            <StackPanel Orientation="Horizontal">
+                              <TextBlock Text="Download ComfyUI" Foreground="{StaticResource bg}"/>
+                              <TextBlock Text=" 5GB" Foreground="{StaticResource bg}" Opacity="0.56" FontSize="12"/>
+                            </StackPanel>
+                        </Button>
+                        <Button Click="Click_comfyLocate" Style="{StaticResource ButtonBig}" Height="40" Background="Transparent" BorderThickness="1" BorderBrush="White">
+                            <themes:IconText Texto="Locate It" IconSource="{StaticResource arrow-top-right-on-square}"/>
+                        </Button>
+
+
+
+                    </StackPanel>
+
+
+                    <Button Cursor="Hand" Click="Button_AICloud" Background="Transparent" Grid.Row="1" Margin="0, 20" HorizontalAlignment="Center" VerticalAlignment="Bottom">
+                        <TextBlock Foreground="{StaticResource fg_sub}" TextDecorations="Underline" Text="I want to use AI in Cloud">
+                            <TextBlock.Effect>
+                                <DropShadowEffect BlurRadius="40" Color="Purple"/>
+                            </TextBlock.Effect>
+                        </TextBlock>
+                    </Button>
+
+                </Grid>
+
+
+
+            </Grid>
+
+
+            <!--extra templates-->
+            <Grid x:Name="setupGrid_extraTemplates" d:Visibility="Collapsed" Visibility="Collapsed">
+                <TextBlock x:Name="mainText_extraTemplates" Text="Also, you can download extra Templates" Opacity="0.95"
+                              VerticalAlignment="Top" HorizontalAlignment="Center"
+                              RenderOptions.BitmapScalingMode="HighQuality"
+                        FontSize="31">   
+                    
+                    <TextBlock.Effect>
+                        <DropShadowEffect BlurRadius="30" ShadowDepth="0" Direction="0" 
+       Color="White" Opacity="0.1"/>
+                    </TextBlock.Effect>
+                </TextBlock>
+                
+                
+            </Grid>
+
+
+            <!--final preparing-->
+            <Grid x:Name="setupGrid_finalPreparing" d:Visibility="Visible" Visibility="Collapsed" Opacity="0.9">
+             
+          
+                
+                <StackPanel x:Name="mainText_panelFinal" VerticalAlignment="Center" d:Visibility="Collapsed" Visibility="Visible">
+
+                    <TextBlock x:Name="mainText_finalPreparing" d:Opacity="1" Opacity="1"
+                           Text="We're preparing everything for you"
+                              VerticalAlignment="Center" HorizontalAlignment="Center"
+                              RenderOptions.BitmapScalingMode="HighQuality"
+                        FontSize="31">
+
+                    <TextBlock.Effect>
+                        <DropShadowEffect BlurRadius="30" ShadowDepth="0" Direction="0" 
+       Color="White" Opacity="0.1"/>
+                    </TextBlock.Effect>
+                </TextBlock>
+
+                        
+                        
+                        
+                    <StackPanel x:Name="mainText_finalPreparing2" HorizontalAlignment="Center" Orientation="Horizontal" Margin="0 10 0 0" d:Opacity="1" Opacity="0">
+                        
+                        
+                    <TextBlock
+                           Text="We'll let you know with a "
+                       VerticalAlignment="Center" HorizontalAlignment="Center"
+                       RenderOptions.BitmapScalingMode="HighQuality"
+                 FontSize="31" >
+
+                    <TextBlock.Effect>
+                        <DropShadowEffect BlurRadius="30" ShadowDepth="0" Direction="0" 
+Color="White" Opacity="0.1"/>
+                    </TextBlock.Effect>
+                </TextBlock>
+
+
+
+                        <Grid>
+
+                            <!--glow-->
+                            <TextBlock x:Name="final_blinkGlow" FontSize="31" Text="blink" d:Opacity="1" Opacity="0"
+              VerticalAlignment="Center" HorizontalAlignment="Center"
+               RenderOptions.BitmapScalingMode="HighQuality">
+
+                                <TextBlock.Effect>
+                                    <DropShadowEffect BlurRadius="50" Color="Orange" Opacity="1"/>
+                                </TextBlock.Effect>
+                            </TextBlock>
+
+                            
+                            <!--blink-->
+                            <TextBlock  FontSize="31" Text="blink" d:Opacity="1" Opacity="1"
+                                   VerticalAlignment="Center" HorizontalAlignment="Center"
+                                    RenderOptions.BitmapScalingMode="HighQuality">
+                                
+                            </TextBlock>
+                     
+                           
+                        </Grid>
+
+
+
+
+                        <TextBlock 
+                           Text=" when all it's ready."
+                       VerticalAlignment="Center" HorizontalAlignment="Center"
+                       RenderOptions.BitmapScalingMode="HighQuality"
+                 FontSize="31">
+
+                            <TextBlock.Effect>
+                                <DropShadowEffect BlurRadius="30" ShadowDepth="0" Direction="0" 
+Color="White" Opacity="0.1"/>
+                            </TextBlock.Effect>
+                        </TextBlock>
+                        
+                        
+
+                    </StackPanel>
+    
+    
+    
+                </StackPanel>
+
+
+
+                <!--FINISHED-->
+                <StackPanel x:Name="setup_startManual" d:Visibility="Collapsed" Visibility="Collapsed" VerticalAlignment="Center" HorizontalAlignment="Center">
+
+                    <!--<TextBlock x:Name="mainText_finalPreparing3" d:Opacity="1" Opacity="1"
+        Text="Ready."
+           VerticalAlignment="Center" HorizontalAlignment="Center"
+           RenderOptions.BitmapScalingMode="HighQuality"
+     FontSize="31">
+
+                        <TextBlock.Effect>
+                            <DropShadowEffect BlurRadius="30" ShadowDepth="0" Direction="0" 
+Color="White" Opacity="0.1"/>
+                        </TextBlock.Effect>
+                    </TextBlock>-->
+
+                    <Grid x:Name="fin_btnLoad">
+                        <themes:Loader/>
+                        <Button x:Name="startManualBtn" Width="200" Height="50" Background="{StaticResource fg_high2}" Margin="0 0 0 0"
+                               HorizontalAlignment="Center"
+                                VerticalAlignment="Center" Click="Button_ClickStartManual" themes:CustomFields.CornerRadius="25" RenderOptions.BitmapScalingMode="HighQuality">
+
+                            <Button.Effect>
+                                <DropShadowEffect BlurRadius="400" ShadowDepth="0" Color="BlueViolet" Opacity="1"/>
+                            </Button.Effect>
+
+                            <Label FontWeight="Bold" Margin="0, 0" FontSize="18" Content="Start Manual" HorizontalAlignment="Center"/>
+
+
+                        </Button>
+                    </Grid>
+                </StackPanel>
+
+
+            </Grid>
+            
+
+            <!--SKIP-->
+            <Grid x:Name="bottomSec" VerticalAlignment="Bottom" Margin="20" d:Visibility="Collapsed" Visibility="Collapsed" Grid.Row="2">
+             
+                <Button x:Name="skipButton" Click="Button_Skip" Background="{StaticResource bg}" Content="Skip" Width="80" HorizontalAlignment="Right" Margin="30 0" Opacity="0.76" FontSize="16"/>
+
+                <Button x:Name="backButton" Click="Back_Click" Background="Transparent" RenderTransformOrigin="0.5 0.5" HorizontalAlignment="Left" Margin="0 0" Opacity="0.76">
+                    <Button.RenderTransform>
+                        <RotateTransform Angle="-90"/>
+                    </Button.RenderTransform>
+                    <Image Source="{StaticResource chevron-up}"/>
+                    
+                </Button>
+                
+                
+            </Grid>
+            
+
+            <Button x:Name="debugReload" Content="reload" Background="{StaticResource log_warning}" Foreground="Black" Click="Reload" Width="50" Opacity="0.3" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0 50 0 0"/>
+        </Grid>
+
+
+
+
+
+
+
+    </Grid>
+    
+</displays:W_WindowContent>

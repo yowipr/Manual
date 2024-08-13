@@ -1,0 +1,478 @@
+{
+  "fullScreen": false,
+  "tool": "Image Generator",
+  "FloatingEditors": [],
+  "Id": 0,
+  "Name": "Default",
+  "Length0": 1.0,
+  "Length1": 1.0,
+  "Space0": {
+    "$type": "Manual.Core.WorkspaceColumn, Manual",
+    "Length0": 1249.0,
+    "Length1": 191.0,
+    "Space0": {
+      "$type": "Manual.Core.WorkspaceColumn, Manual",
+      "Length0": 206.20377350487115,
+      "Length1": 1042.7962264951288,
+      "Space0": {
+        "$type": "Manual.Core.WorkspaceColumn, Manual",
+        "Length0": 36.0,
+        "Length1": 324.0,
+        "Space0": {
+          "$type": "Manual.Core.WorkspaceEditor, Manual",
+          "RegisteredEditors": [
+            {
+              "Name": "Tools",
+              "EditorObject": {
+                "$type": "Manual.Editors.ED_Tools, Manual"
+              }
+            },
+            {
+              "Name": "Canvas",
+              "EditorObject": {
+                "$type": "Manual.Editors.ED_CanvasView, Manual",
+                "ID": "66656692-e373-4e41-9b9d-5e0724a04e22",
+                "ViewportCamera": {},
+                "Is3DView": false,
+                "EnableGrid": true,
+                "TopSection": true,
+                "CanvasMatrix": "Identity",
+                "ShowOverlays": true,
+                "GridWidth": 0.0,
+                "GridHeight": 0.0
+              }
+            },
+            {
+              "Name": "Layers",
+              "EditorObject": {
+                "$type": "Manual.Editors.ED_LayerView, Manual"
+              }
+            },
+            {
+              "Name": "History 5D",
+              "EditorObject": {
+                "$type": "Manual.Editors.ED_History, Manual"
+              }
+            },
+            {
+              "Name": "Properties",
+              "EditorObject": {
+                "$type": "Manual.Editors.ED_ToolProperties, Manual",
+                "EnablePalette": true,
+                "SwitchPaletteCommand": {
+                  "$type": "CommunityToolkit.Mvvm.Input.RelayCommand, CommunityToolkit.Mvvm"
+                }
+              }
+            },
+            {
+              "Name": "Output",
+              "EditorObject": {
+                "$type": "Manual.Editors.ED_Output, Manual",
+                "SectionIndex": 0
+              }
+            },
+            {
+              "Name": "Latent Nodes Editor",
+              "EditorObject": {
+                "$type": "Manual.Editors.ED_LatentNodes, Manual",
+                "loaded": false,
+                "GridWidth": 0.0,
+                "GridHeight": 0.0,
+                "CanvasMatrix": "0.48314244798567996,0,0,0.48314244798567996,230.51859935768547,-82.90405355021053"
+              }
+            }
+          ],
+          "SelectedEditor": {
+            "Name": "Tools",
+            "EditorObject": {
+              "$type": "Manual.Editors.ED_Tools, Manual"
+            }
+          }
+        },
+        "Space1": {
+          "$type": "Manual.Core.WorkspaceEditor, Manual",
+          "RegisteredEditors": [
+            {
+              "Name": "Tools",
+              "EditorObject": {
+                "$type": "Manual.Editors.ED_Tools, Manual"
+              }
+            },
+            {
+              "Name": "Canvas",
+              "EditorObject": {
+                "$type": "Manual.Editors.ED_CanvasView, Manual",
+                "ID": "ba34aead-2ebd-4a45-b928-e73ec33f980b",
+                "ViewportCamera": {},
+                "Is3DView": false,
+                "EnableGrid": true,
+                "TopSection": true,
+                "CanvasMatrix": "Identity",
+                "ShowOverlays": true,
+                "GridWidth": 0.0,
+                "GridHeight": 0.0
+              }
+            },
+            {
+              "Name": "Layers",
+              "EditorObject": {
+                "$type": "Manual.Editors.ED_LayerView, Manual"
+              }
+            },
+            {
+              "Name": "History 5D",
+              "EditorObject": {
+                "$type": "Manual.Editors.ED_History, Manual"
+              }
+            },
+            {
+              "Name": "Properties",
+              "EditorObject": {
+                "$type": "Manual.Editors.ED_ToolProperties, Manual",
+                "EnablePalette": true,
+                "SwitchPaletteCommand": {
+                  "$type": "CommunityToolkit.Mvvm.Input.RelayCommand, CommunityToolkit.Mvvm"
+                }
+              }
+            },
+            {
+              "Name": "Output",
+              "EditorObject": {
+                "$type": "Manual.Editors.ED_Output, Manual",
+                "SectionIndex": 0
+              }
+            },
+            {
+              "Name": "Latent Nodes Editor",
+              "EditorObject": {
+                "$type": "Manual.Editors.ED_LatentNodes, Manual",
+                "loaded": false,
+                "GridWidth": 0.0,
+                "GridHeight": 0.0,
+                "CanvasMatrix": "0.48314244798567996,0,0,0.48314244798567996,230.51859935768547,-82.90405355021053"
+              }
+            }
+          ],
+          "SelectedEditor": {
+            "Name": "Properties",
+            "EditorObject": {
+              "$type": "Manual.Editors.ED_ToolProperties, Manual",
+              "EnablePalette": true,
+              "SwitchPaletteCommand": {
+                "$type": "CommunityToolkit.Mvvm.Input.RelayCommand, CommunityToolkit.Mvvm"
+              }
+            }
+          }
+        }
+      },
+      "Space1": {
+        "$type": "Manual.Core.WorkspaceRow, Manual",
+        "Length0": 782.0,
+        "Length1": 30.0,
+        "Space0": {
+          "$type": "Manual.Core.WorkspaceEditor, Manual",
+          "RegisteredEditors": [
+            {
+              "Name": "Tools",
+              "EditorObject": {
+                "$type": "Manual.Editors.ED_Tools, Manual"
+              }
+            },
+            {
+              "Name": "Canvas",
+              "EditorObject": {
+                "$type": "Manual.Editors.ED_CanvasView, Manual",
+                "ID": "d61a9ca0-1df3-42a8-aca0-fa4541ebfefd",
+                "ViewportCamera": {},
+                "Is3DView": false,
+                "EnableGrid": true,
+                "TopSection": true,
+                "CanvasMatrix": "0.6513671875,0,0,0.6513671875,516.2269388652022,373.25447042641",
+                "ShowOverlays": true,
+                "GridWidth": 1042.7962264951288,
+                "GridHeight": 747.0
+              }
+            },
+            {
+              "Name": "Layers",
+              "EditorObject": {
+                "$type": "Manual.Editors.ED_LayerView, Manual"
+              }
+            },
+            {
+              "Name": "History 5D",
+              "EditorObject": {
+                "$type": "Manual.Editors.ED_History, Manual"
+              }
+            },
+            {
+              "Name": "Properties",
+              "EditorObject": {
+                "$type": "Manual.Editors.ED_ToolProperties, Manual",
+                "EnablePalette": true,
+                "SwitchPaletteCommand": {
+                  "$type": "CommunityToolkit.Mvvm.Input.RelayCommand, CommunityToolkit.Mvvm"
+                }
+              }
+            },
+            {
+              "Name": "Output",
+              "EditorObject": {
+                "$type": "Manual.Editors.ED_Output, Manual",
+                "SectionIndex": 0
+              }
+            },
+            {
+              "Name": "Latent Nodes Editor",
+              "EditorObject": {
+                "$type": "Manual.Editors.ED_LatentNodes, Manual",
+                "loaded": false,
+                "GridWidth": 0.0,
+                "GridHeight": 0.0,
+                "CanvasMatrix": "0.48314244798567996,0,0,0.48314244798567996,230.51859935768547,-82.90405355021053"
+              }
+            }
+          ],
+          "SelectedEditor": {
+            "Name": "Canvas",
+            "EditorObject": {
+              "$type": "Manual.Editors.ED_CanvasView, Manual",
+              "ID": "d61a9ca0-1df3-42a8-aca0-fa4541ebfefd",
+              "ViewportCamera": {},
+              "Is3DView": false,
+              "EnableGrid": true,
+              "TopSection": true,
+              "CanvasMatrix": "0.6513671875,0,0,0.6513671875,516.2269388652022,373.25447042641",
+              "ShowOverlays": true,
+              "GridWidth": 1042.7962264951288,
+              "GridHeight": 747.0
+            }
+          }
+        },
+        "Space1": {
+          "$type": "Manual.Core.WorkspaceEditor, Manual",
+          "RegisteredEditors": [
+            {
+              "Name": "Tools",
+              "EditorObject": {
+                "$type": "Manual.Editors.ED_Tools, Manual"
+              }
+            },
+            {
+              "Name": "Canvas",
+              "EditorObject": {
+                "$type": "Manual.Editors.ED_CanvasView, Manual",
+                "ID": "6f1fba7e-a5d1-4721-bf20-b41599a81962",
+                "ViewportCamera": {},
+                "Is3DView": false,
+                "EnableGrid": true,
+                "TopSection": true,
+                "CanvasMatrix": "Identity",
+                "ShowOverlays": true,
+                "GridWidth": 0.0,
+                "GridHeight": 0.0
+              }
+            },
+            {
+              "Name": "Layers",
+              "EditorObject": {
+                "$type": "Manual.Editors.ED_LayerView, Manual"
+              }
+            },
+            {
+              "Name": "History 5D",
+              "EditorObject": {
+                "$type": "Manual.Editors.ED_History, Manual"
+              }
+            },
+            {
+              "Name": "Properties",
+              "EditorObject": {
+                "$type": "Manual.Editors.ED_ToolProperties, Manual",
+                "EnablePalette": true,
+                "SwitchPaletteCommand": {
+                  "$type": "CommunityToolkit.Mvvm.Input.RelayCommand, CommunityToolkit.Mvvm"
+                }
+              }
+            },
+            {
+              "Name": "Output",
+              "EditorObject": {
+                "$type": "Manual.Editors.ED_Output, Manual",
+                "SectionIndex": 0
+              }
+            },
+            {
+              "Name": "Latent Nodes Editor",
+              "EditorObject": {
+                "$type": "Manual.Editors.ED_LatentNodes, Manual",
+                "loaded": false,
+                "GridWidth": 1042.7962264951288,
+                "GridHeight": 0.0,
+                "CanvasMatrix": "0.48314244798567996,0,0,0.48314244798567996,230.51859935768547,-82.90405355021053"
+              }
+            }
+          ],
+          "SelectedEditor": {
+            "Name": "Latent Nodes Editor",
+            "EditorObject": {
+              "$type": "Manual.Editors.ED_LatentNodes, Manual",
+              "loaded": false,
+              "GridWidth": 1042.7962264951288,
+              "GridHeight": 0.0,
+              "CanvasMatrix": "0.48314244798567996,0,0,0.48314244798567996,230.51859935768547,-82.90405355021053"
+            }
+          }
+        }
+      }
+    },
+    "Space1": {
+      "$type": "Manual.Core.WorkspaceRow, Manual",
+      "Length0": 1.0,
+      "Length1": 1.0,
+      "Space0": {
+        "$type": "Manual.Core.WorkspaceEditor, Manual",
+        "RegisteredEditors": [
+          {
+            "Name": "Tools",
+            "EditorObject": {
+              "$type": "Manual.Editors.ED_Tools, Manual"
+            }
+          },
+          {
+            "Name": "Canvas",
+            "EditorObject": {
+              "$type": "Manual.Editors.ED_CanvasView, Manual",
+              "ID": "41972fdb-648e-43a7-bb1f-5266e2341743",
+              "ViewportCamera": {},
+              "Is3DView": false,
+              "EnableGrid": true,
+              "TopSection": true,
+              "CanvasMatrix": "Identity",
+              "ShowOverlays": true,
+              "GridWidth": 0.0,
+              "GridHeight": 0.0
+            }
+          },
+          {
+            "Name": "Layers",
+            "EditorObject": {
+              "$type": "Manual.Editors.ED_LayerView, Manual"
+            }
+          },
+          {
+            "Name": "History 5D",
+            "EditorObject": {
+              "$type": "Manual.Editors.ED_History, Manual"
+            }
+          },
+          {
+            "Name": "Properties",
+            "EditorObject": {
+              "$type": "Manual.Editors.ED_ToolProperties, Manual",
+              "EnablePalette": true,
+              "SwitchPaletteCommand": {
+                "$type": "CommunityToolkit.Mvvm.Input.RelayCommand, CommunityToolkit.Mvvm"
+              }
+            }
+          },
+          {
+            "Name": "Output",
+            "EditorObject": {
+              "$type": "Manual.Editors.ED_Output, Manual",
+              "SectionIndex": 0
+            }
+          },
+          {
+            "Name": "Latent Nodes Editor",
+            "EditorObject": {
+              "$type": "Manual.Editors.ED_LatentNodes, Manual",
+              "loaded": false,
+              "GridWidth": 0.0,
+              "GridHeight": 0.0,
+              "CanvasMatrix": "0.48314244798567996,0,0,0.48314244798567996,230.51859935768547,-82.90405355021053"
+            }
+          }
+        ],
+        "SelectedEditor": {
+          "Name": "History 5D",
+          "EditorObject": {
+            "$type": "Manual.Editors.ED_History, Manual"
+          }
+        }
+      },
+      "Space1": {
+        "$type": "Manual.Core.WorkspaceEditor, Manual",
+        "RegisteredEditors": [
+          {
+            "Name": "Tools",
+            "EditorObject": {
+              "$type": "Manual.Editors.ED_Tools, Manual"
+            }
+          },
+          {
+            "Name": "Canvas",
+            "EditorObject": {
+              "$type": "Manual.Editors.ED_CanvasView, Manual",
+              "ID": "301bb190-f4b9-40e9-9147-dc62f4afa444",
+              "ViewportCamera": {},
+              "Is3DView": false,
+              "EnableGrid": true,
+              "TopSection": true,
+              "CanvasMatrix": "Identity",
+              "ShowOverlays": true,
+              "GridWidth": 0.0,
+              "GridHeight": 0.0
+            }
+          },
+          {
+            "Name": "Layers",
+            "EditorObject": {
+              "$type": "Manual.Editors.ED_LayerView, Manual"
+            }
+          },
+          {
+            "Name": "History 5D",
+            "EditorObject": {
+              "$type": "Manual.Editors.ED_History, Manual"
+            }
+          },
+          {
+            "Name": "Properties",
+            "EditorObject": {
+              "$type": "Manual.Editors.ED_ToolProperties, Manual",
+              "EnablePalette": true,
+              "SwitchPaletteCommand": {
+                "$type": "CommunityToolkit.Mvvm.Input.RelayCommand, CommunityToolkit.Mvvm"
+              }
+            }
+          },
+          {
+            "Name": "Output",
+            "EditorObject": {
+              "$type": "Manual.Editors.ED_Output, Manual",
+              "SectionIndex": 0
+            }
+          },
+          {
+            "Name": "Latent Nodes Editor",
+            "EditorObject": {
+              "$type": "Manual.Editors.ED_LatentNodes, Manual",
+              "loaded": false,
+              "GridWidth": 0.0,
+              "GridHeight": 0.0,
+              "CanvasMatrix": "0.48314244798567996,0,0,0.48314244798567996,230.51859935768547,-82.90405355021053"
+            }
+          }
+        ],
+        "SelectedEditor": {
+          "Name": "Layers",
+          "EditorObject": {
+            "$type": "Manual.Editors.ED_LayerView, Manual"
+          }
+        }
+      }
+    }
+  },
+  "Space1": null
+}

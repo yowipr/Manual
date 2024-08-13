@@ -1,0 +1,185 @@
+﻿<UserControl x:Class="Manual.Editors.OutputView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Manual.Editors"
+              xmlns:core="clr-namespace:Manual.Core"
+             mc:Ignorable="d" 
+             xmlns:themes="clr-namespace:ManualToolkit.Themes;assembly=ManualToolkit" xmlns:obj="clr-namespace:Manual.Objects"
+             d:DataContext="{d:DesignInstance Type=core:Output}"
+             d:DesignHeight="450" d:DesignWidth="400">
+
+
+    <!--Style of the UserControl-->
+    <UserControl.Resources>
+        <ResourceDictionary>
+
+            <Style x:Key="TextBoxStyle" TargetType="TextBox">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextAlignment" Value="Left" />
+                <Setter Property="Background" Value="Transparent" />
+                <Setter Property="TextWrapping" Value="WrapWithOverflow" />
+                <Setter Property="IsReadOnly" Value="True" />
+                <Setter Property="Width" Value="Auto" />
+                <Setter Property="Height" Value="Auto" />
+                <Setter Property="Foreground" Value="{StaticResource fg}" />
+                <Setter Property="FontWeight" Value="Bold" />
+                <Setter Property="Margin" Value="0,5,0,0" />
+            </Style>
+
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <Border d:Background="{StaticResource bg}" CornerRadius="5">
+    <Grid x:Name="gridContext" Background="Transparent">
+
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="{StaticResource EditorHeaderHeight}"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+
+
+        <!--nav bar-->
+        <Grid Margin="40,0,0,0" Grid.Row="0" d:Background="{StaticResource bg}">
+            
+            <StackPanel Orientation="Horizontal" Style="{x:Null}" HorizontalAlignment="Left" VerticalAlignment="Center">
+                
+                    <Menu>
+                        
+                        <Menu.Resources>
+                            <Style TargetType="{x:Type MenuItem}" BasedOn="{StaticResource {x:Type MenuItem}}">
+                                <EventSetter Event="Click" Handler="MenuItem_Click"/>
+                            </Style>
+                        </Menu.Resources>
+                        
+                        <MenuItem Header="Server">
+                            <MenuItem Header="Run"/>
+                            <MenuItem Header="Close"/>
+                            <Separator/>
+                            <MenuItem Header="Clear All Consoles"/>
+                            <MenuItem Header="Clear Console"/>
+
+                        </MenuItem>
+                    </Menu>
+                
+                </StackPanel>
+            
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" RenderTransformOrigin="1, 1">
+                    <StackPanel.RenderTransform>
+                        <ScaleTransform ScaleX="0.7" ScaleY="0.7"/>
+                    </StackPanel.RenderTransform>
+
+                    <Button Width="80" Content="Clear All" Click="Button_Click_Clear_All"/>
+                    <Button Width="60" Content="Clear" Click="Button_Click_Clear"/>
+                </StackPanel>
+        </Grid>
+
+        <!--Content-->
+            <Grid Grid.Row="1">
+
+                <TabControl x:Name="tabControl" SelectedIndex="{Binding DataContext.SectionIndex, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                    Background="Transparent" BorderBrush="{x:Null}" BorderThickness="0">
+
+                    <!--MESSAGES-->
+                    <TabItem Header="Messages">
+                        <Border Grid.Row="1">
+                            <Grid AllowDrop="True" Drop="Grid_Drop">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                <ScrollViewer Margin="0 0 0 30" ScrollChanged="scroll_ScrollChanged">
+
+                                    <ItemsControl Margin="0 0" ItemsSource="{Binding LogEntries}" x:Name="LogItemsControl" HorizontalAlignment="Stretch" VerticalAlignment="Bottom">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <obj:LogMessageView/>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+
+
+                                </ScrollViewer>
+
+                                <Grid Grid.Row="1" Margin="10">
+                                    <StackPanel>
+                                        <!--images and files-->
+                                        <Border Background="{StaticResource bg2}" Height="120" d:Visibility="Visible" Visibility="{Binding UploadedFiles.Count, Converter={StaticResource collectionCountToVisibilityConverter}}">
+                                            <ItemsControl ItemsSource="{Binding UploadedFiles}">
+                                                <ItemsControl.ItemsPanel>
+                                                    <ItemsPanelTemplate>
+                                                        <StackPanel Orientation="Horizontal"/>
+                                                    </ItemsPanelTemplate>
+                                                </ItemsControl.ItemsPanel>
+                                                <ItemsControl.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <!-- Aquí define cómo deseas mostrar cada elemento -->
+                                                        <StackPanel Margin="5">
+                                                            <themes:ImageBorder ImageSource="{Binding}" Width="80" Height="80"/>
+                                                            <TextBlock Text="{Binding ., Converter={StaticResource fileNameConverter}}" HorizontalAlignment="Center"/>
+                                                        </StackPanel>
+                                                    </DataTemplate>
+                                                </ItemsControl.ItemTemplate>
+                                            </ItemsControl>
+                                        </Border>
+
+                                        <!--input-->
+                                        <themes:Input Placeholder="command" Text="{Binding UserMessage}" PreviewKeyDown="Input_PreviewKeyDown" Height="30"
+                         Width="Auto" Background="{StaticResource bg2}" HorizontalContentAlignment="Left"/>
+                                    </StackPanel>
+                                </Grid>
+                            </Grid>
+
+                        </Border>
+
+                    </TabItem>
+
+                    <!--CONSOLE-->
+                    <TabItem Header="Console">
+                        <Border>
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition/>
+                                    <RowDefinition Height="30"/>
+                                </Grid.RowDefinitions>
+                                <ScrollViewer ScrollChanged="scroll_ScrollChanged">
+                                    <TextBox Width="Auto" Height="Auto" Margin="0" TextAlignment="Left" TextWrapping="Wrap" Padding="10" Text="{Binding ConsoleLog}" IsReadOnly="True" Background="{StaticResource bg_full}"/>
+                                </ScrollViewer>
+
+                            </Grid>
+                        </Border>
+
+                    </TabItem>
+
+                    <!--WEBSOCKET-->
+                    <TabItem Header="WebSocket">
+                        <Border>
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition/>
+                                    <RowDefinition Height="30"/>
+                                </Grid.RowDefinitions>
+                                <ScrollViewer ScrollChanged="scroll_ScrollChanged">
+                                    <TextBox Width="Auto" Height="Auto" Margin="0" TextAlignment="Left" TextWrapping="Wrap" Padding="10" Text="{Binding WebSocketLog}" IsReadOnly="True" Background="{StaticResource bg_full}"/>
+                                </ScrollViewer>
+
+                            </Grid>
+                        </Border>
+
+                    </TabItem>
+
+                 
+                </TabControl>
+                
+              
+            
+            
+             
+                
+            </Grid>
+    </Grid>
+    </Border>
+    
+</UserControl>

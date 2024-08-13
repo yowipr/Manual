@@ -1,0 +1,44 @@
+﻿<UserControl x:Class="Manual.Objects.UI.Camera2DView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Manual.Objects"
+             xmlns:ui="clr-namespace:Manual.Objects.UI"
+             mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance Type=ui:Camera2D}"
+
+             xmlns:opentk="clr-namespace:OpenTK.Wpf;assembly=GLWpfControl"
+             xmlns:skia="clr-namespace:SkiaSharp.Views.WPF;assembly=SkiaSharp.Views.WPF"
+             d:DesignHeight="512" d:DesignWidth="512"
+             Width="{Binding RealWidth}"
+             Height="{Binding RealHeight}" IsHitTestVisible="False">
+
+    <Grid>
+
+        <Rectangle Width="50512" Height="10000" Margin="-10000,-10000,-10000,0" Fill="Black" Opacity="{Binding BackgroundOpacity}" d:Opacity="0.33" VerticalAlignment="Top" HorizontalAlignment="Center"/>
+        <Rectangle Width="50512" Height="10000" Margin="-10000 0 -10000 -10000" Fill="Black" Opacity="{Binding BackgroundOpacity}" d:Opacity="0.33" VerticalAlignment="Bottom" HorizontalAlignment="Center"/>
+        <Rectangle Width="10000" d:Height="512" Height="{Binding RealHeight}" Margin="-10000,0,0,0" Fill="Black" Opacity="{Binding BackgroundOpacity}" d:Opacity="0.33" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+        <Rectangle Width="10000" d:Height="512" Height="{Binding RealHeight}" Margin="0,0,-10000,0" Fill="Black" Opacity="{Binding BackgroundOpacity}" d:Opacity="0.33" VerticalAlignment="Top" HorizontalAlignment="Right"/>
+
+        <TextBlock Style="{x:Null}" Margin="0 -35 0 0" FontSize="20" Text="▬" Foreground="{StaticResource fg_high2}" VerticalAlignment="Top" HorizontalAlignment="Center" Visibility="Collapsed"/>
+        <Rectangle Grid.Row="1"
+                   Stroke="{StaticResource fg_high2}"
+                   StrokeThickness="{Binding RealThick}"
+                   RadiusX="0" RadiusY="0"/>
+
+
+      
+        <Image Visibility="Collapsed" x:Name="render" Stretch="Fill" Source="{Binding Render}" d:Visibility="{Binding IsRenderMode, Converter={StaticResource boolToVisibilityConverter}}" RenderTransformOrigin="0.5 0.5">
+            <!--<Image.RenderTransform>
+                <ScaleTransform ScaleX="1" ScaleY="-1"/>
+            </Image.RenderTransform>-->
+        </Image>
+
+        <!--<opentk:GLWpfControl x:Name="glControl" />-->
+
+        <skia:SKElement x:Name="skRender" PaintSurface="OnPaintSurface" Visibility="{Binding IsRenderMode, Converter={StaticResource boolToVisibilityConverter}}" IsHitTestVisible="False"/>
+
+    </Grid>
+
+</UserControl>

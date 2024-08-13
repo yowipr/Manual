@@ -1,0 +1,99 @@
+﻿<UserControl x:Class="Manual.MUI.ImageGen"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Manual.MUI"
+             xmlns:Core="clr-namespace:Manual.Core"
+             xmlns:themes="clr-namespace:ManualToolkit.Themes;assembly=ManualToolkit"
+             mc:Ignorable="d" 
+             d:DesignHeight="100" d:DesignWidth="100"
+             MouseMove="ImageGen_MouseMove">
+
+    <Border RenderTransformOrigin="0.5 0.5"
+            x:Name="border" Panel.ZIndex="23" CornerRadius="36" BorderThickness="1" 
+            Margin="1,5,1,5" HorizontalAlignment="Center" VerticalAlignment="Center">
+
+        <Border.RenderTransform>
+            <ScaleTransform ScaleX="1" ScaleY="1"/>
+        </Border.RenderTransform>
+
+
+        <Border.Style>
+            <Style TargetType="Border">
+                <Style.Triggers>
+                    <EventTrigger RoutedEvent="Loaded">
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <!--WIDTH AND HEIGHT-->
+                                <DoubleAnimation From="30" To="80" Duration="0:0:0.12" Storyboard.TargetProperty="Width"/>
+                                <DoubleAnimation From="30" To="80" Duration="0:0:0.12" Storyboard.TargetProperty="Height"/>
+                                <DoubleAnimation From="0" To="1" Duration="0:0:0.12" Storyboard.TargetProperty="Opacity"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </EventTrigger>
+                </Style.Triggers>
+            </Style>
+        </Border.Style>
+        
+        <!--<Border.Background>
+            <ImageBrush Stretch="UniformToFill" ImageSource="{Binding PreviewImage, Converter={StaticResource SKBitmapToImageSourceConverter}}" d:ImageSource="/Assets/splash2.png"/>
+        </Border.Background>-->
+
+
+        <Border.ContextMenu>
+            <ContextMenu>
+                <ContextMenu.Resources>
+                    <Style TargetType="{x:Type MenuItem}" BasedOn="{StaticResource {x:Type MenuItem}}">
+                        <EventSetter Event="Click" Handler="MenuItem_Click"/>
+                    </Style>
+                </ContextMenu.Resources>
+
+                <MenuItem Header="Apply to Selected Layer" Visibility="{Binding IsQueue, Converter={StaticResource boolToVisibilityConverterInverse}}"/>
+                <MenuItem Header="Save" />
+                <MenuItem Header="Copy" />
+                <Separator/>
+                <MenuItem Header="Move as Next" />
+                <Separator/>
+                <MenuItem Header="Cancel All" />
+                <MenuItem Header="Cancel" />
+
+            </ContextMenu>
+        </Border.ContextMenu>
+
+        <Grid>
+
+            <themes:Squircle x:Name="borderMask" Background="Black" Curvature="4.5"/>
+            <Image Source="{Binding PreviewImage, Converter={StaticResource SKBitmapToImageSourceConverter}}" Margin="0">
+                <Image.OpacityMask>
+                    <VisualBrush Visual="{Binding ElementName=borderMask}"/>
+                </Image.OpacityMask>
+            </Image>
+
+            <Border CornerRadius="22" Background="{StaticResource bg3}" Opacity="0.2" Visibility="{Binding IsGenerating, Converter={StaticResource boolToVisibilityConverter}}"/>
+            <!--normal image-->
+            <themes:IconText IconSource="{StaticResource photo}" VerticalAlignment="Bottom" HorizontalAlignment="Right"  Visibility="{Binding IsQueue, Converter={StaticResource boolToVisibilityConverterInverse}}"/>
+
+            <!--generating-->
+            <themes:IconText IconSource="{StaticResource sparkles}" VerticalAlignment="Bottom" HorizontalAlignment="Right" Visibility="{Binding IsGenerating, Converter={StaticResource boolToVisibilityConverter}}"/>
+
+
+            <!--queue-->
+
+            <Grid Visibility="{Binding IsQueue, Converter={StaticResource boolToVisibilityConverter}}">
+                <Grid Visibility="{Binding IsGenerating, Converter={StaticResource boolToVisibilityConverterInverse}}">
+                    <Rectangle Fill="Black" RadiusX="7" RadiusY="7" Opacity="0.56" />
+                    <!--<Label Content="Queue" VerticalAlignment="Bottom" HorizontalAlignment="Right"/>-->
+                    <themes:IconText IconSource="{StaticResource clock}" VerticalAlignment="Bottom" HorizontalAlignment="Right"/>
+                </Grid>
+            </Grid>
+
+        </Grid>
+    
+        
+        
+        
+    </Border>
+    
+    
+</UserControl>

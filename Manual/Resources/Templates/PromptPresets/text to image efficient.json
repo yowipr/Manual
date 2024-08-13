@@ -1,0 +1,287 @@
+{
+  "last_node_id": 1,
+  "last_link_id": 1,
+  "nodes": [
+    {
+      "bgcolor": "#FF553333",
+      "id": 2,
+      "type": "Efficient Loader",
+      "pos": [
+        62.0,
+        135.0
+      ],
+      "size": {
+        "0": 400.0,
+        "1": 805.0
+      },
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "lora_stack",
+          "type": "LORA_STACK",
+          "link": null
+        },
+        {
+          "name": "cnet_stack",
+          "type": "CONTROL_NET_STACK",
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            1
+          ],
+          "slot_index": 0
+        },
+        {
+          "name": "CONDITIONING+",
+          "type": "CONDITIONING",
+          "links": [
+            2
+          ],
+          "slot_index": 1
+        },
+        {
+          "name": "CONDITIONING-",
+          "type": "CONDITIONING",
+          "links": [
+            3
+          ],
+          "slot_index": 2
+        },
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "links": [
+            4
+          ],
+          "slot_index": 3
+        },
+        {
+          "name": "VAE",
+          "type": "VAE",
+          "links": [
+            5
+          ],
+          "slot_index": 4
+        },
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "links": null
+        },
+        {
+          "name": "DEPENDENCIES",
+          "type": "DEPENDENCIES",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "Efficient Loader"
+      },
+      "widgets_values": [
+        "animeScreencapStyle_assV13.safetensors",
+        "anything-v4.0.vae.pt",
+        -2,
+        "None",
+        1,
+        1,
+        "girl, glasses, white short hair, dynamic pose, close up, potrait, perspective, painting on canvas, colorfuface focus, masterpiece, best quality, amelia watson, bokeh, cute, 1girl, solo, monocle white hair ornament, glasses, medium hair, brown eyewear, black sweater, painting on canvas, looking at something, green eyes, colors, colorful, perspective, compositing, anime screencap, flat shading, detailed l, colors, palette",
+        "(worst quality, low quality:1.4),(((asymmetry, asymmetrical-shapes))),(((english text:1.9, text:1.9, watermark))),",
+        "none",
+        "comfy",
+        512,
+        512,
+        1
+      ]
+    },
+    {
+      "bgcolor": "#FF335555",
+      "id": 1,
+      "type": "KSampler (Efficient)",
+      "pos": [
+        540.0,
+        136.0
+      ],
+      "size": {
+        "0": 325.0,
+        "1": 601.0
+      },
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 1
+        },
+        {
+          "name": "positive",
+          "type": "CONDITIONING",
+          "link": 2
+        },
+        {
+          "name": "negative",
+          "type": "CONDITIONING",
+          "link": 3
+        },
+        {
+          "name": "latent_image",
+          "type": "LATENT",
+          "link": 4
+        },
+        {
+          "name": "optional_vae",
+          "type": "VAE",
+          "link": 5
+        },
+        {
+          "name": "script",
+          "type": "SCRIPT",
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": null
+        },
+        {
+          "name": "CONDITIONING+",
+          "type": "CONDITIONING",
+          "links": null
+        },
+        {
+          "name": "CONDITIONING-",
+          "type": "CONDITIONING",
+          "links": null
+        },
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "links": null
+        },
+        {
+          "name": "VAE",
+          "type": "VAE",
+          "links": null
+        },
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            6
+          ],
+          "slot_index": 5
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "KSampler (Efficient)"
+      },
+      "widgets_values": [
+        551580206917927.94,
+        null,
+        20,
+        7,
+        "euler",
+        "normal",
+        1,
+        "auto",
+        "true"
+      ]
+    },
+    {
+      "bgcolor": "#FF443366",
+      "id": 3,
+      "title": "Output",
+      "type": "M_Output",
+      "pos": [
+        905.60535,
+        145.61371
+      ],
+      "size": {
+        "0": 468.58133,
+        "1": 407.87033
+      },
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "Result",
+          "type": "LAYER",
+          "link": 6
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "M_Output"
+      }
+    }
+  ],
+  "links": [
+    [
+      1,
+      2,
+      0,
+      1,
+      0,
+      "MODEL"
+    ],
+    [
+      2,
+      2,
+      1,
+      1,
+      1,
+      "CONDITIONING"
+    ],
+    [
+      3,
+      2,
+      2,
+      1,
+      2,
+      "CONDITIONING"
+    ],
+    [
+      4,
+      2,
+      3,
+      1,
+      3,
+      "LATENT"
+    ],
+    [
+      5,
+      2,
+      4,
+      1,
+      4,
+      "VAE"
+    ],
+    [
+      6,
+      1,
+      5,
+      3,
+      0,
+      "IMAGE"
+    ]
+  ],
+  "groups": [],
+  "config": {},
+  "extra": {
+    "manual_config": {
+      "$type": "Manual.Core.Nodes.ComfyUI.Comfy+ManualConfig, Manual",
+      "canvas_position": "0.6041813008895328,0,0,0.6041813008895328,49.56242929463701,16.780486967550612"
+    }
+  },
+  "version": 0.4
+}

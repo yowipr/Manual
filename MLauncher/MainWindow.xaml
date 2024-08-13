@@ -1,0 +1,203 @@
+﻿<Window
+    x:Class="MLauncher.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:sections="clr-namespace:MLauncher.Sections"
+    Title="Manual Launcher"
+    Width="Auto"
+    Height="Auto"
+    MinWidth="900"
+    MinHeight="500"
+    d:Height="300"
+    d:ShowInTaskbar="true"
+    d:Width="640"
+    AllowsTransparency="True"
+    Background="Transparent"
+    BorderBrush="Blue"
+    Icon="Assets/icon.ico"
+    Loaded="Window_Loaded"
+    WindowStartupLocation="CenterOwner"
+    WindowState="Normal"
+    WindowStyle="None"
+    mc:Ignorable="d">
+
+    <Window.TaskbarItemInfo>
+        <TaskbarItemInfo x:Name="taskBarItemInfo" />
+    </Window.TaskbarItemInfo>
+
+    <Window.Resources>
+        <Storyboard x:Key="StartAnimation">
+            <DoubleAnimation
+                Storyboard.TargetProperty="Opacity"
+                From="0"
+                To="1"
+                Duration="0:0:0.07" />
+        </Storyboard>
+
+
+
+    </Window.Resources>
+
+    <WindowChrome.WindowChrome>
+        <WindowChrome CaptionHeight="25" />
+    </WindowChrome.WindowChrome>
+
+    <Border Background="{StaticResource bg4}" CornerRadius="15">
+        <Grid Background="Transparent">
+
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="23" Style="{x:Null}" />
+                <RowDefinition />
+                <RowDefinition Height="23" />
+            </Grid.RowDefinitions>
+
+            <!--  downloading  -->
+            <Grid
+                x:Name="topDownloading"
+                Margin="40,0"
+                VerticalAlignment="Top"
+                Style="{x:Null}">
+                <ProgressBar
+                    x:Name="progressBar"
+                    Height="12"
+                    VerticalAlignment="Top"
+                    d:Value="100"
+                    Background="{x:Null}"
+                    BorderBrush="{x:Null}"
+                    Foreground="{StaticResource fg_high}"
+                    Maximum="100"
+                    Value="{Binding Progress}" />
+                <Label
+                    Margin="0,-6,0,0"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Top"
+                    d:Content="Installing MANUAL 55% (12 K/bps)"
+                    Content="{Binding MessageLog}"
+                    FontSize="10"
+                    Foreground="{StaticResource fg}"
+                    Opacity="0.7" />
+            </Grid>
+
+            <!--  TITLE WINDOW  -->
+            <Grid x:Name="TitleBar" WindowChrome.IsHitTestVisibleInChrome="True">
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+
+
+                <StackPanel
+                    Grid.Column="2"
+                    Margin="0,0,5,0"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Top"
+                    Background="Transparent"
+                    Orientation="Horizontal">
+                    <Button
+                        x:Name="WMin"
+                        Width="25"
+                        Height="25"
+                        Margin="0,2,0,0"
+                        Background="Transparent"
+                        BorderBrush="Transparent"
+                        Click="WMin_Click"
+                        Content="―"
+                        FontSize="10"
+                        Foreground="#FFD1D6DD" />
+                    <Button
+                        x:Name="WMax"
+                        Width="25"
+                        Height="25"
+                        Background="Transparent"
+                        BorderBrush="Transparent"
+                        Click="WMax_Click"
+                        Content=" ▢"
+                        Foreground="#FFD1D6DD" />
+                    <Button
+                        x:Name="WClose"
+                        Width="25"
+                        Height="25"
+                        Margin="0,0,0,2"
+                        Background="Transparent"
+                        BorderBrush="Transparent"
+                        Click="WClose_Click"
+                        Content="✕"
+                        Foreground="#FFD1D6DD" />
+
+
+                </StackPanel>
+
+                <StackPanel
+                    HorizontalAlignment="Left"
+                    Orientation="Horizontal"
+                    WindowChrome.IsHitTestVisibleInChrome="True">
+                    <Image
+                        Width="20"
+                        Margin="7,0,0,0"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Center"
+                        Source="Assets/icon.ico"
+                        Visibility="Collapsed"
+                        WindowChrome.IsHitTestVisibleInChrome="True" />
+                    <TextBlock
+                        x:Name="titleWindow"
+                        Margin="10,0,0,0"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Foreground="{StaticResource fg}"
+                        Text=""
+                        WindowChrome.IsHitTestVisibleInChrome="True" />
+                </StackPanel>
+
+            </Grid>
+
+
+
+            <!--  INTERFACE  -->
+            <Grid Grid.Row="1" Background="Transparent">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" Style="{x:Null}" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+
+
+                <!--  CONTENT  -->
+                <Grid Grid.Row="1" Background="Transparent">
+                    <ContentControl x:Name="contentWindow" />
+                </Grid>
+
+
+
+            </Grid>
+            <!--  FOOTER  -->
+            <Grid Grid.Row="2" Background="Transparent">
+                <StackPanel
+                    Margin="10,0"
+                    HorizontalAlignment="Right"
+                    Orientation="Horizontal">
+                    <Label
+                        Content="M Launcher"
+                        FontSize="10"
+                        Foreground="White"
+                        Opacity="0.30" />
+                    <Label
+                        x:Name="versionLabel"
+                        Content="0.1.0"
+                        FontSize="10"
+                        Foreground="White"
+                        Opacity="0.30" />
+                </StackPanel>
+            </Grid>
+
+
+        </Grid>
+    </Border>
+
+</Window>

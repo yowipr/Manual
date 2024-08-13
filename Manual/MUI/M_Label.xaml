@@ -1,0 +1,20 @@
+﻿<Label x:Class="Manual.MUI.M_Label"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Manual.MUI"
+       xmlns:editors="clr-namespace:Manual.Editors"
+             mc:Ignorable="d"
+       d:Width="500" d:Height="200" d:Content="This is a test">
+  
+    <Label.Style>
+        <Style TargetType="{x:Type Label}">
+            <Setter Property="Foreground" Value="{DynamicResource fg}"/>
+            <Setter Property="FontSize" Value="12"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="HorizontalAlignment" Value="Right"/>
+            <Setter Property="Margin" Value="5,0,-3,0"/>
+        </Style>
+    </Label.Style>
+</Label>

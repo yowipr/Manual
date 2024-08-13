@@ -1,0 +1,15 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Manual.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="Version" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">0.74-chun</Value>
+    </Setting>
+    <Setting Name="SplashAuthor" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">manual team</Value>
+    </Setting>
+    <Setting Name="SplashAuthor_Link" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">https://manualai.art/</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

@@ -1,0 +1,38 @@
+﻿<UserControl x:Class="Manual.Objects.AssetFileView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Manual.Objects"
+             xmlns:themes="clr-namespace:ManualToolkit.Themes;assembly=ManualToolkit"
+             mc:Ignorable="d" 
+             d:DesignHeight="100" d:DesignWidth="100" MouseDown="AssetFile_MouseLeftButtonDown">
+
+    <Grid Margin="4">
+
+        <Border x:Name="borderOver" CornerRadius="16" Background="{StaticResource fg}" Opacity="0"/>
+
+        <Grid Width="80" Height="80" Margin="6">
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <Grid>
+                <themes:ImageBorder d:ImageSource="/Assets/imagetest.png" ImageSource="{Binding Thumbnail, RelativeSource={RelativeSource AncestorType=UserControl}}"/>
+                <Image d:Source="/Assets/shoticon64.png" Source="{Binding Icon, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                   HorizontalAlignment="Right" VerticalAlignment="Bottom"
+                   Height="20" Margin="5"/>
+        </Grid>
+
+
+            <Grid Grid.Row="1">
+                <local:NamerText d:NameText="Shot 1" NameText="{Binding Header, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                 HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0 3 0 -3"/>
+            </Grid>
+        
+    </Grid>
+
+        </Grid>
+
+</UserControl>

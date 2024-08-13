@@ -1,0 +1,172 @@
+<SyntaxDefinition name="C#"
+        xmlns="http://icsharpcode.net/sharpdevelop/syntaxdefinition/2008">
+	<!-- COLORS -->
+	<Color name="Comment" foreground="#449C3B" />
+	<Color name="String" foreground="#C38B70" />
+	
+	<Color name="Class" foreground="#43B687" />
+	<Color name="VoidName" foreground="#D1CC87" />
+
+	<Color name="NLP" foreground="#8f8375" />
+	<!-- This is the main ruleset. -->
+	<RuleSet>
+
+		<Span color="Comment" begin="#" />
+		<Span color="Comment" begin="//" />
+		<Span color="Comment" multiline="true" begin="/\*" end="\*/" />
+
+		<Span color="String">
+			<Begin>"</Begin>
+			<End>"</End>
+			<RuleSet>
+				<!-- nested span for escape sequences -->
+				<Span begin="\\" end="." />
+			</RuleSet>
+		</Span>
+		
+		<Span color="String" multiline="true">
+			<Begin>"""</Begin>
+			<End>"""</End>
+		</Span>
+
+		<Span color="NLP">
+			<Begin>\+\+\+</Begin>
+			<End>\+\+\+</End>
+		</Span>
+
+		<!-- blues -->
+		<Keywords fontWeight="bold" foreground="#4898D4">
+			<Word>using</Word>
+			<Word>namespace</Word>
+			<Word>class</Word>
+			<Word>public</Word>
+			<Word>static</Word>
+			<Word>private</Word>
+			<Word>abstract</Word>
+			<Word>default</Word>
+			<Word>override</Word>
+
+			<Word>async</Word>
+			<Word>void</Word>
+			<Word>get</Word>
+			<Word>set</Word>
+
+			<Word>this</Word>
+			<Word>true</Word>
+			<Word>True</Word>
+			<Word>false</Word>
+			<Word>False</Word>
+			<Word>new</Word>
+			<Word>is</Word>
+			<Word>null</Word>
+			<Word>with</Word>
+			<Word>as</Word>
+			<Word>typeof</Word>
+			<Word>nameof</Word>
+			<Word>not</Word>
+			
+			<Word>var</Word>
+			<Word>int</Word>
+			<Word>string</Word>
+			<Word>bool</Word>
+			<Word>byte</Word>
+			<Word>dynamic</Word>
+			<Word>object</Word>
+		
+			<Word>let</Word>
+			<Word>const</Word>
+			<Word>def</Word>
+			<Word>and</Word>
+			<Word>func</Word>
+
+			<Word>variable</Word>
+			<Word>variables</Word>
+			<!-- ... -->
+		</Keywords>
+
+		<!-- pinks -->
+		<Keywords fontWeight="bold" foreground="#D69CD7">
+			<Word>if</Word>
+			<Word>else</Word>
+			<Word>while</Word>
+			<Word>do</Word>
+			<Word>for</Word>
+			<Word>foreach</Word>
+			<Word>try</Word>
+			<Word>catch</Word>
+			<Word>in</Word>
+			<Word>goto</Word>
+			<Word>break</Word>
+			<Word>continue</Word>
+			<Word>return</Word>
+			<Word>yield</Word>
+
+			<Word>elif</Word>
+			<Word>from</Word>
+			<Word>import</Word>
+
+			<Word>literal</Word>
+			<Word>uliteral</Word>
+			<Word>example</Word>
+			<!-- ... -->
+		</Keywords>
+
+		<!--Magic words -->
+		<Keywords foreground="#7F75F0">
+			<Word>want</Word>
+			<Word>Manual</Word>
+			<Word>named</Word>
+			<Word>here</Word>
+			<!-- ... -->
+		</Keywords>
+
+		<!-- green -->
+		<Keywords foreground="#43B687">
+			<Word>ctor</Word>
+			<!-- ... -->
+		</Keywords>
+		
+		<!-- Digits -->
+		<Rule foreground="#8EC08B">
+			\b0[xX][0-9a-fA-F]+  # hex number
+			|    \b
+			(    \d+(\.[0-9]+)?   #number with optional floating point
+			|    \.[0-9]+         #or just starting with floating point
+			)
+			([eE][+-]?[0-9]+)? # optional exponent
+		</Rule>
+
+
+		
+		
+		<!-- CLASS -->
+		<Span begin="class\s+" end="{|:">
+			<RuleSet>
+				<Span color="Class" begin="\b[A-Za-z]\w*\b" end="\b" />
+			</RuleSet>
+		</Span>
+		
+		<!-- DEF -->
+		<Span begin="def\s+" end="{|:">
+			<RuleSet>
+				<Span color="VoidName" begin="\b[A-Za-z]\w*\b" end="\b" />
+			</RuleSet>
+		</Span>
+
+		<!-- VOID -->
+		<Span begin="void\s+" end="{|:">
+			<RuleSet>
+				<Span color="VoidName" begin="\b[A-Za-z]\w*\b" end="\b" />
+			</RuleSet>
+		</Span>
+
+
+		<Rule color="VoidName">
+			\b
+			[\d\w_]+  # an identifier
+			(?=\s*\() # followed by (
+		</Rule>
+		
+	</RuleSet>
+	
+</SyntaxDefinition>

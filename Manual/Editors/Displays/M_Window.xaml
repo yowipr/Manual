@@ -1,0 +1,114 @@
+﻿<Window x:Class="Manual.Editors.Displays.M_Window"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Manual.Editors.Displays"
+        
+        xmlns:Editors="clr-namespace:Manual.Editors" 
+        xmlns:Core="clr-namespace:Manual.Core"
+        xmlns:autoGrid="clr-namespace:WpfAutoGrid;assembly=WpfAutoGrid"
+        
+        xmlns:media="http://schemas.microsoft.com/winfx/2006/xaml/presentation/media"
+        xmlns:media1="http://schemas.microsoft.com/netfx/2009/xaml/presentation" xmlns:themes="clr-namespace:ManualToolkit.Themes;assembly=ManualToolkit"
+        mc:Ignorable="d"
+        d:Height="300" d:Width="640"
+        Width="Auto" Height="Auto"
+        WindowState="Normal"  BorderBrush="Black"
+        WindowStyle="None" Background="Transparent"
+        ResizeMode="NoResize"
+        
+        Title="Manual"   
+        Icon="/Assets/manualicon64_2.ico"
+    
+        
+        Loaded="Window_Loaded"
+        AllowsTransparency="True"
+        WindowStartupLocation="CenterOwner"
+        ShowInTaskbar="false"
+        MinWidth="60" MinHeight="100">
+
+    <Window.Resources>
+        <Storyboard x:Key="StartAnimation">
+            <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                         From="0"
+                         To="1"
+                         Duration="0:0:0.07" />
+        </Storyboard>
+        
+    </Window.Resources>
+
+    <Window.TaskbarItemInfo>
+        <TaskbarItemInfo x:Name="taskBarItemInfo" />
+    </Window.TaskbarItemInfo>
+
+    <WindowChrome.WindowChrome>
+        <WindowChrome CaptionHeight="25"/>
+    </WindowChrome.WindowChrome>
+
+
+    <themes:Squircle Background="{StaticResource bg}" CornerRadius="15" Margin="5">
+
+        <themes:Squircle.Effect>
+            <DropShadowEffect BlurRadius="3" ShadowDepth="3" Direction="275" Color="#242232" Opacity="0.56"/>
+        </themes:Squircle.Effect>
+        
+        <Grid Background="Transparent" Margin="5 5 5 5">
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="23" Style="{x:Null}"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+
+
+            <!--TITLE WINDOW-->
+            <Grid x:Name="TitleBar" WindowChrome.IsHitTestVisibleInChrome="True" >
+
+                <Grid.ColumnDefinitions>
+                    <!--<ColumnDefinition Width="Auto"/>-->
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top" Background="Transparent" Margin="0,0,5,0">
+                    <Button x:Name="WMin" Content="―" Width="25" Height="25" BorderBrush="Transparent" Background="Transparent" Foreground="#FFD1D6DD" Click="WMin_Click" FontSize="10" Margin="0,2,0,0"/>
+                    <Button x:Name="WMax" Content=" ▢" Width="25" Height="25" BorderBrush="Transparent" Background="Transparent" Foreground="#FFD1D6DD" Click="WMax_Click"/>
+                    <Button x:Name="WClose" Content="✕" Width="25" Height="25" BorderBrush="Transparent" Background="Transparent" Foreground="#FFD1D6DD" Click="WClose_Click" Margin="0,0,0,2"/>
+
+
+                </StackPanel>
+
+                <StackPanel  Orientation="Horizontal" HorizontalAlignment="Center" WindowChrome.IsHitTestVisibleInChrome="False">
+                    <Image Visibility="Collapsed" HorizontalAlignment="Left" Source="/Assets/icon.ico" Width="20" VerticalAlignment="Center" Margin="7,0,0,0" WindowChrome.IsHitTestVisibleInChrome="False"/>
+                    <TextBlock x:Name="titleWindow" FontWeight="Bold" Foreground="{StaticResource fg}"
+                               d:Text="MANUAL" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10,0,0,0" WindowChrome.IsHitTestVisibleInChrome="False"
+                               Text="{Binding Title, RelativeSource={RelativeSource AncestorType={x:Type local:M_Window}}}"/>
+                </StackPanel>
+
+
+
+            </Grid>
+
+            <!--INTERFACE-->
+            <Grid Grid.Row="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" Style="{x:Null}"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <!--CONTENT-->
+                <Grid Grid.Row="1" Background="Transparent">
+                    <!--<ContentControl x:Name="contentWindow"></ContentControl>-->
+                    <ContentPresenter x:Name="contentWindow" Content="{Binding CustomContent, RelativeSource={RelativeSource AncestorType={x:Type local:M_Window}}}" />
+
+                    <Thumb x:Name="thumb" Style="{StaticResource ResizeThumb}" DragDelta="onDragDelta" Panel.ZIndex="10" Foreground="black" Margin="0" />
+
+                </Grid>
+
+
+
+            </Grid>
+        </Grid>
+    </themes:Squircle>
+
+</Window>

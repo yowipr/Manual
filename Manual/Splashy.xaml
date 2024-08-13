@@ -1,0 +1,485 @@
+﻿<UserControl
+    x:Class="Manual.Splashy"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:Core="clr-namespace:Manual.Core"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:Manual"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:obj="clr-namespace:Manual.Objects"
+    xmlns:themes="clr-namespace:ManualToolkit.Themes;assembly=ManualToolkit"
+    xmlns:api="clr-namespace:Manual.API"
+    
+    Width="Auto"
+    Height="Auto"
+    HorizontalAlignment="Center"
+    VerticalAlignment="Center"
+    d:DataContext="{d:DesignInstance Type=Core:Settings}"
+    Background="Transparent"
+    RenderOptions.BitmapScalingMode="HighQuality"
+    UseLayoutRounding="False"
+    mc:Ignorable="d">
+
+    <!--<UserControl.Effect>
+        <DropShadowEffect ShadowDepth="0" BlurRadius="50" Direction="90" Opacity="0.08" Color="White"/>
+    </UserControl.Effect>-->
+
+    <Grid>
+
+        <!--  GLOW  -->
+        <!--
+        <Grid Visibility="Visible" Background="Transparent" IsHitTestVisible="False" Opacity="0.16">
+            <Rectangle Width="734" Height="562" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <Rectangle.Fill>
+                    <VisualBrush Visual="{Binding ElementName=SplashBorder}"/>
+                </Rectangle.Fill>
+                <Rectangle.Effect>
+                    <BlurEffect Radius="100"/>
+                </Rectangle.Effect>
+            </Rectangle>
+        </Grid>-->
+
+        <themes:VisualGlow
+            BlurRadius="100"
+            ShadowDepth="10"
+            Visual="{Binding ElementName=SplashBorder}" />
+
+        <themes:Squircle
+            x:Name="SplashBorder"
+            Width="634"
+            Height="462"
+            Background="#FF191919"
+            ClipToBounds="True">
+            <Grid ClipToBounds="True">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="250" />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+
+
+                <!--  ________________________________________________________________________SPLASH IMAGE_____________________________________________________________  -->
+                <Grid x:Name="splashImage">
+
+                    <!--  SPLASH  -->
+                    <themes:Squircle x:Name="splashMask" Background="Black"/>
+                    <Image Source="/Assets/splash4.png" Stretch="UniformToFill" Margin="0 0 0 0">
+                        <Image.OpacityMask>
+                            <VisualBrush Visual="{Binding ElementName=splashMask}">
+                            </VisualBrush>
+                        </Image.OpacityMask>
+                    </Image>
+
+
+                    <Border
+                        Width="Auto"
+                        Height="180"
+                        VerticalAlignment="Top"
+                        CornerRadius="26"
+                        Opacity="0.1">
+                        <Border.Background>
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="0,0.6">
+                                <GradientStop Offset="0" Color="black" />
+                                <GradientStop Offset="1" Color="#00FFFFFF" />
+                            </LinearGradientBrush>
+                        </Border.Background>
+                    </Border>
+
+                    <!--  manual logo  -->
+                    <StackPanel
+                        Margin="23,20,0,0"
+                        VerticalAlignment="Top"
+                        Orientation="Horizontal">
+                        <Image
+                            Height="50"
+                            Margin="0,0,10,0"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center"
+                            SnapsToDevicePixels="True"
+                            Source="{StaticResource manuallogo}">
+                            <Image.Effect>
+                                <!--<DropShadowEffect ShadowDepth="2" BlurRadius="2" Opacity="0.66" Color="Black",      0.66   />-->
+                                <DropShadowEffect
+                                      BlurRadius="2"
+                                      Opacity="0.33"
+                                      ShadowDepth="2"
+                                      Color="Black" />
+                            </Image.Effect>
+                        </Image>
+
+                        <!--  subtext  -->
+                        <!--<Image Source="/Assets/closed_beta.png" Height="20"
+            DataContext="{x:Static Core:AppModel.userManager}"
+           Visibility="Visible"
+            Margin="0 0 0 0" Grid.RowSpan="2" HorizontalAlignment="Left" VerticalAlignment="Center">
+                            <Image.Effect>
+                                <DropShadowEffect ShadowDepth="2" BlurRadius="2" Opacity="0.66" Color="Black"/>
+                            </Image.Effect>
+                        </Image>-->
+                        <TextBlock
+                            DataContext="{x:Static api:UserManager.instance}"
+                            Visibility="{Binding User, Converter={StaticResource proToVisibilityConverter}}"
+                            Margin="0 3 0 0"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center"
+                            FontFamily="#Roboto"
+                            FontSize="36"
+                            FontWeight="Black"
+                            Foreground="White"
+                            Opacity="1"
+                            RenderOptions.BitmapScalingMode="HighQuality"
+                            Text="PRO">
+                            <TextBlock.Effect>
+                                <DropShadowEffect
+                                    BlurRadius="2"
+                                    Opacity="0.33"
+                                    ShadowDepth="2"
+                                    Color="Black" />
+                            </TextBlock.Effect>
+                        </TextBlock>
+                    </StackPanel>
+
+                    <!--  version  -->
+                    <Grid HorizontalAlignment="Right" VerticalAlignment="Top">
+                        <Grid
+                            Margin="0,15,15,0"
+                            
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            d:Background="#70191919">
+                            <!--#FF191919-->
+                            <themes:Squircle Curvature="8" Background="Black" Opacity="0.4"/>
+                            <TextBlock
+                                Width="Auto"
+                                Height="16"
+                                Margin="10 8 10 7"
+                                d:Text="0.0.1-alpha"
+                                Foreground="white"
+                                Text="{Binding Version}"
+                                TextAlignment="Right"
+                                TextWrapping="Wrap">
+                                <TextBlock.Effect>
+                                    <DropShadowEffect
+                                        BlurRadius="2"
+                                        Opacity="0"
+                                        ShadowDepth="2"
+                                        Color="Black" />
+                                </TextBlock.Effect>
+                            </TextBlock>
+                        </Grid>
+                    </Grid>
+
+                    <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
+
+                        <TextBlock
+                            Height="16"
+                            Margin="0,3"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Bottom"
+                            Foreground="White"
+                            Text=""
+                            TextAlignment="Right"
+                            TextWrapping="Wrap">
+                            <TextBlock.Effect>
+                                <DropShadowEffect
+                                    BlurRadius="2"
+                                    Opacity="0.66"
+                                    ShadowDepth="2"
+                                    Color="Black" />
+                            </TextBlock.Effect>
+                        </TextBlock>
+
+                        <!--  splash author  -->
+                        <TextBlock
+                            Height="16"
+                            Margin="0,0,15,32"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Bottom"
+                            d:Text="Manual Team"
+                            Cursor="Hand"
+                            Foreground="White"
+                            MouseDown="SplashAuthor_Click"
+                            Text="{Binding SplashAuthor}"
+                            TextAlignment="Right"
+                            TextDecorations="Underline"
+                            TextWrapping="Wrap"
+                            ToolTip="{Binding SplashAuthor_Link}">
+                            <TextBlock.Effect>
+                                <DropShadowEffect
+                                    BlurRadius="2"
+                                    Opacity="0.66"
+                                    ShadowDepth="2"
+                                    Color="Black" />
+                            </TextBlock.Effect>
+                        </TextBlock>
+
+                    </StackPanel>
+
+
+                    <!--<Border
+                        Height="16"
+                        VerticalAlignment="Bottom"
+                        Background="#FF191919"
+                        CornerRadius="26 26 0 0" />-->
+
+                    <themes:Squircle
+                          Height="48"
+                          Margin="0 0 0 -20"
+                          VerticalAlignment="Bottom"
+                          Background="#FF191919"/>
+
+
+                </Grid>
+
+
+                <!--  BOTTOM  -->
+                <Grid Grid.Row="1" Margin="0,5,0,0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition Height="60" />
+                    </Grid.RowDefinitions>
+
+ 
+
+                    <!--  Recent files  -->
+                    <Grid>
+                        <Label
+                            VerticalAlignment="Top"
+                            HorizontalAlignment="Center"
+                            Content="Recent Files"
+                            FontWeight="Medium"
+                            Opacity="0.56" />
+
+
+                        <TabControl Background="{x:Null}" BorderBrush="{x:Null}" BorderThickness="0" HorizontalAlignment="Stretch" Width="Auto" SelectedIndex="{Binding RecentFilePathMode}">
+
+                            <!--SUMMARY-->
+                            <TabItem d:Header="▪" Background="Transparent">
+                                <TabItem.Header>
+                                    <StackPanel>
+                                        <Border Background="{StaticResource fg}" Width="10" Height="3" CornerRadius="2" Margin="0 1"/>
+                                        <Border Background="{StaticResource fg}" Width="10" Height="3" CornerRadius="2" Margin="0 1"/>
+                                    </StackPanel>
+                                </TabItem.Header>
+                                <ListView ScrollViewer.VerticalScrollBarVisibility="Disabled" Margin="150 0 0 0"  FocusVisualStyle="{x:Null}" 
+                            Background="{x:Null}"
+                            BorderBrush="{x:Null}"
+                            Foreground="{x:Null}"
+                            ItemsSource="{Binding RecentFilePaths}">
+                                    <ListView.ItemTemplate>
+                                        <DataTemplate>
+
+                                            <obj:ImgLabel
+                                        Background="Transparent"
+                                        ImageSource="{Binding Thumbnail}"
+                                        LabelContent="{Binding Name}"
+                                        MouseDown="Grid_MouseDown" />
+
+                                        </DataTemplate>
+                                    </ListView.ItemTemplate>
+                                    <ListView.ItemContainerStyle>
+                                        <Style TargetType="ListViewItem">
+                                            <Setter Property="Background" Value="Transparent" />
+                                            <Setter Property="BorderBrush" Value="Transparent" />
+                                            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                                            <Setter Property="VerticalContentAlignment" Value="Stretch" />
+                                            <Setter Property="Padding" Value="0" />
+                                            <Setter Property="Template">
+                                                <Setter.Value>
+                                                    <ControlTemplate TargetType="ListViewItem">
+                                                        <Border
+                                                    Background="{TemplateBinding Background}"
+                                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                                    BorderThickness="{TemplateBinding BorderThickness}">
+                                                            <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                                                        </Border>
+                                                        <ControlTemplate.Triggers>
+                                                            <Trigger Property="IsMouseOver" Value="True">
+                                                                <Setter Property="Background" Value="{StaticResource fg_high}" />
+                                                            </Trigger>
+                                                            <Trigger Property="IsSelected" Value="True">
+                                                                <Setter Property="Background" Value="{StaticResource fg_high}" />
+                                                            </Trigger>
+                                                        </ControlTemplate.Triggers>
+                                                    </ControlTemplate>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </Style>
+                                    </ListView.ItemContainerStyle>
+                                </ListView>
+                            </TabItem>
+
+
+                            <!--RECENT FILES-->
+                            <TabItem d:Header="■" Background="Transparent">
+                                <TabItem.Header>
+
+                                    <StackPanel Orientation="Horizontal">
+                                        <StackPanel>
+                                            <Border Background="{StaticResource fg}" Width="5" Height="5" CornerRadius="2" Margin="1 1"/>
+                                            <Border Background="{StaticResource fg}" Width="5" Height="5" CornerRadius="2" Margin="1 1"/>
+                                        </StackPanel>
+                                        <StackPanel>
+                                            <Border Background="{StaticResource fg}" Width="5" Height="5" CornerRadius="2" Margin="1 1"/>
+                                            <Border Background="{StaticResource fg}" Width="5" Height="5" CornerRadius="2" Margin="1 1"/>
+                                        </StackPanel>
+                                    </StackPanel>
+                                </TabItem.Header>
+                                <ScrollViewer >
+                                    <ItemsControl ItemsSource="{Binding RecentFilePaths}">
+                                        <ItemsControl.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <WrapPanel Orientation="Horizontal" HorizontalAlignment="Center"/>
+                                            </ItemsPanelTemplate>
+                                        </ItemsControl.ItemsPanel>
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <obj:AssetFileView
+                     Header="{Binding Name}"
+                     Thumbnail="{Binding Thumbnail}"
+                     MouseDown="Grid_MouseDown"/>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </ScrollViewer>
+
+                            </TabItem>
+
+                        </TabControl>
+
+                    </Grid>
+
+
+                  
+
+
+
+                    <!--  more  -->
+                    <StackPanel Visibility="Collapsed"
+                        Grid.Column="1"
+                        HorizontalAlignment="Center" Width="0">
+                        <Label
+                            HorizontalAlignment="Left"
+                            Content="More"
+                            FontWeight="Medium"
+                            Opacity="0.56" />
+
+                        <Label
+                            Content=" currently updated"
+                            Opacity="0.33"
+                            Visibility="{Binding NewUpdateAvailable, Converter={StaticResource boolToVisibilityConverterInverse}}" />
+                        <StackPanel Visibility="{Binding NewUpdateAvailable, Converter={StaticResource boolToVisibilityConverter}}">
+                            <Label Content="new update available!" />
+                            <Button Background="{StaticResource fg_high}" Content="Update" />
+                        </StackPanel>
+
+                    </StackPanel>
+
+
+
+                    <!--  release notes  -->
+                    <Grid Grid.Row="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="417*"/>
+                            <ColumnDefinition Width="217*" />
+                        </Grid.ColumnDefinitions>
+
+
+
+                        <!--  new open  -->
+                        <StackPanel
+                              Margin="0,5,0,0"
+                              HorizontalAlignment="Center"
+                              Orientation="Horizontal" Width="140">
+
+                                                    <!--  DISABLED button new, open  -->
+                                                    <themes:IconText Background="Transparent"
+                                  Cursor="Hand"
+                                  IconSource="{StaticResource document-text}"
+                                  PreviewMouseDown="New"
+                                  Texto="New" />
+
+                                                    <themes:IconText Background="Transparent"
+                                  Cursor="Hand"
+                                  IconSource="{StaticResource folder-open}"
+                                  PreviewMouseDown="Open"
+                                  Texto="Open..." />
+
+                        </StackPanel>
+                        
+
+                        <!--  release notes guide  -->
+                        <StackPanel
+                                 Grid.Row="1"
+                                 Grid.Column="1"
+                                 Margin="0,5,0,0"
+                                 HorizontalAlignment="Center"
+                                 Orientation="Horizontal" Width="186">
+
+                                                        <themes:IconText Background="Transparent"
+                                     Cursor="Hand"
+                                     IconSource="{StaticResource globe-alt}"       
+                                     PreviewMouseDown="ReleaseNotes"
+                                     Texto="Release Notes" />
+
+                                                        <themes:IconText Background="Transparent"
+                                     Cursor="Hand"
+                                     IconSource="{StaticResource document-text}"
+                                     PreviewMouseDown="Docs"
+                                     Texto="Guide" />
+
+                        </StackPanel>
+
+                        
+                    </Grid>
+                   
+                </Grid>
+
+            </Grid>
+        </themes:Squircle>
+
+
+
+
+        <Border
+            x:Name="maskBorder"
+            Height="247"
+            Margin="14"
+            VerticalAlignment="Bottom"
+            d:Visibility="Collapsed"
+            Background="Transparent"
+            ClipToBounds="True"
+            CornerRadius="14 14 22 22"
+            IsHitTestVisible="False"
+            Opacity="0.2">
+
+            <Border.OpacityMask>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="0,0.7">
+                    <GradientStop Offset="0.0" Color="#FFFFFFFF" />
+                    <GradientStop Offset="1.0" Color="#00FFFFFF" />
+                </LinearGradientBrush>
+            </Border.OpacityMask>
+
+            <themes:VisualGlow
+                x:Name="innerGlow"
+                Margin="0,-100,0,0"
+                d:Visibility="Collapsed"
+                BlurRadius="22"
+                Opacity="1"
+                ShadowDepth="0"
+                Visibility="Visible"
+                Visual="{Binding ElementName=splashImage}"   
+                RenderTransformOrigin="0.5 0.5">
+                <themes:VisualGlow.RenderTransform>
+                    <TransformGroup>
+                        <ScaleTransform ScaleY="-1" />
+                        <!-- Otras transformaciones aquí si es necesario -->
+                    </TransformGroup>
+                </themes:VisualGlow.RenderTransform>
+            </themes:VisualGlow>
+
+        </Border>
+
+
+
+    </Grid>
+</UserControl>

@@ -1,0 +1,1007 @@
+﻿<UserControl x:Class="Manual.Editors.TimelineView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Manual.Editors"
+             xmlns:Obj="clr-namespace:Manual.Objects"
+             xmlns:themes="clr-namespace:ManualToolkit.Themes;assembly=ManualToolkit"
+             mc:Ignorable="d" 
+             
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors" 
+          
+             xmlns:Core="clr-namespace:Manual.Core" 
+             xmlns:MUI="clr-namespace:Manual.MUI"
+             xmlns:ui="clr-namespace:Manual.Objects.UI"
+             
+             d:DataContext="{d:DesignInstance Type=Core:Shot}"
+             d:DesignHeight="450" d:DesignWidth="1200">
+
+
+
+    <!--Style of the UserControl-->
+    <UserControl.Resources>
+        <ResourceDictionary>
+
+            <local:FrameToXConverter x:Key="FrameToXConverter" />
+            <local:ValueToYConverter x:Key="ValueToYConverter" />
+
+
+            <local:TimeToPositionConverter x:Key="timeToPositionConverter" />
+            <local:FrameToTimeConverter x:Key="FrameToTimeConverter" />
+
+         
+            <local:BooleanToOpacityConverter x:Key="BooleanToOpacityConverter"/>
+            <local:GraphPointsConverter x:Key="GraphPointsConverter"/>
+
+          
+            <local:TrackIndexToYConverter x:Key="TrackIndexToYConverter" />
+            
+            <local:ValueToNumberConverter x:Key="ValueToNumberConverter" />
+
+            <DataTemplate DataType="{x:Type Core:Shot}"/>
+            <Style x:Key="RepeatButtonTransparent" TargetType="{x:Type RepeatButton}">
+                <Setter Property="OverridesDefaultStyle" Value="true"/>
+                <Setter Property="Background" Value="Black"/>
+                <Setter Property="Focusable" Value="false"/>
+                <Setter Property="IsTabStop" Value="false"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type RepeatButton}">
+                            <Rectangle Fill="{TemplateBinding Background}" Height="{TemplateBinding Height}" Width="{TemplateBinding Width}"/>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+
+    <Grid x:Name="context">
+        <Grid DataContext="{Binding SelectedShot}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="{StaticResource EditorHeaderHeight}"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+
+        
+
+        <!--nav bar-->
+        <Grid Grid.Row="0" Background="Transparent" d:Background="{DynamicResource bg}">
+
+                    <Grid DataContext="{Binding Animation}">
+                        
+                   
+                        <!--LEFT-->
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
+                        <i:Interaction.Behaviors>
+                            <Core:WidthBasedVisibilityBehavior WidthLimit="580" />
+                        </i:Interaction.Behaviors>
+                            
+                        <TextBlock Text="{Binding Path=CurrentFrame, Converter={StaticResource FrameToTimeConverter}}" VerticalAlignment="Center"
+                               Margin="40,0,0,0"
+                               FontSize="17"
+                               Opacity="1">
+                                <TextBlock.Style>
+                                    <Style TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
+                                        <!-- Valor predeterminado -->
+                                        <Setter Property="Foreground" Value="{DynamicResource fg}" />
+
+                                        <!-- Cambiar el color si IsPlaying es true -->
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsPlaying}" Value="True">
+                                                <Setter Property="Foreground" Value="{DynamicResource fg_high2}" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
+
+                        <Menu Margin="3 0 0 0">
+                            <MenuItem Header="Keyframe">
+                                <MenuItem.ItemContainerStyle>
+                                    <Style TargetType="{x:Type MenuItem}">
+                                        <Setter Property="Background" Value="Transparent"/>
+                                        <Setter Property="Foreground" Value="White"/>
+                                        <Setter Property="VerticalContentAlignment" Value="Center"/>
+                                        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                    </Style>
+                                </MenuItem.ItemContainerStyle>
+
+                                <MenuItem Header="Keyframe Type">
+                                    <MenuItem Header="Keyframe" Click="KeyframeType_Click"/>
+                                    <MenuItem Header="Main Key" Click="KeyframeType_Click"/>
+                                    <MenuItem Header="Inbetween" Click="KeyframeType_Click"/>
+                                    <Separator/>
+                                    <MenuItem Header="Reference" Click="KeyframeType_Click"/>
+                                    <MenuItem Header="Bake Keyframe" Click="KeyframeType_Click"/>
+                                    <MenuItem.ItemContainerStyle>
+                                        <Style TargetType="{x:Type MenuItem}">
+                                            <Setter Property="Background" Value="Transparent"/>
+                                            <Setter Property="Foreground" Value="White"/>
+                                            <Setter Property="VerticalContentAlignment" Value="Center"/>
+                                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                        </Style>
+                                    </MenuItem.ItemContainerStyle>
+                                </MenuItem>
+
+                                <Separator/>
+
+                                <MenuItem Header="Copy" Click="RightClickMenu"/>
+                                <MenuItem Header="Paste" Click="RightClickMenu"/>
+                                <MenuItem Header="Insert Clipboard Image" Click="RightClickMenu"/>
+                                <Separator/>
+
+                                
+                                <MenuItem Header="Delete Keyframe" Click="DeleteKeyframe_Click"/>
+                                <Separator/>
+
+                                <MenuItem Header="Interpolation">
+                                    <MenuItem Header="Constant" Click="RightClickMenu_Interpolation"/>
+                                    <MenuItem Header="Linear" Click="RightClickMenu_Interpolation"/>
+                                    <MenuItem Header="Bezier" Click="RightClickMenu_Interpolation"/>
+                                    <MenuItem.ItemContainerStyle>
+                                        <Style TargetType="{x:Type MenuItem}">
+                                            <Setter Property="Background" Value="Transparent"/>
+                                            <Setter Property="Foreground" Value="White"/>
+                                            <Setter Property="VerticalContentAlignment" Value="Center"/>
+                                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                        </Style>
+                                    </MenuItem.ItemContainerStyle>
+                                </MenuItem>
+
+                                <MenuItem Header="Generative">
+                                    <MenuItem.Icon>
+                                        <Image Source="{StaticResource sparkles}"/>
+                                    </MenuItem.Icon>
+                                    <MenuItem Header="Generate in Batch" Click="RightClickMenu_GenInterpolation"/>
+                                    <Separator/>
+                                    <MenuItem Header="Dynami Interpolation..." Click="RightClickMenu_GenInterpolation"/>
+                                    <MenuItem Header="Linear Interpolation..." Click="RightClickMenu_GenInterpolation"/>
+                                    <!--<MenuItem Header="AnimateDiff..." Click="RightClickMenu_Interpolation"/>-->
+                                    <MenuItem.ItemContainerStyle>
+                                        <Style TargetType="{x:Type MenuItem}">
+                                            <Setter Property="Background" Value="Transparent"/>
+                                            <Setter Property="Foreground" Value="White"/>
+                                            <Setter Property="VerticalContentAlignment" Value="Center"/>
+                                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                        </Style>
+                                    </MenuItem.ItemContainerStyle>
+                                </MenuItem>
+                            </MenuItem>
+                        </Menu>
+
+                    </StackPanel>
+
+
+                            <!--MID BUTTONS-->
+                        <StackPanel Style="{x:Null}" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0 0 100 0" VerticalAlignment="Center" Opacity="0.9">
+                        <i:Interaction.Behaviors>
+                            <Core:WidthBasedVisibilityBehavior WidthLimit="720" />
+                        </i:Interaction.Behaviors>
+
+                        <CheckBox Style="{StaticResource CheckBoxLight}"  Width="24" Height="24"
+                                  ToolTip="Automatic Keyframes" IsChecked="{Binding AutoKeyframe}" 
+                                  VerticalAlignment="Center" Padding="0 0.5 0 0" Margin="5.8 0 10 0">
+                            <TextBlock Text="◉" FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                        </CheckBox>
+
+                        <themes:IconButton Margin="5,2,5,1" VerticalAlignment="Center" IconSource="{StaticResource forward_keyframe}" Command="{Binding KeyframePreviousCommand}">
+                                <themes:IconButton.LayoutTransform>
+                                    <RotateTransform Angle="180"/>
+                                </themes:IconButton.LayoutTransform>
+                            </themes:IconButton>
+
+                            <themes:IconButton Margin="5,2,5,1" VerticalAlignment="Center" IconSource="{StaticResource forward}" Command="{Binding FramePreviousCommand}">
+                                <themes:IconButton.LayoutTransform>
+                                    <RotateTransform Angle="180"/>
+                                </themes:IconButton.LayoutTransform>
+                            </themes:IconButton>
+
+                            <!--PLAY BUTTON-->
+                            <themes:IconButton Margin="5,0,5,0" x:Name="playBtn" Command="{Binding PlayCommand}">
+                                <themes:IconButton.Style>
+                                    <Style TargetType="themes:IconButton">
+                                        <Setter Property="Foreground" Value="{StaticResource fg}"/>
+                                        <Setter Property="BorderBrush" Value="{x:Null}"/>
+                                        <Setter Property="IconSource" Value="{StaticResource play}" />
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsPlaying}" Value="True">
+                                                <Setter Property="IconSource" Value="{StaticResource stop}" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </themes:IconButton.Style>
+                            </themes:IconButton>
+
+
+                            <themes:IconButton Margin="5,0,5,0" IconSource="{StaticResource forward}" Command="{Binding FrameNextCommand}"/>
+
+                            <themes:IconButton Margin="5,0,5,0" IconSource="{StaticResource forward_keyframe}" Command="{Binding KeyframeNextCommand}"/>
+                        </StackPanel>
+                    </Grid>
+
+
+                 <!--RIGHT-->
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="40,0,0,0" VerticalAlignment="Center">
+                    <StackPanel.Style>
+                        <Style TargetType="StackPanel">
+                            <Setter Property="DataContext" Value="{Binding Animation}" />
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding DataContext.TimelineMode, RelativeSource={RelativeSource AncestorType=UserControl}}" Value="Keyframes">
+                                    <Setter Property="DataContext" Value="{Binding SelectedLayer._Animation}" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </StackPanel.Style>
+                    
+
+                 <MUI:M_NumberBox Value="{Binding CurrentFrame}" Width="80"/>
+                <MUI:M_NumberBox Value="{Binding FrameStart}" Margin="1 0 0 0" Header="Start" Width="100"/>
+                <MUI:M_NumberBox Value="{Binding FrameEnd}" Margin="1 0 0 0" Header="End" Width="100"/>
+                    <ComboBox ItemsSource="{Binding Source={Core:EnumBindingSource {x:Type local:TimelineMode}}}" Width="120"
+                                    SelectedItem="{Binding DataContext.TimelineMode, RelativeSource={RelativeSource AncestorType=UserControl}}"/>
+            </StackPanel>
+        </Grid>
+
+            
+            
+            
+            
+            
+            
+            
+            
+            
+        <!--_______________________Content__________________________-->
+            <!--{Binding DataContext.LeftSection, Mode=TwoWay, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource gridLengthConverter}}-->
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                    <ColumnDefinition x:Name="leftSectionColumn" Width="100"/>
+                <ColumnDefinition Width="*"/>
+                    <ColumnDefinition x:Name="rightSectionColumn" Width="170"/>
+            </Grid.ColumnDefinitions>
+
+ 
+            
+                 <!--____TIMED VARIABLES___-->
+                <Grid d:Background="{DynamicResource bg}">
+                    <StackPanel Style="{x:Null}">
+                        <TextBlock d:Text="Layer" Text="{Binding SelectedLayer.Name}" Margin="10 3"/>
+                        <ItemsControl DataContext="{Binding SelectedLayer._Animation}" Background="Transparent" ItemsSource="{Binding TimedVariables}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid Margin="0 5">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+
+                                        <CheckBox IsChecked="{Binding IsUIVisible}" VerticalAlignment="Center" Content="{Binding PropertyName}" />
+                                        <CheckBox Style="{StaticResource CheckBoxLight}" Width="24" Content="🔗" IsChecked="{Binding Linked}" HorizontalAlignment="Right" Grid.Column="1" VerticalAlignment="Center"/>
+                                    </Grid>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+
+                    </StackPanel>
+ 
+                    <Grid Visibility="Collapsed" Grid.Row="1" DataContext="{Binding DataContext, RelativeSource={RelativeSource AncestorType=UserControl}}">
+                        <StackPanel Style="{x:Null}">
+                            <Label Content="Pan" HorizontalAlignment="Center"/>
+                            <TextBlock d:Text="512" Text="{Binding GlobalCanvasTransformX, Mode=OneWay}" Margin="2" HorizontalAlignment="Center" />
+                            <TextBlock d:Text="512" Text="{Binding GlobalCanvasTransformY, Mode=OneWay}" Margin="2" HorizontalAlignment="Center" />
+
+                            <Label Content="Scale" HorizontalAlignment="Center"/>
+                            <MUI:M_NumberBox Header="X" Value="{Binding CanvasScaleX}" Margin="2" Jump="0.1"/>
+                            <MUI:M_NumberBox Header="Y" Value="{Binding CanvasScaleY}" Margin="2" Jump="0.1"/>
+
+                            <MUI:M_NumberBox Header="T Factor" Value="{Binding CanvasTransformFactor}" Margin="2" Jump="0.1"/>
+
+                            <MUI:M_NumberBox Header="S Factor" Value="{Binding ScaleFactor, RelativeSource={RelativeSource AncestorType=UserControl}}" Margin="2" Jump="0.1"/>
+                        </StackPanel>
+                    </Grid>
+            
+                </Grid>
+
+                <!--CANVAS-->
+                <Grid Grid.Column="1" Style="{x:Null}">
+                    
+                    
+                    <!--CanvasTransform="{Binding CanvasTransform, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"-->
+                    <local:SimpleCanvasMatrix x:Name="canvas" Background="Transparent"
+                                              RenderOptions.ClearTypeHint="Auto" RenderOptions.BitmapScalingMode="NearestNeighbor"
+                                              FocusVisualStyle="{x:Null}"
+                                           
+                        ClipToBounds="True" Focusable="True"
+                        MouseEnter="canvas_MouseEnter"
+                        KeyDown="Canvas_KeyDown"
+                        MouseDown="Canvas_MouseDown"
+                        MouseMove="Canvas_MouseMove"
+                        MouseUp="canvasArea_MouseUp"
+                        KeyUp="canvas_KeyUp"
+                        
+                        AllowDrop="True"
+                        DragEnter="canvas_DragEnter"
+                        DragLeave="canvas_DragLeave"
+                        Drop="canvas_Drop"
+                        DragOver="canvas_DragOver">
+
+                        <!--<local:SimpleCanvasMatrix.RenderTransform>
+                        <ScaleTransform ScaleX="1" ScaleY="1"/>
+                    </local:SimpleCanvasMatrix.RenderTransform>-->
+
+                        <!--<i:Interaction.Behaviors>
+                            <Core:CanvasFixedSizeBehaviour/>
+                        </i:Interaction.Behaviors>-->
+
+                        <!--____________________________________________________________________________________RIGHT CLICK CONTEXT MENU________________________________________-->
+                        <local:SimpleCanvasMatrix.Resources>
+                            
+                            <!-- Keyframes ContextMenu -->
+                            <ContextMenu x:Key="ContextMenuKeyframes">
+                                
+                                
+                                <MenuItem Header="Keyframe Type">
+                                    <MenuItem Header="Keyframe" Click="KeyframeType_Click"/>
+                                    <MenuItem Header="Main Key" Click="KeyframeType_Click"/>
+                                    <MenuItem Header="Inbetween" Click="KeyframeType_Click"/>
+                                    <Separator/>
+                                    <MenuItem Header="Reference" Click="KeyframeType_Click"/>
+                                    <MenuItem Header="Bake Keyframe" Click="KeyframeType_Click"/>
+                                </MenuItem>
+                                
+                                
+                                <Separator/>
+
+                                <MenuItem Header="Copy" Click="RightClickMenu"/>
+                                <MenuItem Header="Paste" Click="RightClickMenu"/>
+                                <MenuItem Header="Insert Clipboard Image" Click="RightClickMenu"/>
+                                <Separator/>
+
+                                
+                                <MenuItem Header="Remove from Bake Keyframes" Click="RemoveBakeKeyframes_Click"/>
+                                <MenuItem Header="Delete Keyframe" Click="DeleteKeyframe_Click"/>
+                                <Separator/>
+
+
+
+                                <MenuItem Header="Interpolation">
+                                    <MenuItem Header="Constant" Click="RightClickMenu_Interpolation"/>
+                                    <MenuItem Header="Linear" Click="RightClickMenu_Interpolation"/>
+                                    <MenuItem Header="Bezier" Click="RightClickMenu_Interpolation"/>
+                                </MenuItem>
+
+                                <MenuItem Header="Generative">
+                                    <MenuItem.Icon>
+                                        <Image Source="{StaticResource sparkles}"/>
+                                    </MenuItem.Icon>
+                                    <MenuItem Header="Dynami Interpolation..." Click="RightClickMenu_GenInterpolation"/>
+                                    <MenuItem Header="Linear Interpolation..." Click="RightClickMenu_GenInterpolation"/>
+                                    
+                                    <!--<MenuItem Header="AnimateDiff..." Click="RightClickMenu_Interpolation"/>-->
+                                </MenuItem>
+
+                                <MenuItem Header="Generate in Batch" Click="RightClickMenu_GenInterpolation">
+                                    <MenuItem.Icon>
+                                        <Image Source="{StaticResource sparkles}"/>
+                                    </MenuItem.Icon>
+                                </MenuItem>
+
+                            </ContextMenu>
+
+                            
+                            
+                            
+                            
+                            <ContextMenu x:Key="ContextMenuKeyframes_Interpolation">
+                                <MenuItem Header="Constant" Click="RightClickMenu_Interpolation"/>
+                                <MenuItem Header="Linear" Click="RightClickMenu_Interpolation"/>
+                                <MenuItem Header="Bezier" Click="RightClickMenu_Interpolation"/>
+                                <Separator/>
+
+                                <MenuItem Header="Assign as Bake Keyframes" Click="AssignBakeKeyframes_Click"/>
+                                <MenuItem Header="Remove from Bake Keyframes" Click="RemoveBakeKeyframes_Click"/>
+                                <MenuItem Header="Delete Keyframe" Click="DeleteKeyframe_Click"/>
+
+                                <Separator/>
+                                <MenuItem Header="Dynami Interpolation..." Click="RightClickMenu_GenInterpolation"/>
+                                <MenuItem Header="Linear Interpolation..." Click="RightClickMenu_GenInterpolation"/>
+
+                            </ContextMenu>
+                            
+
+                            <!-- Track ContextMenu -->
+                            <ContextMenu x:Key="ContextMenuTracks">
+                                <MenuItem Header="Edit Keyframes" Click="EditKeyframes_Click"/>
+                                <MenuItem Header="Convert To Image Sequence" Click="RightClickMenu_Tracks"/>
+                                <MenuItem Header="Delete Track" Click="DeleteTrack_Click"/>
+                            </ContextMenu>
+                        </local:SimpleCanvasMatrix.Resources>
+
+
+                    
+                    
+                    
+                    
+
+      <!--____________________________UI THINGS, AREA OF INTEREST___________________________________-->
+                    
+                        <Rectangle  Tag="UITypeX" x:Name="startEndRectGlobal" Fill="{DynamicResource bg}">
+                            
+                            <Rectangle.Style>
+                                <Style TargetType="Rectangle">
+                                    <Setter Property="Panel.ZIndex" Value="-3"/>
+                                    <Setter Property="Height" Value="1000"/>
+                                    <Setter Property="IsHitTestVisible" Value="False"/>
+                                    <Setter Property="DataContext" Value="{Binding Animation}" />
+                                </Style>
+                            </Rectangle.Style>
+
+                                
+                            <Canvas.Left>
+                                <MultiBinding Converter="{StaticResource FrameToXConverter}">
+                                    <Binding Path="FrameStart" />
+                                    <Binding Path="DataContext.CanvasScaleX" RelativeSource="{RelativeSource AncestorType=UserControl}" />
+                                </MultiBinding>
+                            </Canvas.Left>
+
+                            <Rectangle.Width>
+                                <MultiBinding Converter="{StaticResource FrameToXConverter}">
+                                    <Binding Path="FrameDuration" />
+                                    <Binding Path="DataContext.CanvasScaleX" RelativeSource="{RelativeSource AncestorType=UserControl}" />
+                                </MultiBinding>
+                            </Rectangle.Width>
+
+                        </Rectangle>
+                    
+                                                                                            <!--bg2, 0.33-->
+                        <Rectangle Tag="UITypeX" x:Name="startEndRect" Fill="{DynamicResource bg2}" Opacity="0.22">
+
+                            <Rectangle.Style>
+                                <Style TargetType="Rectangle">
+                                    <Setter Property="Panel.ZIndex" Value="-3"/>
+                                    <Setter Property="Height" Value="1000"/>
+                                    <Setter Property="IsHitTestVisible" Value="False"/>
+                                    <Setter Property="DataContext" Value="{Binding Animation}" />
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding DataContext.TimelineMode, RelativeSource={RelativeSource AncestorType=UserControl}}" Value="Keyframes">
+                                            <Setter Property="DataContext" Value="{Binding SelectedLayer._Animation}" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Rectangle.Style>
+
+
+                            <Canvas.Left>
+                                <MultiBinding Converter="{StaticResource FrameToXConverter}">
+                                    <Binding Path="FrameStart" />
+                                    <Binding Path="DataContext.CanvasScaleX" RelativeSource="{RelativeSource AncestorType=UserControl}" />
+                                </MultiBinding>
+                            </Canvas.Left>
+
+                            <Rectangle.Width>
+                                <MultiBinding Converter="{StaticResource FrameToXConverter}">
+                                    <Binding Path="FrameDuration" />
+                                    <Binding Path="DataContext.CanvasScaleX" RelativeSource="{RelativeSource AncestorType=UserControl}" />
+                                </MultiBinding>
+                            </Rectangle.Width>
+
+                        </Rectangle>
+
+
+
+
+
+                        <!--______________________________________________TIMELINE LINES_________________________________________________________________________-->
+                        <local:TimeLineCanvasLines Tag="UIType" Width="{Binding ActualWidth, ElementName=canvas}"
+                         Height="{Binding ActualHeight, ElementName=canvas}"
+                         DataContext="{Binding DataContext, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                         CanvasScaleX="{Binding CanvasScaleX}"
+                         CanvasScaleY="{Binding CanvasScaleY}"                
+                         GlobalCanvasTransformX="{Binding GlobalCanvasTransformX}"
+                         GlobalCanvasTransformY="{Binding GlobalCanvasTransformY}"
+                         ViewMode="{Binding ViewMode, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                         Panel.ZIndex="0"
+                         PrimaryColorLine="{StaticResource bg4}"
+                         SecondaryColorLine="#49101010"
+                         ForegroundColor="{StaticResource fg}"
+                         IsHitTestVisible="False"
+                         FocusVisualStyle="{x:Null}"/>   
+
+
+
+
+
+                        <!--___________________________ TRACK VIEW ___________________________-->
+                        
+                            <ItemsControl Name="TrackLayersItems" ItemsSource="{Binding LayersFromView}" Visibility="Collapsed">
+                                
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <Canvas />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                                
+                            <ItemsControl.ItemContainerStyle>
+                                    <Style>
+                                        <Setter Property="Canvas.Top">
+                                            <Setter.Value>
+                                                <MultiBinding Converter="{StaticResource TrackIndexToYConverter}">
+                                                    <Binding Path="_Animation.TrackIndex" />
+                                                    <Binding Path="DataContext.CanvasScaleY" RelativeSource="{RelativeSource AncestorType=UserControl}" />
+                                                </MultiBinding>
+                                            </Setter.Value>
+                                        </Setter>
+
+                                        <Setter Property="Canvas.Left">
+                                            <Setter.Value>
+                                                <MultiBinding Converter="{StaticResource FrameToXConverter}">
+                                                    <Binding Path="_Animation.GlobalFrameStart"/>
+                                                    <Binding Path="DataContext.CanvasScaleX" RelativeSource="{RelativeSource AncestorType=UserControl}" />
+                                                </MultiBinding>
+                                            </Setter.Value>
+                                        </Setter>
+
+
+
+                                    </Style>
+                                </ItemsControl.ItemContainerStyle>
+
+
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Obj:TrackV/>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+
+
+                            </ItemsControl>
+                    
+                     
+
+
+                        <!--___________________________ KEYFRAME VIEW ___________________________-->
+
+                        <Grid DataContext="{Binding SelectedLayer}">
+                        <!--______GRAPHS________________-->
+                        <ItemsControl Name="GraphLinesItems" Panel.ZIndex="-1" DataContext="{Binding _Animation}" ItemsSource="{Binding TimedVariables}">
+
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <Canvas />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+
+
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+
+                                        <!--Stroke="{Binding GraphColor,Converter={StaticResource colorToSolidColorBrushConverter}}"-->
+                                        <Polyline Visibility="{Binding IsUIVisible, Converter={StaticResource boolToVisibilityConverter}}"
+                                   IsHitTestVisible="False" RenderOptions.EdgeMode="Unspecified">
+
+                                            <Polyline.Stroke>
+                                                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                                    <GradientStop Color="{Binding GraphColor}" Offset="0"/>
+                                                    <GradientStop Offset="1">
+                                                        <GradientStop.Color>
+                                                            <MultiBinding Converter="{StaticResource colorMixerMultiConverter}" ConverterParameter="0.66">
+                                                                <Binding Path="GraphColor" />
+                                                                <Binding Source="{StaticResource fg_high2}" />
+                                                            </MultiBinding>
+                                                        </GradientStop.Color>
+                                                    </GradientStop>
+                                                </LinearGradientBrush>
+                                            </Polyline.Stroke>
+                                            
+                                            <Polyline.Style>
+                                                <Style TargetType="Polyline">
+                                                    <Setter Property="StrokeThickness" Value="1"/>
+                                                    <Setter Property="Opacity" Value="0.5" />
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding IsSelected}" Value="True">
+                                                            <Setter Property="StrokeThickness" Value="2"/>
+                                                            <Setter Property="Opacity" Value="1" />
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Polyline.Style>
+                                        
+                                            <Polyline.Points>
+                                            <MultiBinding Converter="{StaticResource GraphPointsConverter}">
+                                                <Binding Path="GraphPoints" />
+                                                <Binding Path="DataContext" RelativeSource="{RelativeSource Self}" />
+                                                <Binding Path="DataContext" RelativeSource="{RelativeSource AncestorType=UserControl}" />
+                                            </MultiBinding>
+                                        </Polyline.Points>
+
+                                    </Polyline>
+
+
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+
+                            <!--ITEMS-->
+
+                        </ItemsControl>
+                            
+                            
+                            
+                        <!--____________KEYFRAMES________________-->
+
+                            <ItemsControl Name="TimedVariablesItems"  DataContext="{Binding _Animation}" ItemsSource="{Binding TimedVariables}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <Canvas />
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <!--<ItemsControl.ItemContainerStyle>
+                            <Style>
+                                <Setter Property="Canvas.Top" Value="{Binding Value, Converter={StaticResource ValueToYConverter}}" />
+
+                            </Style>
+                        </ItemsControl.ItemContainerStyle>-->
+
+
+
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <ItemsControl ItemsSource="{Binding Keyframes}" Name="KeyframesItems" Visibility="{Binding IsUIVisible, Converter={StaticResource boolToVisibilityConverter}}">
+
+                                            <ItemsControl.ItemsPanel>
+                                                <ItemsPanelTemplate>
+                                                    <Canvas/>
+                                                </ItemsPanelTemplate>
+                                            </ItemsControl.ItemsPanel>
+
+                                            <ItemsControl.ItemContainerStyle>
+                                                <Style>
+                                                    <Setter Property="Canvas.Top">
+                                                        <Setter.Value>
+                                                            <MultiBinding Converter="{StaticResource ValueToYConverter}">
+                                                                <Binding Path="Value" />
+                                                                <Binding Path="DataContext.CanvasScaleY" RelativeSource="{RelativeSource AncestorType=UserControl}" />
+                                                            </MultiBinding>
+                                                        </Setter.Value>
+                                                    </Setter>
+
+
+                                                    <Setter Property="Canvas.Left">
+                                                        <Setter.Value>
+                                                            <MultiBinding Converter="{StaticResource FrameToXConverter}">
+                                                                <Binding Path="Frame" />
+                                                                <Binding Path="DataContext.CanvasScaleX" RelativeSource="{RelativeSource AncestorType=UserControl}" />
+                                                            </MultiBinding>
+                                                        </Setter.Value>
+                                                    </Setter>
+
+
+                                                </Style>
+                                            </ItemsControl.ItemContainerStyle>
+
+
+                                            <!--KEYFRAME VIEWS-->
+
+                                        </ItemsControl>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </Grid>
+
+
+                        <!--______________________________________________TIMELINE TOP NUMBERS_________________________________________________________________________-->
+
+                        <Rectangle Tag="UIType" x:Name="pathRect" Width="{Binding ActualWidth, ElementName=canvas}" Height="24" Fill="{DynamicResource bg4}"/>
+
+                        <local:TimeLineCanvasNumbers Tag="UIType" Width="{Binding ActualWidth, ElementName=canvas}" Margin="0 2 0 0"
+                                      Height="{Binding ActualHeight, ElementName=canvas}"
+                                      DataContext="{Binding Animation}"
+                        CanvasScaleX="{Binding DataContext.CanvasScaleX, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                        GlobalCanvasTransformX="{Binding DataContext.GlobalCanvasTransformX, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                        Panel.ZIndex="0"
+                        PrimaryColorLine="{StaticResource fg}"
+                        SecondaryColorLine="#282828"
+                        ForegroundColor="{StaticResource fg}"
+                        IsHitTestVisible="False"
+                        TimelineMode="{Binding DataContext.TimelineMode, RelativeSource={RelativeSource AncestorType=UserControl}}"/>
+
+                        
+                        
+                        
+                        <!--__________________PATH___________________-->
+
+                        <Grid x:Name="pathGrid" Tag="UITypeX" UseLayoutRounding="True" HorizontalAlignment="Left" Margin="-11 9 0 0" VerticalAlignment="Top" d:Margin="7 9 0 0"
+                          MouseUp="Canvas_MouseDown">
+    
+                            <Grid.Style>
+                                <Style TargetType="Grid">
+                                    <Setter Property="DataContext" Value="{Binding Animation}" />
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding DataContext.TimelineMode, RelativeSource={RelativeSource AncestorType=UserControl}}" Value="Keyframes">
+                                            <Setter Property="DataContext" Value="{Binding SelectedLayer._Animation}" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Grid.Style>
+                            
+                            <Canvas.Left>
+                                <MultiBinding Converter="{StaticResource FrameToXConverter}">
+                                    <Binding Path="CurrentFrame" />
+                                    <Binding Path="DataContext.CanvasScaleX" RelativeSource="{RelativeSource AncestorType=UserControl}" />
+                                </MultiBinding>
+                            </Canvas.Left>
+
+                            
+                            <!--GLOW-->
+                            <Rectangle Fill="{StaticResource fg_high}" Tag="IgnoreHit" Height="30" Width="30" VerticalAlignment="Top" Margin="-78 -18 0 0" Opacity="0.22">
+                                <Rectangle.Effect>
+                                    <BlurEffect Radius="16" KernelType="Box"/>
+                                </Rectangle.Effect>
+                            </Rectangle>
+
+                            
+                            <!--VERTICAL LINE-->
+                            <Rectangle Margin="11,0,0,0" Fill="{DynamicResource fg_high}" Tag="IgnoreHit"
+                                      Width="1" Height="{Binding ActualHeight, ElementName=canvas}" IsHitTestVisible="False" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+
+                            <Grid Cursor="Hand" x:Name="circlePath" Background="{x:Null}" Margin="0 -13 0 0" Width="100" Height="30" VerticalAlignment="Top" RenderTransformOrigin="0.12 0.3">
+                                <Grid.RenderTransform>
+                                    <ScaleTransform ScaleX="1" ScaleY="1"/>
+                                </Grid.RenderTransform>
+
+                                <Border Panel.ZIndex="2" Background="{DynamicResource fg_high}" CornerRadius="12" Width="17" Height="17"
+                    Margin="3 5 0 0" Style="{x:Null}" Padding="0" VerticalAlignment="Top" HorizontalAlignment="Left">
+                                </Border>
+
+                                <!--PATH NUMBER-->
+                                <Label Panel.ZIndex="3" Style="{x:Null}" Foreground="White" d:Content="15" Content="{Binding CurrentFrame}"
+                   Margin="-78 2 0 0" HorizontalContentAlignment="Center"/>
+                                <Grid.Triggers>
+                                    <EventTrigger RoutedEvent="MouseEnter">
+                                        <BeginStoryboard>
+                                            <Storyboard>
+                                                <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)"
+                                             To="1.2" Duration="0:0:0.2">
+                                                    <DoubleAnimation.EasingFunction>
+                                                        <BackEase Amplitude="0.3" EasingMode="EaseOut"/>
+                                                    </DoubleAnimation.EasingFunction>
+                                                </DoubleAnimation>
+                                                <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)"
+                                             To="1.2" Duration="0:0:0.2">
+                                                    <DoubleAnimation.EasingFunction>
+                                                        <BackEase Amplitude="0.3" EasingMode="EaseOut"/>
+                                                    </DoubleAnimation.EasingFunction>
+                                                </DoubleAnimation>
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </EventTrigger>
+                                    <EventTrigger RoutedEvent="MouseLeave">
+                                        <BeginStoryboard>
+                                            <Storyboard>
+                                                <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)"
+                                             To="1" Duration="0:0:0.2">
+                                                    <DoubleAnimation.EasingFunction>
+                                                        <BackEase Amplitude="0.3" EasingMode="EaseOut"/>
+                                                    </DoubleAnimation.EasingFunction>
+                                                </DoubleAnimation>
+                                                <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)"
+                                             To="1" Duration="0:0:0.2">
+                                                    <DoubleAnimation.EasingFunction>
+                                                        <BackEase Amplitude="0.3" EasingMode="EaseOut"/>
+                                                    </DoubleAnimation.EasingFunction>
+                                                </DoubleAnimation>
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </EventTrigger>
+                                </Grid.Triggers>
+                            </Grid>
+                        </Grid>
+
+
+                
+
+                    <!--____________________________________________SELECTOR_____________________________________________-->
+
+                        <ui:RectangleSelectorView x:Name="selector"/>
+
+                    </local:SimpleCanvasMatrix>
+
+        
+                    
+                
+                    <!--SCROLLS-->
+                    
+                    <!--<MUI:ScrollbarArea VerticalAlignment="Bottom" Margin="2"
+                                       FrameStart="{Binding Animation.FrameStart}"
+                                       FrameEnd="{Binding Animation.FrameEnd}"
+                                       CanvasScaleX="{Binding DataContext.CanvasScaleX, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                       LeftDragDelta="H_ScrollLeftDelta"
+                                       RightDragDelta="H_ScrollRightDelta"/>-->
+                    
+                    <!--<ScrollBar Name="miScrollBarVertical"
+                   Orientation="Vertical"
+                   Minimum="0"
+                   Maximum="10"
+                   Value="50"
+                   ViewportSize="10"
+                   VerticalAlignment="Stretch"
+                   HorizontalAlignment="Right"
+                   SmallChange="1"
+                   LargeChange="10"/>-->
+
+
+                    
+                    
+                    <!--BOTTOM BUTTONS-->
+                    <StackPanel DataContext="{Binding Animation}" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="3 30 3 3">
+
+                        <Grid>
+                            <i:Interaction.Behaviors>
+                                <Core:VisibilityBoolAnimationBehavior IsVisible="{Binding SelectedKeyframes.Count, Converter={StaticResource collectionCountToBoolConverter}, ConverterParameter=2}" />
+                            </i:Interaction.Behaviors>
+
+                            <Button Background="{StaticResource fg_high}" Opacity="0.8" Width="50" Padding="0" ToolTip="Interpolate..."
+                                Click="Interpolate_Click">
+                                <themes:IconText IconSource="{StaticResource sparkles}" Texto="" Margin="0"/>
+                            </Button>
+
+                        </Grid>
+                        
+                    </StackPanel>
+               
+
+                </Grid>
+
+
+
+
+
+             <!--_______________________________________________INSPECTOR_______________________________________-->
+                <ScrollViewer Grid.Column="2" d:Background="{DynamicResource bg}">
+                
+                    <!--KEYFRAMES-->
+                    <Grid Visibility="{Binding Animation.SelectedKeyframe, Converter={StaticResource objToVisibilityConverter}}">
+                        <StackPanel DataContext="{Binding Animation.SelectedKeyframe}" Grid.Column="2">
+
+
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                            <MUI:M_Label Content="Selected Keyframe" HorizontalAlignment="Center" FontWeight="Medium"/>
+                            <CheckBox Grid.Column="1" Style="{StaticResource CheckBoxLight}" Width="23" Height="23" ToolTip="Block Keyframe to prevent generation making changes"
+                                  IsChecked="{Binding Block}"
+                                  FontSize="13" Margin="3 0 3 0">       
+                                <!--<TextBlock Text="🔒" FontSize="11" Margin="0 0 0 0"/>-->
+                                <Image Source="{StaticResource block}" Margin="2" RenderOptions.BitmapScalingMode="Fant"/>
+                            </CheckBox>
+                            </Grid>
+                            
+                            
+                            <!--APPLY-->
+                            <Border d:Visibility="Visible" Visibility="{Binding PreviewValue.IsPreviewMode, Converter={StaticResource boolToVisibilityConverter}}" Margin="0 0 0 10" BorderBrush="{StaticResource fg_high}" BorderThickness="2">
+                            <StackPanel Margin="5 0 5 0">
+                                <MUI:M_Label Content="Generation Preview" HorizontalAlignment="Center" />
+                                    <CheckBox Content="Show Preview" IsChecked="{Binding PreviewValue.IsPreview}" Margin="10"/>
+                                    <Grid Background="Transparent" Margin="0 10">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition/>
+                                        <ColumnDefinition/>
+                                    </Grid.ColumnDefinitions>
+                                        <Button Content="Apply" Background="{StaticResource fg_high}" Command="{Binding PreviewValue.EndPreviewCommand}" CommandParameter="{StaticResource BoolTrue}"/>
+                                        <Button Grid.Column="1" Content="Discard" Command="{Binding PreviewValue.EndPreviewCommand}" CommandParameter="{StaticResource BoolFalse}"/>
+                                    </Grid>
+                             
+                            </StackPanel>
+                            </Border>
+                        
+                            
+                            
+                            
+                            <!--KEYFRAME-->
+
+                        
+
+                            <Grid Background="Transparent">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <MUI:M_Label Content="Frame"/>
+                                <MUI:M_NumberBox Grid.Column="1" Value="{Binding Frame}"/>
+                            </Grid>
+
+                            <Grid Background="Transparent">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <MUI:M_Label Content="Value"/>
+                                <Label Grid.Column="1" d:Content="512" Content="{Binding Value, Converter={StaticResource ValueToNumberConverter}}" HorizontalAlignment="Center"/>
+                            </Grid>
+                            <Separator/>
+                            <Grid Background="Transparent">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <MUI:M_Label Content="Interpolation"/>
+                                <ComboBox Grid.Column="1"  ItemsSource="{Binding Source={Core:EnumBindingSource {x:Type Core:TemporalInterpolation}}}"
+                                      SelectedItem="{Binding Interpolation, Mode=TwoWay}"/>
+                            </Grid>
+                            <Separator/>
+                            <MUI:M_Label Content="Left Handle" HorizontalAlignment="Left"/>
+
+                            <Grid Background="Transparent">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <MUI:M_Label Content="X"/>
+                                <MUI:M_NumberBox Grid.Column="1" Value="{Binding LeftHandleFrame}"/>
+                            </Grid>
+
+                            <Grid Background="Transparent">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <MUI:M_Label Content="Y"/>
+                                <MUI:M_NumberBox Grid.Column="1" Value="{Binding LeftHandleValue}"/>
+                            </Grid>
+
+                            <Separator/>
+                            <MUI:M_Label Content="Right Handle" HorizontalAlignment="Left"/>
+
+                            <Grid Background="Transparent">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <MUI:M_Label Content="X"/>
+                                <MUI:M_NumberBox Grid.Column="1" Value="{Binding RightHandleFrame}"/>
+                            </Grid>
+
+                            <Grid Background="Transparent">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+
+                                <MUI:M_Label Content="Y"/>
+                                <MUI:M_NumberBox Grid.Column="1" Value="{Binding RightHandleValue}"/>
+                            </Grid>
+
+
+
+                        </StackPanel>
+                    </Grid>
+                </ScrollViewer>
+         
+            
+                <GridSplitter Grid.Column="1"
+                      Panel.ZIndex="5"
+                      HorizontalAlignment="Left"
+                      VerticalAlignment="Stretch"
+                      Width="5"
+                      Opacity="0"/>
+                <GridSplitter Grid.Column="2"
+                      Panel.ZIndex="5"
+                      HorizontalAlignment="Left"
+                      VerticalAlignment="Stretch"
+                      Width="5"
+                      Opacity="0"/>
+
+            
+            
+        </Grid>
+
+
+    </Grid>
+    </Grid>
+</UserControl>

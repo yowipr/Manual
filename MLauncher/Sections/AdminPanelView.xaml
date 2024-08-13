@@ -1,0 +1,60 @@
+﻿<UserControl x:Class="MLauncher.Sections.AdminPanelView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:MLauncher.Sections"
+             
+             d:DataContext="{d:DesignInstance Type=local:AdminPanel}"
+             
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <ScrollViewer>
+        <StackPanel HorizontalAlignment="Stretch">
+
+            <Label Content="SVG TO PNG" FontSize="20"/>
+            <Grid Margin="10 3" AllowDrop="True" DragEnter="SvgPath_DragEnter" DragOver="SvgPath_DragOver" Drop="SvgPath_Drop">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Label Content="icon name" HorizontalAlignment="Right"  VerticalAlignment="Center"/>
+                <TextBox x:Name="textBox" Text="{Binding IconName}"
+                         Grid.Column="1" Margin="0" Width="Auto" Height="30" VerticalAlignment="Center"
+                         />
+            </Grid>
+
+
+            <Grid Margin="10 3" AllowDrop="True" DragEnter="SvgPath_DragEnter" DragOver="SvgPath_DragOver" Drop="SvgPath_Drop">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Label Content="svg content" HorizontalAlignment="Right"  VerticalAlignment="Center"/>
+                <TextBox x:Name="textBox2" Text="{Binding SvgContent}" TextWrapping="Wrap" Height="200" Width="500" AcceptsReturn="True" TextAlignment="Left"
+              Grid.Column="1" Margin="0" VerticalAlignment="Center"
+              />
+            </Grid>
+            
+
+            <Grid Margin="10 3">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Label Content="size" HorizontalAlignment="Right"  VerticalAlignment="Center"/>
+                <TextBox d:Text="128" Text="{Binding Size}"   Grid.Column="1" Margin="0" Width="Auto" Height="30" VerticalAlignment="Center"/>
+            </Grid>
+
+
+            <Button Content="Convert" Command="{Binding ConvertSvgToPngCommand}"/>
+
+            <Separator/>
+
+         
+        </StackPanel>
+        </ScrollViewer>
+    </Grid>
+    
+</UserControl>

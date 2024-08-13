@@ -1,0 +1,222 @@
+﻿<UserControl x:Class="Manual.Objects.KeyframeView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Manual.Objects"
+             xmlns:Core="clr-namespace:Manual.Core"
+             xmlns:editors="clr-namespace:Manual.Editors"
+             
+             mc:Ignorable="d" 
+             d:DesignHeight="50" d:DesignWidth="50"
+             d:DataContext="{d:DesignInstance Type=Core:Keyframe}"
+             RenderOptions.BitmapScalingMode="LowQuality"
+             CacheMode="BitmapCache">
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <editors:FrameToXConverter x:Key="FrameToXConverter" />
+            <editors:ValueToYConverter x:Key="ValueToYConverter" />
+
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <Grid>
+      
+        <!--DISABLED handle view in keyframes-->
+        <!--HANDLE-->
+        <Grid d:Visibility="Visible" Visibility="{Binding IsSelected, Converter={StaticResource boolToVisibilityConverter}}">
+
+            <Grid Visibility="{Binding Interpolation,
+Converter={StaticResource enumToVisibilityConverter},
+ConverterParameter={x:Static Core:TemporalInterpolation.Bezier}}">
+
+                <Line X1="0" Y1="0" Opacity="0.5" Margin="0.5 0 0 0" IsHitTestVisible="False" Tag="IgnoreHit"
+               Stroke="{StaticResource fg_high}" StrokeThickness="2">
+                    <Line.X2>
+                        <MultiBinding Converter="{StaticResource FrameToXConverter}">
+                            <Binding Path="RightHandleFrame" />
+                            <Binding Path="DataContext.CanvasScaleX" RelativeSource="{RelativeSource AncestorType=UserControl, AncestorLevel=2}" />
+                        </MultiBinding>
+                    </Line.X2>
+                    <Line.Y2>
+                        <MultiBinding Converter="{StaticResource ValueToYConverter}">
+                            <Binding Path="RightHandleValue" />
+                            <Binding Path="DataContext.CanvasScaleY" RelativeSource="{RelativeSource AncestorType=UserControl, AncestorLevel=2}" />
+                        </MultiBinding>
+                    </Line.Y2>
+                </Line>
+
+                <Grid x:Name="RightHandle" Margin="-9.5 -9.5 0 0" d:Margin="15 -3.5 0 0" Width="20" Height="20" Background="Transparent" Tag="IgnoreHit"
+                     HorizontalAlignment="Left" VerticalAlignment="Top"
+                     PreviewMouseDown="Handle_PreviewMouseDown"
+                     MouseMove="Handle_MouseMove"
+                     PreviewMouseUp="Handle_PreviewMouseUp">
+                    <Grid.RenderTransform>
+                        <TranslateTransform>
+                            <TranslateTransform.X>
+                                <MultiBinding Converter="{StaticResource FrameToXConverter}">
+                                    <Binding Path="RightHandleFrame" />
+                                    <Binding Path="DataContext.CanvasScaleX" RelativeSource="{RelativeSource AncestorType=UserControl, AncestorLevel=2}" />
+                                </MultiBinding>
+                            </TranslateTransform.X>
+                            <TranslateTransform.Y>
+                                <!-- Si necesitas un convertidor para Y también -->
+                                <MultiBinding Converter="{StaticResource ValueToYConverter}">
+                                    <Binding Path="RightHandleValue" />
+                                    <Binding Path="DataContext.CanvasScaleY" RelativeSource="{RelativeSource AncestorType=UserControl, AncestorLevel=2}" />
+                                </MultiBinding>
+                            </TranslateTransform.Y>
+                        </TranslateTransform>
+                    </Grid.RenderTransform>
+                    
+                    <Ellipse  Width="7" Height="7" Stroke="{StaticResource fg_high}" Fill="{StaticResource fg_high}">
+                      
+                    </Ellipse>
+                </Grid>
+
+
+                <Line X1="0" Y1="0" Opacity="0.5" Margin="0.5 0 0 0" IsHitTestVisible="False" Tag="IgnoreHit"
+      Stroke="{StaticResource fg_high}" StrokeThickness="2">
+                    <Line.X2>
+                        <MultiBinding Converter="{StaticResource FrameToXConverter}">
+                            <Binding Path="LeftHandleFrame" />
+                            <Binding Path="DataContext.CanvasScaleX" RelativeSource="{RelativeSource AncestorType=UserControl, AncestorLevel=2}" />
+                        </MultiBinding>
+                    </Line.X2>
+                    <Line.Y2>
+                        <MultiBinding Converter="{StaticResource ValueToYConverter}">
+                            <Binding Path="LeftHandleValue" />
+                            <Binding Path="DataContext.CanvasScaleY" RelativeSource="{RelativeSource AncestorType=UserControl, AncestorLevel=2}" />
+                        </MultiBinding>
+                    </Line.Y2>
+                </Line>
+
+
+                <!--LEFT HANDLE-->
+                <Grid x:Name="LeftHandle" Background="Transparent" Width="20" Height="20" Tag="IgnoreHit"
+                      Margin="-9.5 -9.5 0 0" d:Margin="-20 -3.5 0 0"
+                      HorizontalAlignment="Left" VerticalAlignment="Top"
+         PreviewMouseDown="Handle_PreviewMouseDown"
+         MouseMove="Handle_MouseMove" PreviewMouseUp="Handle_PreviewMouseUp">
+                    <Grid.RenderTransform>
+                        <TranslateTransform>
+                            <TranslateTransform.X>
+                                <MultiBinding Converter="{StaticResource FrameToXConverter}">
+                                    <Binding Path="LeftHandleFrame" />
+                                    <Binding Path="DataContext.CanvasScaleX" RelativeSource="{RelativeSource AncestorType=UserControl, AncestorLevel=2}" />
+                                </MultiBinding>
+                            </TranslateTransform.X>
+                            <TranslateTransform.Y>
+                                <!-- Si necesitas un convertidor para Y también -->
+                                <MultiBinding Converter="{StaticResource ValueToYConverter}">
+                                    <Binding Path="LeftHandleValue" />
+                                    <Binding Path="DataContext.CanvasScaleY" RelativeSource="{RelativeSource AncestorType=UserControl, AncestorLevel=2}" />
+                                </MultiBinding>
+                            </TranslateTransform.Y>
+                        </TranslateTransform>
+                    </Grid.RenderTransform>
+
+                    <Ellipse
+                     Stroke="{StaticResource fg_high}" Fill="{StaticResource fg_high}" Width="7" Height="7" >
+                    </Ellipse>
+                    
+                    
+                </Grid>
+                
+                
+                
+            </Grid>
+            
+        </Grid>
+
+
+
+        <!--dot at not selected-->   
+        <Ellipse Margin="0 -3 0 0" HorizontalAlignment="Left" VerticalAlignment="Top" Fill="{StaticResource fg}" Width="4" Height="4"
+                 Visibility="{Binding AttachedTimedVariable.IsSelected, Converter={StaticResource boolToVisibilityConverterInverse}}">
+            <Ellipse.RenderTransform>
+                <RotateTransform Angle="45"/>
+            </Ellipse.RenderTransform>
+            
+        </Ellipse>
+        
+        
+        <!-- Línea con LeftHandle --><!--
+        <Line d:X1="0"  d:Y1="0" d:X2="-40" d:Y2="0" Margin="0 0 0 0"
+              X1="0" Y1="0"
+              X2="{Binding LeftHandleFrame}" Y2="{Binding LeftHandleValue}"
+              Stroke="{StaticResource fg}" StrokeThickness="0.5" Visibility="Collapsed"/>
+
+        --><!-- Línea con RightHandle --><!--
+        <Line  d:X1="0"  d:Y1="0" d:X2="40" d:Y2="0" Margin="0 0 0 0"
+              X1="0" Y1="0"
+              X2="{Binding RightHandleFrame}" Y2="{Binding RightHandleValue}"
+              Stroke="{StaticResource fg}" StrokeThickness="0.5" Visibility="Collapsed"/>-->
+
+        
+        
+        
+        
+        
+        <!--keyframe background-->
+        <Grid x:Name="keygrid" Background="Transparent" Width="20" Height="20" HorizontalAlignment="Left" VerticalAlignment="Top"  Margin="-9.5 -9.5 0 0">
+            <Grid Margin="-1 -1 0 0" RenderTransformOrigin="0.5 0.5" HorizontalAlignment="Center" VerticalAlignment="Center"   Visibility="{Binding AttachedTimedVariable.IsSelected, Converter={StaticResource boolToVisibilityConverter}}">
+
+                <Grid.RenderTransform>
+                    <!-- Escala el botón al doble de su tamaño original en ambos ejes -->
+                    <ScaleTransform ScaleX="{Binding Type.Size}" ScaleY="{Binding Type.Size}"/>
+                </Grid.RenderTransform>
+
+                <!--real bg-->
+                <Border Opacity="1"
+     Width="10" Height="10" Background="{StaticResource fg}"
+     BorderBrush="{StaticResource fg_high2}" BorderThickness="1" CornerRadius="1" RenderTransformOrigin="0.5 0.5" HorizontalAlignment="Left" VerticalAlignment="Top">
+                    <Border.RenderTransform>
+                        <RotateTransform Angle="45"/>
+                    </Border.RenderTransform>
+                </Border>
+
+                <!--Visibility="{Binding AttachedTimedVariable.IsSelected, Converter={StaticResource boolToVisibilityConverter}}"-->
+                <Border x:Name="bgkey"
+                
+                Width="10" Height="10"
+                BorderBrush="{StaticResource fg_high2}" BorderThickness="1" CornerRadius="1" RenderTransformOrigin="0.5 0.5" HorizontalAlignment="Left" VerticalAlignment="Top">
+
+                    <Border.RenderTransform>
+                        <RotateTransform Angle="45"/>
+                    </Border.RenderTransform>
+                    <Border.Style>
+                        <Style TargetType="Border">
+                            <Setter Property="Background" d:Value="{StaticResource bg}" Value="{Binding Type.Color, Converter={StaticResource colorToSolidColorBrushConverter}, ConverterParameter=fg_high}"/>
+                            <Setter Property="Opacity" Value="0.4"/>
+                            <Setter Property="BorderThickness" Value="1"/>
+                            <Style.Triggers>
+
+                                <DataTrigger Binding="{Binding IsSelected}" Value="True">
+                                    <Setter Property="Opacity" Value="1"/>
+                                    <Setter Property="BorderThickness" Value="3"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding IsBaking}" Value="True">
+                                    <Setter Property="Background" Value="violet"/>
+                                </DataTrigger>
+                                <!-- Nuevo MultiDataTrigger para cuando ambos IsSelected e IsBakeKeyframe son verdaderos -->
+                                <MultiDataTrigger>
+                                    <MultiDataTrigger.Conditions>
+                                        <Condition Binding="{Binding IsSelected}" Value="True"/>
+                                        <Condition Binding="{Binding IsBakeKeyframe}" Value="True"/>
+                                    </MultiDataTrigger.Conditions>
+                                    <Setter Property="Background" Value="{DynamicResource fg_sub}"/>
+                                </MultiDataTrigger>
+
+                            </Style.Triggers>
+                        </Style>
+                    </Border.Style>
+                </Border>
+
+
+
+            </Grid>
+        </Grid>
+    </Grid>
+</UserControl>

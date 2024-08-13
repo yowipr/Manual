@@ -1,0 +1,151 @@
+﻿<local:CanvasMatrix x:Class="Manual.Objects.CanvasArea"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Manual.Objects"
+             xmlns:ViewModel="clr-namespace:Manual.Core"
+             xmlns:ui="clr-namespace:Manual.Objects.UI"
+           
+             mc:Ignorable="d" 
+             d:DataContext="{d:DesignInstance Type=ViewModel:Shot}"
+             d:DesignHeight="450" d:DesignWidth="800"
+       
+             AllowDrop="True" 
+             Drop="Canvas_Drop" Loaded="Canvas_Loaded"
+             SnapsToDevicePixels="True"
+             RenderOptions.BitmapScalingMode="HighQuality"
+             Background="{DynamicResource Line}"
+             ClipToBounds="True"
+             FocusVisualStyle="{x:Null}" RenderOptions.EdgeMode="Unspecified">
+
+    <Canvas.Resources>
+
+        <SolidColorBrush x:Key="brushGrid" Color="#2a2a2a"/>
+        <!--bg grid dot-->
+        <VisualBrush x:Key="Dot" TileMode="Tile" Viewport="-2 -2 64 64" ViewportUnits="Absolute" Viewbox="0 0 50 50" ViewboxUnits="Absolute">
+            <VisualBrush.Visual>
+                <Ellipse Fill="white" Width="3" Height="3" Opacity="0.36"/>
+            </VisualBrush.Visual>
+        </VisualBrush>
+        <!--bg grid line-->
+        <DrawingBrush x:Key="Line" TileMode="Tile" Viewport="-32 -32 64 64" ViewportUnits="Absolute" Viewbox="0 0 10 10" ViewboxUnits="Absolute">
+            <DrawingBrush.Drawing>
+                <GeometryDrawing>
+                    <GeometryDrawing.Pen>
+                        <Pen Thickness="0.2" Brush="{StaticResource brushGrid}" />
+                    </GeometryDrawing.Pen>
+                    <GeometryDrawing.Geometry>
+                        <!-- Define la geometría de las líneas aquí -->
+                        <GeometryGroup>
+                            <!-- Líneas Horizontales -->
+                            <LineGeometry StartPoint="0,5" EndPoint="10,5"/>
+                            <!-- Líneas Verticales -->
+                            <LineGeometry StartPoint="5,0" EndPoint="5,10" />
+                        </GeometryGroup>
+                    </GeometryDrawing.Geometry>
+                </GeometryDrawing>
+            </DrawingBrush.Drawing>
+        </DrawingBrush>
+        <!--bg grid line dot-->
+        <DrawingBrush x:Key="Plus" TileMode="Tile" Viewport="-6 -6 64 64" ViewportUnits="Absolute" Viewbox="0 0 50 50" ViewboxUnits="Absolute">
+            <DrawingBrush.Drawing>
+                <GeometryDrawing>
+                    <GeometryDrawing.Pen>
+                        <Pen Thickness="1" Brush="{StaticResource brushGrid}" />
+                    </GeometryDrawing.Pen>
+                    <GeometryDrawing.Geometry>
+                        <!-- Define la geometría de las líneas aquí -->
+                        <GeometryGroup>
+                            <!-- Líneas Horizontales -->
+                            <LineGeometry StartPoint="0,5" EndPoint="10,5" />
+                            <!-- Líneas Verticales -->
+                            <LineGeometry StartPoint="5,0" EndPoint="5,10" />
+                        </GeometryGroup>
+                    </GeometryDrawing.Geometry>
+                </GeometryDrawing>
+            </DrawingBrush.Drawing>
+        </DrawingBrush>
+
+
+
+
+        <ContextMenu x:Key="ImageContextMenu">
+            <MenuItem Header="Save Image As..." Click="MenuItem_Click" />
+            <MenuItem Header="Copy Image" Click="MenuItem_Click" />
+            <MenuItem Header="Send To Img2Img" Click="MenuItem_Click" />
+        </ContextMenu>
+
+        <ContextMenu x:Key="InsertKeyframetMenu">
+            <MenuItem Header="Image" Click="InsertKeyframe_Click" />
+            <MenuItem Header="Blank Image" Click="InsertKeyframe_Click" />
+            <Separator/>
+            <MenuItem Header="Position" Click="InsertKeyframe_Click" />
+            <MenuItem Header="Scale" Click="InsertKeyframe_Click" />
+        </ContextMenu>
+
+    </Canvas.Resources>
+    
+
+    <ItemsControl ItemsSource="{Binding cameras}">
+        <ItemsControl.ItemsPanel>
+            <ItemsPanelTemplate>
+                <Canvas />
+            </ItemsPanelTemplate>
+        </ItemsControl.ItemsPanel>
+
+        <ItemsControl.ItemContainerStyle>
+            <Style>
+                <Setter Property="Canvas.Left" Value="{Binding PositionGlobalX, Mode=OneWay}" />
+                <Setter Property="Canvas.Top" Value="{Binding PositionGlobalY, Mode=OneWay}" />
+                <Setter Property="Panel.ZIndex" Value="800" />
+
+            </Style>
+
+        </ItemsControl.ItemContainerStyle>
+    </ItemsControl>
+
+    <ItemsControl ItemsSource="{Binding LayersR}" Visibility="{Binding ShowUIElements, Converter={StaticResource boolToVisibilityConverter}}">
+        <ItemsControl.ItemsPanel>
+            <ItemsPanelTemplate>
+                <Canvas/>
+            </ItemsPanelTemplate>
+        </ItemsControl.ItemsPanel>
+
+        <ItemsControl.ItemContainerStyle>
+            <Style>
+                <Setter Property="Canvas.Left" Value="{Binding PositionGlobalX, Mode=OneWay}" />
+                <Setter Property="Canvas.Top" Value="{Binding PositionGlobalY, Mode=OneWay}" />
+                <Setter Property="Panel.ZIndex" Value="{Binding Index}" />
+
+            </Style>
+        </ItemsControl.ItemContainerStyle>
+    
+    </ItemsControl>
+
+
+
+
+    <ItemsControl ItemsSource="{Binding uiObjects}" Visibility="{Binding ShowUIElements, Converter={StaticResource boolToVisibilityConverter}}">
+        <ItemsControl.ItemsPanel>
+            <ItemsPanelTemplate>
+                <Canvas />
+            </ItemsPanelTemplate>
+        </ItemsControl.ItemsPanel>
+
+        <ItemsControl.ItemContainerStyle>
+            <Style>
+                <Setter Property="Canvas.Left" Value="{Binding PositionGlobalX, Mode=OneWay}" />
+                <Setter Property="Canvas.Top" Value="{Binding PositionGlobalY, Mode=OneWay}" />
+                <!--<Setter Property="Panel.ZIndex" Value="{Binding Index}" />-->
+
+            </Style>
+        </ItemsControl.ItemContainerStyle>
+    </ItemsControl>
+
+
+    <!--<TextBlock x:Name="test" Text="Testing"/>-->
+
+</local:CanvasMatrix>
+
+

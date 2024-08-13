@@ -1,0 +1,61 @@
+﻿<UserControl x:Class="Manual.MUI.M_PromptBox"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Manual.MUI"
+             xmlns:themes="clr-namespace:ManualToolkit.Themes;assembly=ManualToolkit"
+             mc:Ignorable="d" 
+             d:DesignWidth="400"
+             Height="120"
+             themes:CustomFields.CornerRadius="4" FontStyle="Italic" Cursor="IBeam" MouseLeftButtonDown="Border_MouseDown"
+             Foreground="{DynamicResource bg3}">
+    <Grid>
+
+        <!--<Border Background="{Binding Foreground, RelativeSource={RelativeSource AncestorType=UserControl}}"
+             CornerRadius="{Binding Path=(themes:CustomFields.CornerRadius), RelativeSource={RelativeSource AncestorType=UserControl}}" Opacity="0.9">
+        </Border>-->
+        <themes:Squircle Background="{Binding Foreground, RelativeSource={RelativeSource AncestorType=UserControl}}"
+        Curvature="{Binding Path=(themes:CustomFields.CornerRadius), RelativeSource={RelativeSource AncestorType=UserControl}}" Opacity="0.9">
+        </themes:Squircle>
+        
+        <Grid Margin="10" Background="{x:Null}" >
+
+            <!--PROMPT-->
+            <TextBox x:Name="textBox" Style="{StaticResource PromptBox}" Text="{Binding Text, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource AncestorType=UserControl}}" CaretBrush="{StaticResource fg}"
+                 TextWrapping="Wrap" Width="Auto" Height="Auto" Margin="0" FontSize="14" Padding="10" VerticalAlignment="Stretch"
+                 AcceptsReturn="True" TextAlignment="Left" VerticalScrollBarVisibility="Auto" Background="{x:Null}"
+                 TextChanged="textBox_TextChanged" PreviewKeyDown="textBox_PreviewKeyDown"
+                 AllowDrop="True" PreviewDragEnter="textBox_DragEnter" PreviewDragOver="textBox_DragOver" PreviewDrop="textBox_Drop"/>
+
+            <!--PLACEHOLDER-->
+            <TextBlock Text="{Binding Placeholder,RelativeSource={RelativeSource AncestorType=UserControl}}" 
+                           Visibility="{Binding IsTextEntered, Converter={StaticResource boolToVisibilityConverterInverse}, RelativeSource={RelativeSource AncestorType=UserControl}}" 
+                           VerticalAlignment="Center" Margin="10" Opacity="0.36"/>
+        </Grid>
+
+        <Border Visibility="Collapsed" Height="30" IsHitTestVisible="False" VerticalAlignment="Top" Opacity="0.3" Margin="10 20 10 4">
+            <Border.Background>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                    <GradientStop Color="#FF1F1F1F" Offset="0"/>
+                    <GradientStop Color="#001F1F1F" Offset="1"/>
+                </LinearGradientBrush>
+            </Border.Background>
+        </Border>
+        <Border Visibility="Collapsed" Height="20" IsHitTestVisible="False" VerticalAlignment="Bottom" Opacity="0.4" Margin="10 4 10 16" >
+            <Border.Background>
+                <LinearGradientBrush StartPoint="0, 0.6" EndPoint="0,0">
+                    <GradientStop Color="#FF1F1F1F" Offset="0"/>
+                    <GradientStop Color="#001F1F1F" Offset="1"/>
+                </LinearGradientBrush>
+            </Border.Background>
+        </Border>
+
+        <!--HEADER-->
+        <TextBlock x:Name="textBlock" d:Text="prompt"
+                   Text="{Binding Header, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                   FontStyle="Italic" Margin="21 6 0 0" Opacity="0.33" FontSize="10" IsHitTestVisible="False"/>
+
+    </Grid>
+
+</UserControl>

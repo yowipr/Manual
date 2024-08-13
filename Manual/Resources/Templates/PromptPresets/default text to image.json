@@ -1,0 +1,625 @@
+{
+  "last_node_id": 1,
+  "last_link_id": 1,
+  "nodes": [
+    {
+      "bgcolor": "#FF7E544C",
+      "id": 2,
+      "title": "CLIP Text Encode (Prompt)",
+      "type": "CLIPTextEncode",
+      "pos": [
+        -99.06357,
+        38.42558
+      ],
+      "size": {
+        "0": 516.49866,
+        "1": 221.0
+      },
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 4
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "links": [
+            1
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CLIPTextEncode"
+      },
+      "widgets_values": [
+        "girl, blue hair, blunt bangs, shy, sleepy, colorful, bibrant colors, dynamic pose, gray sharp eyes, pose, dynamic pose, posing, chainsaw_man, cinematic, sharp eyes, score_9, score_8_up, score_7_up, source_anime, rating_safe, intricate details, anime screencap, anime coloring, official style, looking at something, depth of field, jewelry, simple background, solo, upper body, solo, rule of thirds"
+      ]
+    },
+    {
+      "bgcolor": "#FF7E544C",
+      "id": 5,
+      "title": "CLIP Text Encode (Prompt)",
+      "type": "CLIPTextEncode",
+      "pos": [
+        -101.9953,
+        287.62256
+      ],
+      "size": {
+        "0": 516.49866,
+        "1": 221.0
+      },
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 5
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "links": [
+            3
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CLIPTextEncode"
+      },
+      "widgets_values": [
+        ", score_4_up, score_5_up, score_6_up, lowres, messy drawing, amateur drawing, ugly face, bad face, bad teeth, (interlocked fingers, badly drawn hands and fingers, anatomically incorrect hands, bad anatomy), watermark, greyscale, monochrome, blurry, source_cartoon, source_furry, source_pony, sketch, painting, loli"
+      ]
+    },
+    {
+      "bgcolor": "#FF553355",
+      "id": 3,
+      "title": "VAE Decode",
+      "type": "VAEDecode",
+      "pos": [
+        780.9448,
+        136.6385
+      ],
+      "size": {
+        "0": 200.0,
+        "1": 127.0
+      },
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "samples",
+          "type": "LATENT",
+          "link": 7
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": 6
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            8
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VAEDecode"
+      }
+    },
+    {
+      "bgcolor": "#FF644065",
+      "id": 7,
+      "title": "Empty Latent Image",
+      "type": "EmptyLatentImage",
+      "pos": [
+        208.4372,
+        534.67303
+      ],
+      "size": {
+        "0": 200.0,
+        "1": 139.0
+      },
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "links": [
+            9
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "EmptyLatentImage"
+      },
+      "widgets_values": [
+        512,
+        512,
+        1
+      ]
+    },
+    {
+      "bgcolor": "#FF443366",
+      "id": 6,
+      "title": "Output",
+      "type": "M_Output",
+      "pos": [
+        812.09546,
+        299.91708
+      ],
+      "size": {
+        "0": 243.1065,
+        "1": 307.59662
+      },
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "Result",
+          "type": "IMAGE",
+          "link": 8
+        },
+        {
+          "name": "Mask",
+          "type": "LAYER",
+          "link": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "M_Output"
+      },
+      "widgets_values": [
+        "Selected",
+        "Front"
+      ]
+    },
+    {
+      "bgcolor": "#FF644065",
+      "id": 1,
+      "type": "KSampler",
+      "pos": [
+        449.3301,
+        123.257454
+      ],
+      "size": {
+        "0": 279.255,
+        "1": 355.0
+      },
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 2
+        },
+        {
+          "name": "positive",
+          "type": "CONDITIONING",
+          "link": 1
+        },
+        {
+          "name": "negative",
+          "type": "CONDITIONING",
+          "link": 3
+        },
+        {
+          "name": "latent_image",
+          "type": "LATENT",
+          "link": 9
+        }
+      ],
+      "outputs": [
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "links": [
+            7
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "KSampler"
+      },
+      "widgets_values": [
+        14043893318131703511,
+        "randomize",
+        22.0,
+        8.0,
+        "euler_ancestral",
+        "normal",
+        1.0
+      ]
+    },
+    {
+      "bgcolor": "#FF553333",
+      "id": 4,
+      "title": "Load Checkpoint",
+      "type": "CheckpointLoaderSimple",
+      "pos": [
+        -487.28223,
+        279.83884
+      ],
+      "size": {
+        "0": 308.77304,
+        "1": 151.0
+      },
+      "flags": {},
+      "order": 6,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            2
+          ],
+          "slot_index": 0
+        },
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "links": [
+            4,
+            5
+          ],
+          "slot_index": 1
+        },
+        {
+          "name": "VAE",
+          "type": "VAE",
+          "links": [
+            6
+          ],
+          "slot_index": 2
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CheckpointLoaderSimple"
+      },
+      "widgets_values": [
+        "aamAnyloraAnimeMixAnime_v1.safetensors"
+      ]
+    }
+  ],
+  "links": [
+    [
+      1,
+      2,
+      0,
+      1,
+      1,
+      "CONDITIONING"
+    ],
+    [
+      3,
+      5,
+      0,
+      1,
+      2,
+      "CONDITIONING"
+    ],
+    [
+      6,
+      4,
+      2,
+      3,
+      1,
+      "VAE"
+    ],
+    [
+      7,
+      1,
+      0,
+      3,
+      0,
+      "LATENT"
+    ],
+    [
+      8,
+      3,
+      0,
+      6,
+      0,
+      "IMAGE"
+    ],
+    [
+      9,
+      7,
+      0,
+      1,
+      3,
+      "LATENT"
+    ],
+    [
+      2,
+      4,
+      0,
+      1,
+      0,
+      "MODEL"
+    ],
+    [
+      4,
+      4,
+      1,
+      2,
+      0,
+      "CLIP"
+    ],
+    [
+      5,
+      4,
+      1,
+      5,
+      0,
+      "CLIP"
+    ]
+  ],
+  "groups": [],
+  "config": {},
+  "extra": {
+    "manual_config": {
+      "preset_name": "default text to image",
+      "canvas_position": "0.5199067396857543,0,0,0.5199067396857543,291.9762438691263,75.49517442964752",
+      "prompt": null,
+      "drivers": [
+        {
+          "enabled": true,
+          "expressionCode": "Model",
+          "sources": [
+            {
+              "type": "Manual.Core.Nodes.Prompt, Manual",
+              "Source": "anime",
+              "Name": "source"
+            }
+          ],
+          "target": {
+            "type": "Manual.Core.Nodes.NodeOption, Manual",
+            "Source": "default text to image;4;ckpt_name",
+            "Name": "source"
+          },
+          "targetPropertyName": "FieldValue",
+          "twoWay": true,
+          "sourcePropertyName": "Model"
+        },
+        {
+          "enabled": true,
+          "expressionCode": "Seed",
+          "sources": [
+            {
+              "type": "Manual.Core.Nodes.Prompt, Manual",
+              "Source": "anime",
+              "Name": "source"
+            }
+          ],
+          "target": {
+            "type": "Manual.Core.Nodes.NodeOption, Manual",
+            "Source": "default text to image;1;seed",
+            "Name": "source"
+          },
+          "targetPropertyName": "FieldValue",
+          "twoWay": true,
+          "sourcePropertyName": "Seed"
+        },
+        {
+          "enabled": true,
+          "expressionCode": "ControlSeed",
+          "sources": [
+            {
+              "type": "Manual.Core.Nodes.Prompt, Manual",
+              "Source": "anime",
+              "Name": "source"
+            }
+          ],
+          "target": {
+            "type": "Manual.Core.Nodes.NodeOptionLinked, Manual",
+            "Source": "default text to image;1;control_after_generate",
+            "Name": "source"
+          },
+          "targetPropertyName": "FieldValue",
+          "twoWay": true,
+          "sourcePropertyName": "ControlSeed"
+        },
+        {
+          "enabled": true,
+          "expressionCode": "Steps",
+          "sources": [
+            {
+              "type": "Manual.Core.Nodes.Prompt, Manual",
+              "Source": "anime",
+              "Name": "source"
+            }
+          ],
+          "target": {
+            "type": "Manual.Core.Nodes.NodeOption, Manual",
+            "Source": "default text to image;1;steps",
+            "Name": "source"
+          },
+          "targetPropertyName": "FieldValue",
+          "twoWay": true,
+          "sourcePropertyName": "Steps"
+        },
+        {
+          "enabled": true,
+          "expressionCode": "CFG",
+          "sources": [
+            {
+              "type": "Manual.Core.Nodes.Prompt, Manual",
+              "Source": "anime",
+              "Name": "source"
+            }
+          ],
+          "target": {
+            "type": "Manual.Core.Nodes.NodeOption, Manual",
+            "Source": "default text to image;1;cfg",
+            "Name": "source"
+          },
+          "targetPropertyName": "FieldValue",
+          "twoWay": true,
+          "sourcePropertyName": "CFG"
+        },
+        {
+          "enabled": true,
+          "expressionCode": "Sampler",
+          "sources": [
+            {
+              "type": "Manual.Core.Nodes.Prompt, Manual",
+              "Source": "anime",
+              "Name": "source"
+            }
+          ],
+          "target": {
+            "type": "Manual.Core.Nodes.NodeOption, Manual",
+            "Source": "default text to image;1;sampler_name",
+            "Name": "source"
+          },
+          "targetPropertyName": "FieldValue",
+          "twoWay": true,
+          "sourcePropertyName": "Sampler"
+        },
+        {
+          "enabled": true,
+          "expressionCode": "Scheduler",
+          "sources": [
+            {
+              "type": "Manual.Core.Nodes.Prompt, Manual",
+              "Source": "anime",
+              "Name": "source"
+            }
+          ],
+          "target": {
+            "type": "Manual.Core.Nodes.NodeOption, Manual",
+            "Source": "default text to image;1;scheduler",
+            "Name": "source"
+          },
+          "targetPropertyName": "FieldValue",
+          "twoWay": true,
+          "sourcePropertyName": "Scheduler"
+        },
+        {
+          "enabled": true,
+          "expressionCode": "RealPositivePrompt",
+          "sources": [
+            {
+              "type": "Manual.Core.Nodes.Prompt, Manual",
+              "Source": "anime",
+              "Name": "source"
+            }
+          ],
+          "target": {
+            "type": "Manual.Core.Nodes.NodeOption, Manual",
+            "Source": "default text to image;2;text",
+            "Name": "source"
+          },
+          "targetPropertyName": "FieldValue",
+          "twoWay": true,
+          "sourcePropertyName": "RealPositivePrompt"
+        },
+        {
+          "enabled": true,
+          "expressionCode": "RealNegativePrompt",
+          "sources": [
+            {
+              "type": "Manual.Core.Nodes.Prompt, Manual",
+              "Source": "anime",
+              "Name": "source"
+            }
+          ],
+          "target": {
+            "type": "Manual.Core.Nodes.NodeOption, Manual",
+            "Source": "default text to image;5;text",
+            "Name": "source"
+          },
+          "targetPropertyName": "FieldValue",
+          "twoWay": true,
+          "sourcePropertyName": "RealNegativePrompt"
+        },
+        {
+          "enabled": true,
+          "expressionCode": "Width",
+          "sources": [
+            {
+              "type": "Manual.Core.Nodes.Prompt, Manual",
+              "Source": "anime",
+              "Name": "source"
+            }
+          ],
+          "target": {
+            "type": "Manual.Core.Nodes.NodeOption, Manual",
+            "Source": "default text to image;7;width",
+            "Name": "source"
+          },
+          "targetPropertyName": "FieldValue",
+          "twoWay": true,
+          "sourcePropertyName": "Width"
+        },
+        {
+          "enabled": true,
+          "expressionCode": "Height",
+          "sources": [
+            {
+              "type": "Manual.Core.Nodes.Prompt, Manual",
+              "Source": "anime",
+              "Name": "source"
+            }
+          ],
+          "target": {
+            "type": "Manual.Core.Nodes.NodeOption, Manual",
+            "Source": "default text to image;7;height",
+            "Name": "source"
+          },
+          "targetPropertyName": "FieldValue",
+          "twoWay": true,
+          "sourcePropertyName": "Height"
+        },
+        {
+          "enabled": true,
+          "expressionCode": "BatchSize",
+          "sources": [
+            {
+              "type": "Manual.Core.Nodes.Prompt, Manual",
+              "Source": "anime",
+              "Name": "source"
+            }
+          ],
+          "target": {
+            "type": "Manual.Core.Nodes.NodeOption, Manual",
+            "Source": "default text to image;7;batch_size",
+            "Name": "source"
+          },
+          "targetPropertyName": "FieldValue",
+          "twoWay": true,
+          "sourcePropertyName": "BatchSize"
+        }
+      ],
+      "promptNameId": "anime",
+      "Pinned": false
+    }
+  },
+  "version": 0.4
+}

@@ -1,0 +1,24 @@
+﻿<Window x:Class="Manual.Editors.RenderView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Manual.Editors"
+        mc:Ignorable="d"
+        Title="RenderView" Height="450" Width="800">
+    <Grid Background="{StaticResource bg}">
+        <Image x:Name="render">
+
+            <Image.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="Save Image As..." Click="MenuItem_Click" />
+                    <MenuItem Header="Save PromptPreset with Image..." Click="MenuItem_Click" />
+                    <MenuItem Header="Copy Image" Click="MenuItem_Click" />
+                    <MenuItem Header="Asign to Prompt Thumbnail" Click="MenuItem_Click" />
+                </ContextMenu>
+
+            </Image.ContextMenu>
+
+        </Image>
+    </Grid>
+</Window>

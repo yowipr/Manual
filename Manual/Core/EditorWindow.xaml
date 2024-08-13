@@ -1,0 +1,153 @@
+﻿<UserControl x:Class="Manual.Core.EditorWindow"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Manual.Core"
+             mc:Ignorable="d" 
+             
+             xmlns:Editors="clr-namespace:Manual.Editors" xmlns:themes="clr-namespace:ManualToolkit.Themes;assembly=ManualToolkit"
+             d:DataContext="{d:DesignInstance Type=local:WorkspaceEditor}"
+             Tag="editor"
+             d:DesignHeight="556" d:DesignWidth="356"
+             Background="Transparent" Loaded="UserControl_Loaded">
+
+    <UserControl.Resources>
+
+        <ContextMenu x:Key="EditorContextMenu">
+                <MenuItem Header="Vertical split" Click="MenuItem_Click" />
+                <MenuItem Header="Horizontal split" Click="MenuItem_Click" />
+                <MenuItem Header="Close Editor" Click="MenuItem_Click" />
+            </ContextMenu>
+
+
+            <Style TargetType="GridSplitter">
+                <Setter Property="Background" Value="Black"/>
+            </Style>
+
+            <Style TargetType="MenuItem">
+                <Setter Property="Foreground" Value="#FFD1D6DD" />
+                <Setter Property="FontFamily" Value="Blender Book Pro" />
+                <Setter Property="Background" Value="#FF1D1D1D" />
+                <Setter Property="Margin" Value="1,6,1,6" />
+            </Style>
+
+            <Style x:Key="PathArrow2" TargetType="{x:Type Path}">
+                <Setter Property="Data" Value="M 106.601 490 412.15 245.004 106.601 0 77.85 35.856 338.702 245.004 77.85 454.159 Z" />
+                <Setter Property="Fill" Value="{StaticResource fg}" />
+                <Setter Property="Stretch" Value="Fill" />
+                <Setter Property="Height" Value="10" />
+                <Setter Property="Width" Value="6" />
+                <Setter Property="StrokeThickness" Value="0.8" />
+                <Setter Property="Stroke" Value="{StaticResource fg}" />
+            </Style>
+
+ 
+
+            <Style x:Key="ComboBoxTest2" TargetType="{x:Type ComboBox}">
+                <Setter Property="Foreground" Value="#FF9FA2A5" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="ComboBox">
+                            <Grid>
+                                <ToggleButton Grid.Column="2" Focusable="false" IsChecked="{Binding Path=IsDropDownOpen,Mode=TwoWay,RelativeSource={RelativeSource TemplatedParent}}" >
+                                    <ToggleButton.Template>
+                                        <ControlTemplate>
+                                            <Grid>
+
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="5*" />
+                                                    <ColumnDefinition Width="*" />
+                                                </Grid.ColumnDefinitions>
+
+                                                <Border x:Name="Border"  Grid.ColumnSpan="2" CornerRadius="10 10 10 10" Background="{StaticResource bg4}" BorderBrush="{StaticResource bg4}" BorderThickness="0" />
+                                                <Border Grid.Column="0" CornerRadius="5,0,0,5"  Margin="1"  Background="{StaticResource bg4}"  BorderBrush="{StaticResource bg4}" BorderThickness="0" />
+
+
+                                            <Rectangle Style="{StaticResource ArrowRect}" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0 3 -2 0" Width="5" Height="3" RadiusX="2" RadiusY="2"/>
+
+                                            <!--<Ellipse Width="4" Height="4" Fill="White" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0 2 -2 0" Opacity="0.56"/>-->
+
+                                            <!--<Polyline Style="{StaticResource ArrowPolyline}" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0 -6 -11 0"/>-->
+
+                                            <!--<Path Style="{StaticResource PathArrow2}" Fill="White" Width="2" Height="4" Margin="0 0 -7 12" x:Name="Arroow" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                                    <Path.RenderTransform>
+                                                        <RotateTransform Angle="90" />
+                                                    </Path.RenderTransform>
+                                                </Path>-->
+                                                
+                                            </Grid>
+                                            <ControlTemplate.Triggers>
+                                                <Trigger Property="ToggleButton.IsMouseOver" Value="true">
+                                                    <Setter TargetName="Border" Property="Background" Value="{StaticResource bg4}" />
+                                                </Trigger>
+                                                <Trigger Property="ToggleButton.IsChecked" Value="true">
+                                                    <Setter TargetName="Border" Property="Background" Value="{StaticResource bg4}" />
+                                                </Trigger>
+                                            </ControlTemplate.Triggers>
+                                        </ControlTemplate>
+                                    </ToggleButton.Template>
+                                </ToggleButton>
+                                <ContentPresenter Name="ContentSite" IsHitTestVisible="False"  Content="{TemplateBinding SelectionBoxItem}" ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}" ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}" Margin="3"  />
+                                <TextBox x:Name="PART_EditableTextBox" Visibility="Hidden" IsReadOnly="{TemplateBinding IsReadOnly}"/>
+                                <Popup Name="Popup" Placement="Bottom" IsOpen="{TemplateBinding IsDropDownOpen}" AllowsTransparency="True"  Focusable="False" PopupAnimation="Slide">
+                                    <Grid  Name="DropDown" SnapsToDevicePixels="True" MinWidth="200" MaxHeight="{TemplateBinding MaxDropDownHeight}">
+                                        <Border x:Name="DropDownBorder" Background="{DynamicResource bg4}" />
+                                        <ScrollViewer SnapsToDevicePixels="True">
+                                            <StackPanel IsItemsHost="True" />
+                                        </ScrollViewer>
+                                    </Grid>
+                                </Popup>
+                            </Grid>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+                <Style.Triggers>
+                </Style.Triggers>
+            </Style>
+
+
+
+    </UserControl.Resources>
+
+
+    
+
+    <Border CornerRadius="6" d:Background="{DynamicResource bg}" Margin="0">
+
+        <Grid ClipToBounds="True">
+            <!--GLOW-->
+            <!--<Rectangle x:Name="glow" d:Visibility="Collapsed" Visibility="{Binding IsGlow, Converter={StaticResource boolToVisibilityConverter}}" Fill="Red" Height="100" VerticalAlignment="Top"/>-->
+
+
+            <!--<themes:VisualGlow x:Name="glow" ShadowDepth="10" BlurRadius="100" Margin="0 -700 0 0" IsHitTestVisible="False" RenderOptions.BitmapScalingMode="LowQuality"
+                       Visibility="Collapsed" d:Visibility="{Binding IsGlow, Converter={StaticResource boolToVisibilityConverter}}"/>-->
+
+
+            <Label Visibility="Collapsed" DockPanel.Dock="Top" Content="upsi, algo salió mal pibe" Foreground="{StaticResource fg}" Opacity="0.56" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+
+            <ContentControl DockPanel.Dock="Top"                        
+                            Content="{Binding SelectedEditor.EditorObject}">
+            </ContentControl>
+
+            
+            <!--<Rectangle Visibility="Collapsed" Fill="Black" DockPanel.Dock="Top" HorizontalAlignment="Left" Width="26" Margin="5,0,0,0" Height="12" VerticalAlignment="Top"/>-->
+            <ComboBox ContextMenu="{StaticResource EditorContextMenu}" x:Name="editorBox" Panel.ZIndex="1" DockPanel.Dock="Top" Style="{StaticResource ComboBoxTest2}"  HorizontalAlignment="Left" Width="27" Margin="5,0,0,0" BorderBrush="{x:Null}" Background="Black" Height="25" VerticalAlignment="Top"
+                      ItemsSource="{Binding RegisteredEditors}" 
+                      SelectedItem="{Binding SelectedEditor, Mode=TwoWay}">
+
+                
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal">
+                            <Image Width="16" Height="16" Source="{Binding Icon}" RenderOptions.BitmapScalingMode="HighQuality"/>
+                            <TextBlock Text="{Binding Name}" Padding="0 1.09 0 0" Margin="5,0,0,0"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+
+        </Grid>
+
+    </Border>
+</UserControl>

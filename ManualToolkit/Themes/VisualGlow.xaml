@@ -1,0 +1,18 @@
+﻿<UserControl x:Class="ManualToolkit.Themes.VisualGlow"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:ManualToolkit.Themes"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800"
+             Opacity="0.3" IsHitTestVisible="False">
+    <Grid SnapsToDevicePixels="True" IsHitTestVisible="False">
+        <Grid.Background>
+            <SolidColorBrush Color="Transparent" Opacity="1"/>
+        </Grid.Background>
+        <Rectangle x:Name="Rectangle" HorizontalAlignment="Center" VerticalAlignment="Center" IsHitTestVisible="False">
+            <!-- El VisualBrush y el BlurEffect se configuran dinámicamente en el código detrás -->
+        </Rectangle>
+    </Grid>
+</UserControl>

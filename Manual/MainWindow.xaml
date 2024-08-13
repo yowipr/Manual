@@ -1,0 +1,541 @@
+﻿<Window x:Class="Manual.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Manual"
+        MinWidth="900"
+        MinHeight="500"
+        xmlns:Editors="clr-namespace:Manual.Editors" 
+        xmlns:Core="clr-namespace:Manual.Core"
+        xmlns:themes="clr-namespace:ManualToolkit.Themes;assembly=ManualToolkit"
+        xmlns:obj="clr-namespace:Manual.Objects"
+     xmlns:api="clr-namespace:Manual.API"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+    
+    
+        Icon="/Assets/manualicon64_2.ico"
+    
+        x:Name="mainwindow" 
+        mc:Ignorable="d"
+        Title="Manual" Height="681" Width="1114"
+        WindowState="Maximized" BorderBrush="Black"
+        WindowStyle="None" Background="Transparent"
+   
+   
+    ContentRendered="mainwindow_ContentRendered"
+    SourceInitialized="mainwindow_SourceInitialized">
+    <Window.TaskbarItemInfo>
+        <TaskbarItemInfo x:Name="taskBarItemInfo" />
+    </Window.TaskbarItemInfo>
+
+    <Window.Resources>
+
+
+        <Storyboard x:Key="startMain">
+            <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                         From="0" To="1" Duration="0:0:0.5">
+                <DoubleAnimation.EasingFunction>
+                    <SineEase EasingMode="EaseInOut" />
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+        </Storyboard>
+
+        <Storyboard x:Key="loadingMain">
+            <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                         From="1" To="0.56" Duration="0:0:0.5">
+                <DoubleAnimation.EasingFunction>
+                    <SineEase EasingMode="EaseInOut" />
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+        </Storyboard>
+
+        <Storyboard x:Key="fadeIn">
+            <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                 To="1" Duration="0:0:0.3">
+                <DoubleAnimation.EasingFunction>
+                    <SineEase EasingMode="EaseInOut" />
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+        </Storyboard>
+
+        <Style TargetType="GridSplitter">
+            <Setter Property="Background" Value="Black"/>
+        </Style>
+
+
+
+
+
+    </Window.Resources>
+
+
+    <!--<WindowChrome.WindowChrome>
+        <WindowChrome CaptionHeight="25"/>
+    </WindowChrome.WindowChrome>-->
+    <!--#FF1D1D1D-->
+    <Grid Background="{DynamicResource bg3}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="25" Style="{x:Null}"/> <!--25 height title bar-->
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+
+
+        <!--TITLE WINDOW-->
+        <Grid x:Name="TitleBar" WindowChrome.IsHitTestVisibleInChrome="true">
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,0,5,0">
+            <Button x:Name="WMin" Content="―" Width="25" Height="25" BorderBrush="Transparent" Background="Transparent" Foreground="#FFD1D6DD" Click="WMin_Click" FontSize="10" Margin="0,2,0,0"/>
+                <Button x:Name="WMax" Content="▢" Width="25" Height="25" BorderBrush="Transparent" Background="Transparent" Foreground="#FFD1D6DD" Click="WMax_Click" Margin="0,0,2,5"/>
+            <Button x:Name="WClose" Content="✕" Width="25" Height="25" BorderBrush="Transparent" Background="Transparent" Foreground="#FFD1D6DD" Click="WClose_Click" Margin="0,0,0,2"/>
+
+           
+        </StackPanel>
+
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+            
+            <!--LOGO-->
+            <Image MouseDown="OpenSplash" HorizontalAlignment="Left" Opacity="0.9" Cursor="Hand"
+                   Source="{StaticResource manuallogo2}" Width="20" VerticalAlignment="Center" Margin="7,0,0,0" RenderOptions.BitmapScalingMode="HighQuality"/>
+           
+                <!-- Menu bar -->
+
+                <StackPanel Orientation="Horizontal">
+                    <Menu Height="40" VerticalAlignment="Center" Padding="0,12,0,0" Margin="10,0,44,0">
+
+                        <Menu.Resources>
+                            <Style TargetType="{x:Type MenuItem}" BasedOn="{StaticResource {x:Type MenuItem}}">
+                                <EventSetter Event="Click" Handler="MenuItem_Click"/>
+                            </Style>
+                        </Menu.Resources>
+                      
+                        <!--DISABLED buttons on principal menu: save, save as, recent, cut, copy, save shots, save all shots, compile and reload ui, reload ui, test, manual, tutorials--> 
+                        
+                        <!--____________________________________________________________________________FILE-->
+                        <MenuItem Header="File">
+                            <MenuItem Header="New" />
+                            <MenuItem Header="Open..." />
+                            <MenuItem Header="Recent" IsEnabled="False"/>
+                            <Separator />
+                            <MenuItem Header="Save" InputGestureText="Ctrl+S"/>
+                            <MenuItem Header="Save As..."/>
+                            <Separator />
+
+                            <!--DISABLED RELEASE: shot-->
+                            <!--<MenuItem Header="Save Shot"/>
+                            <MenuItem Header="Save All Shots"/>
+                            <Separator />-->
+                            
+                            <MenuItem Header="Import">
+                                <MenuItem Header="File..." />
+                                <MenuItem Header="Image Sequence..." />
+                                <Separator />
+                                <MenuItem Header="Prompt Preset..." />
+                                <MenuItem Header="Prompt..." />
+                                <Separator />
+                                <!--DISABLED RELEASE: code-->
+                                <!--<MenuItem Header="Script..." />-->
+                            </MenuItem>
+
+                            <MenuItem Header="Export">
+                                <MenuItem Header="Export Prompt Preset..." />
+                                <MenuItem Header="Export Workflow API..." />
+                                <Separator />
+                                <MenuItem Header="Export Prompt..." />
+                                <Separator/>
+                                <MenuItem Header="Export Layer..." />
+                                <!--DISABLED RELEASE: code-->
+                                <!--<MenuItem Header="Export Script..." />-->
+                            </MenuItem>
+
+                            <!--DISABLED RELEASE: workspaces-->
+                            <!--MANUAL PRO-->
+                            <MenuItem Background="{StaticResource log_warning}" Visibility="{Binding User, Converter={StaticResource adminToVisibilityConverter}}" Header="Workspaces" Foreground="{StaticResource fg_sub}"
+                                      DataContext="{x:Static Core:AppModel.userManager}">
+                                <MenuItem Header="New Empty Workspace" />
+                                <MenuItem Header="New Editor as Window" />
+                                <MenuItem Header="Duplicate Workspace" />
+                            
+                                <MenuItem Header="Save Workspace" />
+                                <MenuItem Header="Delete Workspace" />
+                                <Separator />
+                                <MenuItem Header="Load Workspace..." />
+                                <MenuItem Header="Save All Workspaces" />
+                                <MenuItem Header="Return to Default Workspaces" />
+                            </MenuItem>
+
+                            <Separator />
+                            <MenuItem Header="Quit" />
+                        </MenuItem>
+                        
+                        
+                        <!--__________________________________________________________________________EDIT-->
+                        <MenuItem Header="Edit">
+                            <MenuItem Header="Undo" InputGestureText="Ctrl+Z" />
+                            <MenuItem Header="Redo" InputGestureText="Ctrl+Shift+Z"/>
+                            <Separator />
+                            <MenuItem Header="Cut" IsEnabled="False"/>
+                            <MenuItem Header="Copy" IsEnabled="False"/>
+                            <Separator />
+                            <Separator/>
+                            <!--<MenuItem Header="Transform">-->
+                                <MenuItem Header="Flip Horizontal"/>
+                                <MenuItem Header="Flip Vertical"/>
+                                <Separator/>
+                                <MenuItem Header="Apply Scale"/>
+                            <!--</MenuItem>-->
+                            <Separator/>
+                            <Separator />
+                            <MenuItem Header="Preferences"/>
+                        </MenuItem>
+                        
+                        <!--________________________________________________________________________________SHOT-->
+                        <MenuItem Header="Render">
+                            
+                            <MenuItem Header="Add">
+                                <MenuItem Header="Solid Color Layer"/>
+                                <MenuItem Header="Text"/>
+                                <!--DISABLED RELEASE: effects-->
+                                <MenuItem Header="Adjustment Layer"/>
+                            </MenuItem>
+                            <Separator />
+
+                            <MenuItem Header="Render Image" InputGestureText="F11"/>
+                            
+                            <!--DISABLED RELEASE: animation-->
+                            <!--<MenuItem Header="Render Animation..." />
+
+                            <Separator/>
+                            <MenuItem Header="Clear Shot Preview" />
+                            <MenuItem Header="Clear Preview for all Shots" />
+                            <Separator/>-->
+                            
+                            <MenuItem Header="Render Layer Area" />
+                            <Separator/>
+                            
+                            <!--DISABLED RELEASE: animation-->
+                            <!--<MenuItem Header="Insert Keyframe" InputGestureText="Y" />
+                            <MenuItem Header="Delete Keyframe" />-->
+                           
+                            
+                        </MenuItem>
+                        
+                        
+                        <!--_____________________________________________________________________________HELP-->
+                        <MenuItem Header="Help">
+                            <MenuItem Header="Manual"/>
+                            <MenuItem Header="Tutorials"/>
+                            <Separator/>
+                            <MenuItem Header="Reinstall Icons"/>
+                            <!--<Separator/>
+                            <MenuItem Header="Donate" />-->
+                            <!--<MenuItem Header="Installu" />-->
+                            <!--<MenuItem Header="Reload UI" IsEnabled="False"/>
+                            <MenuItem Header="Compile all and Reload UI" IsEnabled="False"/>-->
+                            
+                        </MenuItem>
+
+                        
+                        
+                        <!--_______________________________________________TESTS______________________________________________________-->
+                        <MenuItem  DataContext="{x:Static api:UserManager.instance}"
+                                  Visibility="{Binding User, Converter={StaticResource adminToVisibilityConverter}}">
+                            <MenuItem.Header>
+                                <TextBlock Text="Admin" Foreground="{StaticResource log_warning}"/>
+                            </MenuItem.Header>
+                            <MenuItem Header="add square"/>
+                            <MenuItem Header="add layer"/>
+                            <MenuItem Header="copy pos"/>
+                            <MenuItem Header="add test"/>
+                        </MenuItem>
+                        
+                        
+                    </Menu>
+                </StackPanel>
+
+            
+            
+            
+            
+            
+                <!-- ______________________________________WORKSPACES______________________________ -->
+
+                <TabControl Grid.Row="1" Margin="0,2,0,0" Background="Transparent" BorderBrush="Transparent" ItemsSource="{Binding Workspaces}" SelectedItem="{Binding Current_Workspace}">
+                    <TabControl.ContentTemplate>
+                        <DataTemplate>
+                            <ContentControl Content="{Binding WorkSpaces}"/>
+                        </DataTemplate>
+
+                    </TabControl.ContentTemplate>
+
+                    <TabControl.Resources>
+                        <Style TargetType="TabItem">
+
+                            <EventSetter Event="DragEnter" Handler="TabItem_DragEnter"/>
+
+                            <Setter Property="ContextMenu">
+                                <Setter.Value>
+                                    <ContextMenu>
+                                        <MenuItem Header="Duplicate Workspace" Command="{Binding DuplicateCommand}" />
+                                        <MenuItem Header="Save Workspace" Command="{Binding SaveCommand}" />
+                                        <MenuItem Header="Move Left" Command="{Binding MoveLeftCommand}" />
+                                        <MenuItem Header="Move Right" Command="{Binding MoveRightCommand}" />
+                                        <MenuItem Header="Delete Workspace" Command="{Binding DeleteCommand}" />
+                                    </ContextMenu>
+                                </Setter.Value>
+                            </Setter>
+                            
+                            <Setter Property="Foreground" Value="#707070" />
+                            <Setter Property="FontFamily" Value="{StaticResource span}" />
+                            <Setter Property="Background" Value="Transparent" />
+                            <Setter Property="BorderBrush" Value="Transparent" />
+                            <!--DISABLED RELEASE: workspaces - cambiar a Binding Name (creo que nunca funcó aquí)-->
+                            <Setter Property="Header" Value="" />
+                            <Setter Property="Margin" Value="0,0,0,0" />
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="TabItem">
+                                        <Grid>
+                                            <Border x:Name="border"
+                                BorderBrush="Black"
+                                BorderThickness="0"
+                                Background="Transparent">
+                                                <ContentPresenter x:Name="contentPresenter"
+                                              Margin="12,2"
+                                              HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"
+                                              ContentSource="Header"
+                                              RecognizesAccessKey="True" TextBlock.FontSize="{TemplateBinding FontSize}">
+                                                    <ContentPresenter.Resources>
+                                                        <Style TargetType="TextBlock">
+                                                            <Setter Property="Foreground" Value="{StaticResource fg}" />
+                                                            <Setter Property="Opacity" Value="0.56"/>
+                                                            <Style.Triggers>
+                                                                <DataTrigger Binding="{Binding IsSelected, RelativeSource={RelativeSource AncestorType={x:Type TabItem}}}" Value="True">
+                                                                    <Setter Property="Foreground" Value="{StaticResource fg_high2}" />
+                                                                    <Setter Property="Opacity" Value="1"/>
+                                                                </DataTrigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </ContentPresenter.Resources>
+                                                    <ContentPresenter.ContentTemplate>
+                                                        <DataTemplate>
+                                                            <!--DISABLED RELEASE: workspaces - cambiar NameText a Binding Name-->
+                                                            <obj:NamerText DataContext="{Binding RelativeSource={RelativeSource AncestorType={x:Type TabItem}}, Path=DataContext}"
+                                                                           NameText=""/>
+                                                        </DataTemplate>
+                                                    </ContentPresenter.ContentTemplate>
+                                                </ContentPresenter>
+                                            </Border>
+                                        </Grid>
+                                       
+                                        
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </TabControl.Resources>
+                    
+                </TabControl>
+
+            
+            
+            
+                <!--<Button Command="{Binding NewWorkspaceCommand}" FontSize="8" Height="20" Width="20" Content="➕" Background="{x:Null}" Foreground="White" BorderBrush="{x:Null}" Margin="0,0,0,2"/>-->
+               
+            </StackPanel>
+
+            
+            
+            
+            
+
+            <!--______________________________________________________________USER LOGIN__________________________________________________________________-->
+            
+            <Grid VerticalAlignment="Center" Grid.Column="1" Margin="100 0 0 0" DataContext="{x:Static Core:AppModel.project}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                
+                <!--PROJECT-->
+                <StackPanel IsHitTestVisible="False" HorizontalAlignment="Center" Orientation="Horizontal">
+                     <TextBlock d:Text="Untitled" Text="{Binding Name}"  Foreground="{StaticResource fg}" Opacity="0.56" />
+                    <TextBlock Text="●" Margin="10 0 0 0" Visibility="{Binding IsSaved, Converter={StaticResource boolToVisibilityConverterInverse}}"/>
+                </StackPanel>
+
+
+                <Grid Background="{x:Null}" Grid.Column="1" PreviewMouseLeftButtonDown="Login_Click" Cursor="Hand">
+                <!--LOGIN-->
+                    <Grid DataContext="{x:Static Core:AppModel.userManager}" d:Visibility="Collapsed"
+                          Visibility="{Binding User, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource nullOrEmptyToVisibilityConverterInverse}}">
+                        <themes:IconButton x:Name="loginBtn" Width="20" IconSource="{StaticResource user-circle}">
+                            <themes:IconButton.Resources>
+                                <ContextMenu x:Key="LoginContextMenu" Style="{StaticResource {x:Type ContextMenu}}">
+                                    <!--<MenuItem Header="Sign In" Click="ContextMenu_Login_Click"/>-->
+                                    <MenuItem Header="Log Out" Click="ContextMenu_Login_Click"/>
+                                </ContextMenu>
+                            </themes:IconButton.Resources>
+                        </themes:IconButton>
+                    </Grid>
+                
+                <!--LOGGED-->
+                <Grid DataContext="{x:Static Core:AppModel.userManager}" Visibility="Visible" d:Visibility="{Binding User, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource nullOrEmptyToVisibilityConverter}}">
+                <themes:ImageBorder ImageSource="{Binding User.ImageSource}" ToolTip="{Binding User.Name}" Width="16" Height="16"
+                                   Margin="0 0 30 0" HorizontalAlignment="Right" VerticalAlignment="Center" />
+                <TextBlock Visibility="Collapsed" d:Text="Rodrigo Garcia" FontFamily="{StaticResource span}"
+                           Text="{Binding User.Name}" HorizontalAlignment="Right" Margin="0 0 60 0" VerticalAlignment="Center"/>
+                </Grid>
+               </Grid>
+
+            </Grid>
+
+        </Grid>
+        
+        
+        
+
+        <!--INTERFACE-->
+        <Grid Grid.Row="2" d:Background="Black">
+        <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" Style="{x:Null}"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="25" Style="{x:Null}"/>
+        </Grid.RowDefinitions>
+
+
+        
+            <!--EDITORS-->
+            <Grid Name="EDITORS" Grid.Row="1" d:Background="{DynamicResource bg3}">
+
+                <!--<themes:VisualGlow x:Name="visualGlow" Opacity="1" ShadowDepth="1" BlurRadius="100" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0 0 0 0" IsHitTestVisible="False" RenderOptions.BitmapScalingMode="LowQuality"
+          Visibility="Visible" d:Visibility="{Binding IsGlow, Converter={StaticResource boolToVisibilityConverter}}"/>-->
+
+
+                
+                  
+                <!--GLOW-->
+                <Rectangle x:Name="RectangleGlow" Fill="Blue" Opacity="1"
+                           RadiusX="50" RadiusY="50" RenderTransformOrigin="0.5, 0.5"
+                           VerticalAlignment="Top" HorizontalAlignment="Left" IsHitTestVisible="False"
+                           
+                           RenderOptions.BitmapScalingMode="LowQuality"
+                           RenderOptions.EdgeMode="Aliased"
+                           CacheMode="BitmapCache">
+
+                    <Rectangle.Effect>
+                        <BlurEffect Radius="100" KernelType="Gaussian"/>
+                    </Rectangle.Effect>
+                    <Rectangle.OpacityMask>
+                        <RadialGradientBrush RadiusX="0.8" RadiusY="0.8" Center="0.5, 0.5" GradientOrigin="0.5, 0.5" Opacity="0.2">
+                            <GradientStop Color="#FFFFFFFF" Offset="0.5"/>
+                            <GradientStop Color="#00FFFFFF" Offset="1"/>
+                        </RadialGradientBrush>
+                    </Rectangle.OpacityMask>
+                    <Rectangle.RenderTransform>
+                        <!--<ScaleTransform ScaleX="1.15" ScaleY="1.3"/>-->
+                        <ScaleTransform ScaleX="1.15" ScaleY="1.3"/>
+                    </Rectangle.RenderTransform>
+                </Rectangle>
+
+                
+                
+                <!--CONTENT-->
+                <ContentControl Content="{Binding Current_Workspace}"/>
+
+                
+                <!--SPLASH-->
+                <Grid x:Name="splashBg" Background="Gray" Opacity="0" Visibility="Collapsed" PreviewMouseDown="CloseSplash"/>
+                <local:Splashy x:Name="splash" Visibility="Collapsed"/>
+
+            </Grid>
+
+            <!--adorner drag drop-->
+            <Grid Grid.Row="1">
+                <Border x:Name="dragDropAdornerBody" Visibility="Collapsed" Opacity="0.56" IsHitTestVisible="False" AllowDrop="False" CornerRadius="11" Margin="0 0 0 0" BorderBrush="{StaticResource log_warning}" BorderThickness="1" VerticalAlignment="Top" HorizontalAlignment="Left">
+                    <ContentPresenter x:Name="dragDropAdorner"/>
+                </Border>
+            </Grid>
+
+            
+            <!--FOOTER-->
+            <Grid Grid.Row="2" Background="Black">
+            
+                <Grid Background="{DynamicResource bg3}" Margin="0">
+                    <StackPanel Margin="0 0 0 0" VerticalAlignment="Center" Orientation="Horizontal" HorizontalAlignment="Right">
+
+                      
+                        <TextBlock x:Name="logFooter" Cursor="Hand" d:Text="Log Footer" Visibility="Collapsed" Margin="20 0" Height="Auto"  TextWrapping="NoWrap" VerticalAlignment="Center" Foreground="#FFD1D6DD" Opacity="0.4" HorizontalAlignment="Right"
+                                   MouseLeftButtonUp="logFooter_MouseLeftButtonUp" ToolTip="Click to see extra info in Output..."/>
+
+                        <Grid x:Name="progressGrid" Visibility="Collapsed">
+                               <TextBlock x:Name="l_textblock" Text="" Cursor="Hand" VerticalAlignment="Center" Foreground="#FFD1D6DD" Margin="0,0,15,0" Opacity="0.6" HorizontalAlignment="Right"/>
+                            
+                            <ProgressBar x:Name="r_bar" Maximum="1" Width="100" Height="16" themes:CustomFields.CornerRadius="8" Margin="0,0,5,0" Background="#FF262626" Foreground="{DynamicResource fg_sub}" Opacity="1" BorderBrush="{x:Null}">
+                                <i:Interaction.Behaviors>
+                                    <Core:ProgressBarAnimationBehavior x:Name="r_barBehaviour" Progress="0"/>
+                                </i:Interaction.Behaviors>
+                            </ProgressBar>
+                        </Grid>
+
+                        <Label Content="⚬" Foreground="#FFD1D6DD" Opacity="0.6" Margin="5,0,5,0" Cursor="Hand" ToolTip="Open Output" MouseLeftButtonUp="logFooter_MouseLeftButtonUp"/>
+                        <TextBlock x:Name="info_text" Text="..." VerticalAlignment="Center" Foreground="#FFD1D6DD" Margin="0,0,10,0" Opacity="0.6" HorizontalAlignment="Right"/>
+
+                        <!--<CheckBox Padding="3 0.5 0 0" Margin="0 0 10 0"  DataContext="{x:Static Core:AppModel.settings}" Content="Cloud" IsChecked="{Binding IsCloud}" VerticalAlignment="Center"/>-->
+
+                        <!--SERVER STATUS-->
+                        <Button Click="info_elipse_Click" Style="{StaticResource SubButton}" Cursor="Hand">
+                            <Button.Resources>
+                                <ContextMenu x:Key="ServerContextMenu" Style="{StaticResource {x:Type ContextMenu}}">
+                                    <MenuItem Header="Open Local Server" Click="ContextMenu_Click"/>
+                                    <MenuItem Header="Check Status" Click="ContextMenu_Click"/>
+                                    <MenuItem Header="Close Local Server" Click="ContextMenu_Click"/>
+                                    <MenuItem Header="Disconnect" Click="ContextMenu_Click" ToolTip="only disconnected from the server, server still running, use Close Local Server for close"/>
+                                </ContextMenu>
+                            </Button.Resources>
+
+                            <Grid>
+                                <Ellipse x:Name="info_elipse" Width="15" Height="15" Fill="{DynamicResource log_warning}" Cursor="Hand"/>
+                                <!--<themes:Loader x:Name="info_loader" RenderTransformOrigin="0.5 0.5" Margin="0 -7 0 0">
+                                    <themes:Loader.RenderTransform>
+                                        <ScaleTransform ScaleX="0.5" ScaleY="0.5"/>
+                                    </themes:Loader.RenderTransform>
+                                </themes:Loader>-->
+                            </Grid>
+                            
+                        </Button>
+                        
+                        <TextBlock DataContext="{x:Static Core:AppModel.settings}" Text="{Binding Version}" VerticalAlignment="Center" Foreground="#FFD1D6DD" Margin="15,0,15,0" Opacity="0.6" HorizontalAlignment="Right"/>
+
+                       
+                    </StackPanel>
+                    
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                        <TextBlock DataContext="{x:Static Core:AppModel.settings}" d:Text="fps: 120" Text="{Binding FPS}" Visibility="{Binding SeeFPS, Converter={StaticResource boolToVisibilityConverter}}" VerticalAlignment="Center" Foreground="#FFD1D6DD" Margin="15,0,15,0" Opacity="0.6" HorizontalAlignment="Right"/>
+
+                        <Grid DataContext="{x:Static Core:AppModel.project}">
+                            <Button Content="■  Pause Anim" DataContext="{Binding SelectedShot.Animation}" Command="{Binding PlayCommand}" Opacity="0.56"
+                                    Visibility="{Binding IsPlaying, Converter={StaticResource boolToVisibilityConverter}}"
+                                Width="120" VerticalAlignment="Center" RenderTransformOrigin="0.5 0.5" Background="{StaticResource fg2}">
+                            <Button.RenderTransform>
+                                <ScaleTransform ScaleX="0.8" ScaleY="0.8"/>
+                            </Button.RenderTransform>
+                            </Button>
+                         </Grid>
+                    
+                    </StackPanel>
+                </Grid>
+            </Grid>
+
+
+        </Grid>
+    </Grid>
+    
+    
+</Window>

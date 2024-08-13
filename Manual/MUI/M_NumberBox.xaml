@@ -1,0 +1,148 @@
+﻿<UserControl x:Class="Manual.MUI.M_NumberBox"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Manual.MUI"
+             mc:Ignorable="d" d:DesignWidth="110" Height="20"
+             Loaded="UserControl_Loaded" Padding="0"
+             Foreground="{DynamicResource bg3}"
+             Margin="0,0,0,0">
+    
+    <UserControl.Resources>
+        <SolidColorBrush x:Key="TextBox.Static.Border" Color="#FFABAdB3"/>
+        <SolidColorBrush x:Key="TextBox.MouseOver.Border" Color="#FF7EB4EA"/>
+        <SolidColorBrush x:Key="TextBox.Focus.Border" Color="#FF569DE5"/>
+        <Style x:Key="NumberBox" TargetType="{x:Type TextBox}">
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="Foreground" Value="{DynamicResource fg}"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="KeyboardNavigation.TabNavigation" Value="None"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+            <Setter Property="AllowDrop" Value="true"/>
+            <Setter Property="ScrollViewer.PanningMode" Value="VerticalFirst"/>
+            <Setter Property="Stylus.IsFlicksEnabled" Value="False"/>
+            <Setter Property="Margin" Value="0 0 30 0"/>
+            <Setter Property="TextAlignment" Value="Right"/>
+            
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type TextBox}">
+
+                        <Border CornerRadius="5 5 5 5" x:Name="border" Background="{TemplateBinding Background}" BorderBrush="Transparent" BorderThickness="{TemplateBinding BorderThickness}" SnapsToDevicePixels="True">
+                            <ScrollViewer Grid.Column="1" VerticalAlignment="Center" Margin="0 0 20 0" HorizontalAlignment="Right" x:Name="PART_ContentHost" Focusable="false" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden"/>
+                        </Border>
+
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsEnabled" Value="false">
+                                <Setter Property="Opacity" TargetName="border" Value="0.56"/>
+
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="true">
+                                <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource fg_sub}"/>
+                                <Setter Property="Background" Value="{StaticResource fg2}"/>
+                            </Trigger>
+                           
+                            
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <MultiTrigger>
+                    <MultiTrigger.Conditions>
+                        <Condition Property="IsInactiveSelectionHighlightEnabled" Value="true"/>
+                        <Condition Property="IsSelectionActive" Value="false"/>
+                    </MultiTrigger.Conditions>
+                    <Setter Property="SelectionBrush" Value="{StaticResource fg_high}"/>
+
+                </MultiTrigger>
+                <DataTrigger Binding="{Binding Header, RelativeSource={RelativeSource AncestorType=UserControl}}" Value="{x:Null}">
+                    <Setter Property="Margin" Value="0"/>
+                    <Setter Property="TextAlignment" Value="Left"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Header, RelativeSource={RelativeSource AncestorType=UserControl}}" Value="">
+                    <Setter Property="Margin" Value="0"/>
+                    <Setter Property="TextAlignment" Value="Left"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style TargetType="{x:Type Path}">
+            <Setter Property="Data" Value="M 106.601 490 412.15 245.004 106.601 0 77.85 35.856 338.702 245.004 77.85 454.159 Z" />
+            <Setter Property="Fill" Value="{StaticResource fg}" />
+            <Setter Property="Stretch" Value="Fill" />
+            <Setter Property="Height" Value="7" />
+            <Setter Property="Width" Value="4" />
+            <Setter Property="StrokeThickness" Value="0.6" />
+            <Setter Property="Stroke" Value="{StaticResource fg}" />
+        </Style>
+
+    </UserControl.Resources>
+
+    
+    
+    <!--BG-->
+    <Border x:Name="bgBorder" Margin="0" CornerRadius="11" MouseLeave="Border_MouseLeave" MouseEnter="Border_MouseEnter">
+        <Border.Background>
+            <SolidColorBrush Color="{Binding Foreground, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource solidColorBrushToColorConverter}}" 
+                             Opacity="0.56"/>
+        </Border.Background>
+        
+        <Grid Margin="0">
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="15"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="15"/>
+            </Grid.ColumnDefinitions>
+
+
+            <TextBlock x:Name="head" Margin="0 0 0 0" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center" Text="{Binding Header, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                     d:Visibility="Collapsed" d:Text="Start" d:Foreground="{StaticResource fg}" 
+                     IsHitTestVisible="False" Padding="0" Opacity="0.7">
+            </TextBlock>
+
+            <!--<Grid Margin="0" Grid.Column="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                
+            </Grid>-->
+            <TextBox Grid.Column="1" Style="{DynamicResource NumberBox}" x:Name="textBox" d:Text="512"
+                      Text="{Binding Value, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource advancedNumberFormatConverter}}"
+                    PreviewMouseDown="TextBox_GotFocus" PreviewKeyDown="textBox_PreviewKeyDown"
+                    PreviewMouseLeftButtonDown="TextBox_PreviewMouseLeftButtonDown" 
+                    PreviewMouseMove="TextBox_PreviewMouseMove" 
+                    PreviewMouseLeftButtonUp="TextBox_PreviewMouseLeftButtonUp"
+                    MouseLeave="textBox_MouseLeave"  MouseEnter="textBox_MouseEnter"
+                    GotFocus="TextBox_GotFocus"
+                    Focusable="False"
+                    LostFocus="textBox_LostFocus"
+                    Background="Transparent"
+                    Height="Auto"
+                    CaretBrush="White"
+                    Foreground="{StaticResource fg}"
+                    FontFamily="{StaticResource span}"/>
+
+            <Button Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Left" x:Name="left" d:Visibility="Visible" Visibility="Hidden" Foreground="{StaticResource fg}" Background="Transparent" Width="15" Margin="0 1 0 0" Click="DecreaseButton_Click">
+                <Grid Background="Transparent">
+                    <Path Margin="1,9,-6,-5">
+                        <Path.RenderTransform>
+                             <RotateTransform Angle="180" />
+                        </Path.RenderTransform>
+                    </Path>
+                </Grid>
+            </Button>
+
+            <Button Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Right" x:Name="right" d:Visibility="Visible" Visibility="Hidden" Foreground="{StaticResource fg}" Background="Transparent" Width="15" Margin="0 1 0 0" Click="IncreaseButton_Click">
+                <Grid Background="Transparent">
+                    <Path></Path>
+                </Grid>
+            </Button>
+
+        </Grid>
+
+    </Border>
+</UserControl>

@@ -1,0 +1,77 @@
+﻿<local:UICanvasElement x:Class="Manual.Objects.UI.LassoView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Manual.Objects.UI"
+             mc:Ignorable="d" 
+                      
+             xmlns:themes="clr-namespace:ManualToolkit.Themes;assembly=ManualToolkit"
+             d:DataContext="{d:DesignInstance Type=local:Lasso}"
+             
+             IsHitTestVisible="True"
+             d:DesignHeight="450" d:DesignWidth="800"
+             Opacity="{Binding RealOpacity}"
+             Visibility="{Binding Visible, Converter={StaticResource boolToVisibilityConverter}}"
+             PreviewMouseLeftButtonDown="UICanvasElement_PreviewMouseLeftButtonDown"
+                       MouseMove="Canvas_MouseMove"
+                       PreviewMouseLeftButtonUp="UICanvasElement_MouseUp"
+                       MouseEnter="UICanvasElement_MouseEnter"
+                       MouseLeave="UICanvasElement_MouseLeave">
+
+    <local:UICanvasElement.Resources>
+        <themes:PointsConverter x:Key="PointsConverter"/>
+    </local:UICanvasElement.Resources>
+
+    <Grid>  
+        
+        <Polyline x:Name="polyLine2" Points="{Binding Points, Converter={StaticResource PointsConverter}}" 
+                Opacity="0.8" Stroke="Black" StrokeThickness="{Binding RealThick, RelativeSource={RelativeSource AncestorType=local:UICanvasElement}, UpdateSourceTrigger=PropertyChanged}"
+                  Fill="Transparent"
+                
+                StrokeDashOffset="0"
+                SnapsToDevicePixels="True">
+
+        <Polyline.Triggers>
+            <EventTrigger RoutedEvent="FrameworkElement.Loaded">
+                <BeginStoryboard>
+                    <Storyboard>
+                        <DoubleAnimation 
+              To="16" 
+              Duration="0:0:3" 
+              RepeatBehavior="Forever" 
+              By="0" 
+              Storyboard.TargetProperty="StrokeDashOffset" />
+                    </Storyboard>
+                </BeginStoryboard>
+            </EventTrigger>
+        </Polyline.Triggers>
+    </Polyline>
+        
+    <Polyline x:Name="polyLine" Points="{Binding Points, Converter={StaticResource PointsConverter}}" 
+                  Stroke="White" StrokeThickness="{Binding RealThick, RelativeSource={RelativeSource AncestorType=local:UICanvasElement}, UpdateSourceTrigger=PropertyChanged}" 
+                  StrokeDashArray="5 5"
+                  StrokeDashOffset="0"
+                  SnapsToDevicePixels="True">
+
+            <Polyline.Triggers>
+                <EventTrigger RoutedEvent="FrameworkElement.Loaded">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation 
+                To="16" 
+                Duration="0:0:3" 
+                RepeatBehavior="Forever" 
+                By="0" 
+                Storyboard.TargetProperty="StrokeDashOffset" />
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+            </Polyline.Triggers>
+        </Polyline>
+    
+
+    
+    </Grid>
+    
+</local:UICanvasElement>

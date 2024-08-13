@@ -1,0 +1,472 @@
+{
+  "last_node_id": 1,
+  "last_link_id": 1,
+  "nodes": [
+    {
+      "bgcolor": "#FF7E544C",
+      "id": 6,
+      "title": "CLIP Text Encode (Prompt)",
+      "type": "CLIPTextEncode",
+      "pos": [
+        400.96988,
+        147.93571
+      ],
+      "size": {
+        "0": 444.31552,
+        "1": 222.13002
+      },
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 1
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "links": [
+            8
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CLIPTextEncode"
+      },
+      "widgets_values": [
+        "masterpiece, best quality, 1girl, solo, glasses, cherry blossoms, hanami, pink flower, white flower, spring season, wisteria, petals, flower, plum blossoms, outdoors, falling petals, white hair, black eyes"
+      ]
+    },
+    {
+      "bgcolor": "#FF553355",
+      "id": 8,
+      "title": "VAE Decode",
+      "type": "VAEDecode",
+      "pos": [
+        1253.0,
+        191.0
+      ],
+      "size": {
+        "0": 210.0,
+        "1": 127.0
+      },
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "samples",
+          "type": "LATENT",
+          "link": 7
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": 4
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            3
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VAEDecode"
+      }
+    },
+    {
+      "id": 16,
+      "title": "Animate Diff Module Loader",
+      "type": "AnimateDiffModuleLoader",
+      "pos": [
+        27.0,
+        345.0
+      ],
+      "size": {
+        "0": 315.0,
+        "1": 121.0
+      },
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "lora_stack",
+          "type": "MOTION_LORA_STACK",
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MOTION_MODULE",
+          "type": "MOTION_MODULE",
+          "links": [
+            5
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "AnimateDiffModuleLoader"
+      },
+      "widgets_values": [
+        "mm-Stabilized_mid.pth"
+      ]
+    },
+    {
+      "bgcolor": "#FF553333",
+      "id": 4,
+      "title": "Load Checkpoint",
+      "type": "CheckpointLoaderSimple",
+      "pos": [
+        27.656187,
+        485.59332
+      ],
+      "size": {
+        "0": 315.0,
+        "1": 151.0
+      },
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            6
+          ],
+          "slot_index": 0
+        },
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "links": [
+            1,
+            2
+          ],
+          "slot_index": 1
+        },
+        {
+          "name": "VAE",
+          "type": "VAE",
+          "links": [
+            4
+          ],
+          "slot_index": 2
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CheckpointLoaderSimple"
+      },
+      "widgets_values": [
+        "AnimeScreencapStyle.safetensors"
+      ]
+    },
+    {
+      "bgcolor": "#FF553333",
+      "id": 13,
+      "title": "Load VAE",
+      "type": "VAELoader",
+      "pos": [
+        17.072636,
+        229.61322
+      ],
+      "size": {
+        "0": 315.0,
+        "1": 91.0
+      },
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "VAE",
+          "type": "VAE",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VAELoader"
+      },
+      "widgets_values": [
+        "anything-v4.0.vae.pt"
+      ]
+    },
+    {
+      "bgcolor": "#FF644065",
+      "id": 15,
+      "title": "Animate Diff Sampler",
+      "type": "AnimateDiffSampler",
+      "pos": [
+        880.2098,
+        209.90211
+      ],
+      "size": {
+        "0": 315.0,
+        "1": 448.0
+      },
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "motion_module",
+          "type": "MOTION_MODULE",
+          "link": 5
+        },
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 6
+        },
+        {
+          "name": "positive",
+          "type": "CONDITIONING",
+          "link": 8
+        },
+        {
+          "name": "negative",
+          "type": "CONDITIONING",
+          "link": 9
+        },
+        {
+          "name": "latent_image",
+          "type": "LATENT",
+          "link": 10
+        },
+        {
+          "name": "sliding_window_opts",
+          "type": "SLIDING_WINDOW_OPTS",
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "links": [
+            7
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "AnimateDiffSampler"
+      },
+      "widgets_values": [
+        "default",
+        16,
+        345029849956677,
+        "randomize",
+        20,
+        8,
+        "euler",
+        "normal",
+        1.0
+      ]
+    },
+    {
+      "bgcolor": "#FF7E544C",
+      "id": 7,
+      "title": "CLIP Text Encode (Prompt)",
+      "type": "CLIPTextEncode",
+      "pos": [
+        414.6562,
+        392.31238
+      ],
+      "size": {
+        "0": 425.278,
+        "1": 221.0
+      },
+      "flags": {},
+      "order": 6,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 2
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "links": [
+            9
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CLIPTextEncode"
+      },
+      "widgets_values": [
+        "embedding:easynegative, embedding:badhandv4, "
+      ]
+    },
+    {
+      "bgcolor": "#FF443366",
+      "id": 1,
+      "title": "Output",
+      "type": "M_Output",
+      "pos": [
+        1245.5986,
+        359.7543
+      ],
+      "size": {
+        "0": 331.24213,
+        "1": 397.26068
+      },
+      "flags": {},
+      "order": 7,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "Result",
+          "type": "LAYER",
+          "link": 3
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "M_Output"
+      }
+    },
+    {
+      "bgcolor": "#FF644065",
+      "id": 5,
+      "title": "Empty Latent Image",
+      "type": "EmptyLatentImage",
+      "pos": [
+        617.6646,
+        638.8969
+      ],
+      "size": {
+        "0": 200.0,
+        "1": 130.0
+      },
+      "flags": {},
+      "order": 8,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "links": [
+            10
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "EmptyLatentImage"
+      },
+      "widgets_values": [
+        512.0,
+        512.0,
+        1
+      ]
+    }
+  ],
+  "links": [
+    [
+      1,
+      4,
+      1,
+      6,
+      0,
+      "CLIP"
+    ],
+    [
+      2,
+      4,
+      1,
+      7,
+      0,
+      "CLIP"
+    ],
+    [
+      5,
+      16,
+      0,
+      15,
+      0,
+      "MOTION_MODULE"
+    ],
+    [
+      6,
+      4,
+      0,
+      15,
+      1,
+      "MODEL"
+    ],
+    [
+      7,
+      15,
+      0,
+      8,
+      0,
+      "LATENT"
+    ],
+    [
+      8,
+      6,
+      0,
+      15,
+      2,
+      "CONDITIONING"
+    ],
+    [
+      9,
+      7,
+      0,
+      15,
+      3,
+      "CONDITIONING"
+    ],
+    [
+      3,
+      8,
+      0,
+      1,
+      0,
+      "IMAGE"
+    ],
+    [
+      4,
+      4,
+      2,
+      8,
+      1,
+      "VAE"
+    ],
+    [
+      10,
+      5,
+      0,
+      15,
+      4,
+      "LATENT"
+    ]
+  ],
+  "groups": [],
+  "config": {},
+  "extra": {
+    "manual_config": {
+      "canvas_position": "0.6037962853095291,0,0,0.6037962853095291,-4.4602995036895265,26.9726310651136"
+    }
+  },
+  "version": 0.4
+}

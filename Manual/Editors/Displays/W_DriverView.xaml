@@ -1,0 +1,20 @@
+﻿<local:W_WindowContent  x:Class="Manual.Editors.Displays.W_DriverView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Manual.Editors.Displays"
+             xmlns:core="clr-namespace:Manual.Core"
+             mc:Ignorable="d" 
+                        
+             d:DataContext="{d:DesignInstance Type=core:Driver}"
+                        
+             d:DesignHeight="400" d:DesignWidth="200"
+                        Loaded="W_WindowContent_Loaded">
+    <Grid>
+        <StackPanel>
+            <TextBox x:Name="textbox" Text="{Binding ExpressionCode}" PreviewKeyDown="textbox_PreviewKeyDown" Width="Auto"/>
+            <Button Content="Apply" Click="Button_Click"/>
+        </StackPanel>
+    </Grid>
+</local:W_WindowContent>

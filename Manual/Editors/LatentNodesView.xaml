@@ -1,0 +1,260 @@
+﻿<UserControl x:Class="Manual.Editors.LatentNodesView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Manual.Editors"
+             xmlns:obj="clr-namespace:Manual.Objects"
+             xmlns:nodes="clr-namespace:Manual.Core.Nodes"
+             xmlns:core="clr-namespace:Manual.Core"
+             xmlns:themes="clr-namespace:ManualToolkit.Themes;assembly=ManualToolkit" 
+             xmlns:mui="clr-namespace:Manual.MUI" 
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800" 
+             DataContext="{x:Static core:AppModel.project}"
+             PreviewKeyDown="UserControl_KeyDown">
+
+    <UserControl.Resources>
+
+        <DataTemplate DataType="{x:Type nodes:LatentNode}">
+            <nodes:NodeView/>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type nodes:NodeOption}">
+            <nodes:NodeOptionView/>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type nodes:LineConnection}">
+            <nodes:LineConnectionView/>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type nodes:GroupNode}">
+            <nodes:GroupNodeView/>
+        </DataTemplate>
+
+
+    </UserControl.Resources>
+
+
+    <Grid x:Name="contextShot" Style="{x:Null}"  DataContext="{Binding generationManager}">
+
+        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="{StaticResource EditorHeaderHeight}"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+
+
+        <Popup Name="searchPopup" Placement="MousePoint" StaysOpen="False"
+               AllowsTransparency="True" PopupAnimation="Fade" PreviewKeyDown="searchPopup_PreviewKeyDown"
+               Closed="searchPopup_Closed"
+               HorizontalOffset="-34" VerticalOffset="-12">
+            <mui:SearchMenuBox x:Name="searchBox" ItemsSource="{Binding RegisteredNodes}"/>
+            <!-- Ajusta las dimensiones según sea necesario -->
+        </Popup>
+
+
+
+
+        <!--nav bar, context project-->
+        <Grid Margin="42,0,0,0" Width="Auto" HorizontalAlignment="Stretch">
+
+            <StackPanel  Margin="-5,0,0,0" Grid.Column="0" Style="{x:Null}" Orientation="Horizontal" HorizontalAlignment="left" VerticalAlignment="Center">
+
+                <ComboBox ItemsSource="{Binding PromptPresets}"
+                              SelectedItem="{Binding SelectedPreset}"
+                              DisplayMemberPath="Name" Width="200"/>
+                
+                <!--<mui:M_ComboBox ItemsSource="{Binding PromptPresets}"
+                  SelectedItem="{Binding SelectedPreset}"
+                  DisplayMemberPath="Name" Width="200"/>-->
+
+                <CheckBox Margin="6,0,0,0" Width="20" Height="20" Style="{StaticResource CheckBoxLight}" ToolTip="Pin Prompt Preset from begin modified automatically"
+    IsChecked="{Binding SelectedPreset.Pinned, Mode=TwoWay}"
+    FontSize="13">
+                    <TextBlock Text="📌" Margin="0 0 0 0" FontSize="10"/>
+                </CheckBox>
+                
+                <TextBox Text="{Binding SelectedPreset.Name}"/>
+
+                <themes:IconButton IconSource="{StaticResource plus}" Command="{Binding AddPresetCommand}" Margin="6 0 4 0" FontSize="16" ToolTip="Add New Preset"/>
+                <Button Foreground="{StaticResource fg_full}" Content="📋" Command="{Binding DuplicatePresetCommand}" Margin="6 3 4 0" FontSize="16" ToolTip="Duplicate Preset"/>
+                <themes:IconButton IconSource="{StaticResource trash}" Command="{Binding DeletePresetCommand}" Margin="4 0" ToolTip="Delete Preset"/>
+
+                <Menu Margin="10 0 0 0">
+
+                    <MenuItem Header="PromptPreset">
+                        <MenuItem Header="Automatic Drivers" Click="MenuItem_Click" Style="{x:Null}" />
+                        <MenuItem Header="Delete All Drivers" Click="MenuItem_Click" Style="{x:Null}" />
+                    </MenuItem>
+
+                    <MenuItem Header="Add" ItemsSource="{Binding NodesToShow}">
+                        <MenuItem.ItemContainerStyle>
+                            <Style TargetType="{x:Type MenuItem}">
+                                <EventSetter Event="Click" Handler="OnMenuItemClick"/>
+                                <Setter Property="Background" Value="Transparent"/>
+                                <Setter Property="Foreground" Value="White"/>
+                                <Setter Property="Padding" Value="10,5,10,5"/>
+                                <Setter Property="VerticalContentAlignment" Value="Center"/>
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                            </Style>
+                        </MenuItem.ItemContainerStyle>
+                        <MenuItem.Resources>
+                            <HierarchicalDataTemplate DataType="{x:Type nodes:MenuItemNode}" ItemsSource="{Binding SubItems}">
+                                <TextBlock Text="{Binding Name}" Background="Transparent" VerticalAlignment="Center"/>
+                            </HierarchicalDataTemplate>
+                        </MenuItem.Resources>
+                    </MenuItem>
+
+                    <MenuItem Header="View">
+                        <MenuItem Header="Refresh" Click="MenuItem_Click" Style="{x:Null}" />
+                    </MenuItem>
+
+                    <MenuItem Header="Templates" ItemsSource="{Binding PromptPresetTemplates}">
+                        <MenuItem.ItemContainerStyle>
+                            <Style TargetType="{x:Type MenuItem}">
+                                <EventSetter Event="Click" Handler="Templates_OnMenuItemClick"/>
+                                <Setter Property="Background" Value="Transparent"/>
+                                <Setter Property="Foreground" Value="White"/>
+                                <Setter Property="Padding" Value="10,5,10,5"/>
+                                <Setter Property="VerticalContentAlignment" Value="Center"/>
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                            </Style>
+                        </MenuItem.ItemContainerStyle>
+                        <MenuItem.Resources>
+                            <HierarchicalDataTemplate DataType="{x:Type nodes:MenuItemNode}" ItemsSource="{Binding SubItems}">
+                                <TextBlock Text="{Binding Name}" Background="Transparent" VerticalAlignment="Center"/>
+                            </HierarchicalDataTemplate>
+                        </MenuItem.Resources>
+                    </MenuItem>
+
+                    <!--<MenuItem Header="Testing" >
+                        <MenuItem Header="test" Click="MenuItem_Click" />
+                    </MenuItem>-->
+                   
+                </Menu>
+            
+            </StackPanel>
+
+
+            <!--PROMPT-->
+            <StackPanel Margin="0" HorizontalAlignment="Right" Orientation="Horizontal" Style="{x:Null}" VerticalAlignment="Center">
+                <ComboBox ItemsSource="{Binding Prompts}"
+                 SelectedItem="{Binding SelectedPreset.Prompt}"
+                 DisplayMemberPath="Name" Width="100"/>
+
+                <!--<themes:IconButton IconSource="{StaticResource plus}" Command="{Binding DuplicatePromptCommand}" Margin="6 0 4 0" FontSize="16" ToolTip="Add New Prompt"/>
+                <themes:IconButton IconSource="{StaticResource trash}" Command="{Binding DeletePromptCommand}" Margin="4 0" ToolTip="Delete Prompt"/>-->
+
+                
+            </StackPanel>
+            
+        </Grid>
+
+        <!--Content-->
+
+        <!--  Content  -->
+        <Grid Grid.Row="1" >
+            <themes:Squircle x:Name="maskBorder" Background="{DynamicResource bg4}" ClipToBounds="True"/>
+            <Grid  DataContext="{Binding SelectedPreset}">
+                <Grid.OpacityMask>
+                    <VisualBrush Visual="{Binding ElementName=maskBorder}"/>
+                </Grid.OpacityMask>
+
+                <!--content here-->
+                <Grid FocusVisualStyle="{x:Null}">
+
+                    <!--<obj:DottedCanvas CanvasMatrix="{Binding CanvasMatrix}" RenderOptions.BitmapScalingMode="NearestNeighbor" RenderOptions.EdgeMode="Aliased"/>-->
+
+                    <obj:CanvasAreaControl x:Name="groups" ItemsSource="{Binding Groups}"
+                    CanvasTransform="{Binding CanvasMatrix}" IsHitTestVisible="False" Panel.ZIndex="-2"/>
+
+
+                    <obj:CanvasAreaControl x:Name="lines" ItemsSource="{Binding LineConnections}"
+                    CanvasTransform="{Binding CanvasMatrix}" IsHitTestVisible="False" Panel.ZIndex="-1"/>
+
+
+                    <obj:CanvasAreaControl x:Name="canvas" ItemsSource="{Binding LatentNodes}" FocusVisualStyle="{x:Null}"
+                    CanvasTransform="{Binding CanvasMatrix}"
+                    KeyDown="canvas_KeyDown"
+                    Background="Transparent"
+                    AllowDrop="True"
+                    Drop="Canvas_Drop"
+                    ClickPan="True"
+                    PreviewMouseDown="canvas_PreviewMouseDown">
+
+                        <i:Interaction.Behaviors>
+                            <core:CanvasFixedSizeBehaviour/>
+                        </i:Interaction.Behaviors>
+
+
+                        <obj:CanvasAreaControl.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Header="Wrap Nodes" Click="RightClickMenu"/>
+                                <MenuItem Header="Paste" Click="RightClickMenu"/>
+                                <MenuItem Header="Connect By Pass" Click="RightClickMenu"/>
+
+                                <Separator/>
+                                <MenuItem Header="Color">
+                                    <MenuItem Header="No Color" Click="RightClickMenu" Template="{StaticResource NoHoverEffectMenuItem}"/>
+                                    <MenuItem Header="Red" Click="RightClickMenu" Background="#533" Template="{StaticResource NoHoverEffectMenuItem}"/>
+                                    <MenuItem Header="Brown" Click="RightClickMenu" Background="#593930" Template="{StaticResource NoHoverEffectMenuItem}"/>
+                                    <MenuItem Header="Green" Click="RightClickMenu" Background="#353" Template="{StaticResource NoHoverEffectMenuItem}"/>
+                                    <MenuItem Header="Blue" Click="RightClickMenu" Background="#335" Template="{StaticResource NoHoverEffectMenuItem}"/>
+                                    <MenuItem Header="Pale Blue" Click="RightClickMenu" Background="#3f5159" Template="{StaticResource NoHoverEffectMenuItem}"/>
+                                    <MenuItem Header="Cyan" Click="RightClickMenu" Background="#355" Template="{StaticResource NoHoverEffectMenuItem}"/>
+                                    <MenuItem Header="Violet" Click="RightClickMenu" Background="#436" Template="{StaticResource NoHoverEffectMenuItem}"/>
+                                    <MenuItem Header="Purple" Click="RightClickMenu" Background="#535" Template="{StaticResource NoHoverEffectMenuItem}"/>
+                                    <MenuItem Header="Pink" Click="RightClickMenu" Background="#644065" Template="{StaticResource NoHoverEffectMenuItem}"/>
+                                    <MenuItem Header="Yellow" Click="RightClickMenu" Background="#653" Template="{StaticResource NoHoverEffectMenuItem}"/>
+                                    <MenuItem Header="Orange" Click="RightClickMenu" Background="#7E544C" Template="{StaticResource NoHoverEffectMenuItem}"/>
+                                    <MenuItem Header="Black" Click="RightClickMenu" Background="#000" Template="{StaticResource NoHoverEffectMenuItem}"/>
+                                </MenuItem>
+                            </ContextMenu>
+                        </obj:CanvasAreaControl.ContextMenu>
+                    </obj:CanvasAreaControl>
+
+    
+                </Grid>
+
+                
+                <!--options-->
+                <Grid Width="Auto" Grid.Column="1" Height="Auto" VerticalAlignment="Top" HorizontalAlignment="Right" Background="Transparent">
+                    <StackPanel Margin="0 0">
+                        <mui:GeneratorButton Width="90" Height="80" HorizontalAlignment="Right" VerticalAlignment="Top"/>
+                        <!--<Button Content="Generate" Click="Generate_Click"/>-->
+                    </StackPanel>
+                </Grid>
+                
+                
+            </Grid>
+
+
+            <Border CornerRadius="{StaticResource windowCorner}" Background="Black" IsHitTestVisible="False" Tag="IgnoreHit" Opacity="1" Visibility="Collapsed" d:Visibility="{Binding IsLoadingNodes, Converter={StaticResource boolToVisibilityConverter}}">
+                <Grid>
+                    <Image Source="/Assets/lod_nodes.png" Opacity="0.8"/>
+                    <themes:Loader/>
+                </Grid>
+            </Border>
+
+        </Grid>
+        
+
+        <!--<Grid Grid.Row="1"
+              Background="{DynamicResource bg3}"
+              DataContext="{Binding SelectedPreset}">
+           
+
+            --><!--canvas--><!--
+            <Border CornerRadius="16" Background="{DynamicResource bg4}">
+               
+            </Border>
+
+
+        </Grid>-->
+        
+        
+        
+    </Grid>
+</UserControl>

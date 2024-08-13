@@ -1,0 +1,192 @@
+﻿<UserControl x:Class="Manual.Editors.ToolProperties"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Manual.Editors" 
+             
+             xmlns:API="clr-namespace:Manual.API" 
+             xmlns:ViewModel="clr-namespace:Manual.Core" 
+             xmlns:MUI="clr-namespace:Manual.MUI" 
+             xmlns:themes="clr-namespace:ManualToolkit.Themes;assembly=ManualToolkit" 
+             xmlns:nodes="clr-namespace:Manual.Core.Nodes" 
+             d:DataContext="{d:DesignInstance Type=ViewModel:Shot}"
+             mc:Ignorable="d" 
+             d:DesignHeight="558.899" d:DesignWidth="199.01"
+             Width="Auto" Height="Auto">
+
+
+    <!--Style of the UserControl-->
+    <UserControl.Resources>
+        <ResourceDictionary>
+
+            <DataTemplate DataType="{x:Type ViewModel:Shot}"/>
+
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+
+
+        <!--TOOLPROPERTIES-->
+        <Grid x:Name="toolManagerContext">
+           <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="{StaticResource EditorHeaderHeight}"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+
+            <!--nav bar-->
+                <Grid Grid.Row="0" x:Name="generationManagerContext" Margin="37,5,13,5" VerticalAlignment="Center">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    
+                    <ComboBox Grid.Column="0" ItemsSource="{Binding PromptPresets}" 
+                              SelectedItem="{Binding SelectedPreset}" DisplayMemberPath="Name"
+                              AllowDrop="True"
+                              Drop="preset_Drop" TextBlock.FontSize="10"/>
+
+                    <Border ToolTip="Nodes has errors" IsHitTestVisible="False" BorderThickness="1" BorderBrush="Red" Opacity="0.36" Visibility="{Binding SelectedPreset.Errors, Converter={StaticResource nullOrEmptyToVisibilityConverter}}">
+                        
+                    </Border>
+                    
+                    <!--PROMPTPRESET MORE OPTIONS-->
+                    <Button Width="20" Margin="0 -2 0 0" HorizontalAlignment="Right" Background="Transparent" ToolTip="PromptPreset more options" Click="PromptPreset_Click">
+                        <TextBlock Text="⋮" FontWeight="Black" FontSize="10"/>
+                        <Button.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Header="Open in Latent Nodes Editor" Click="ContextMenu_Click"/>
+                                <MenuItem Header="Refresh" Click="ContextMenu_Click"/>
+                                <Separator/>
+                                <MenuItem Header="Delete" Click="ContextMenu_Click"/>
+                                <Separator/>
+                                <MenuItem Header="Templates" ItemsSource="{Binding PromptPresetTemplates}">
+                                    <MenuItem.ItemContainerStyle>
+                                        <Style TargetType="{x:Type MenuItem}">
+                                            <EventSetter Event="Click" Handler="Templates_OnMenuItemClick"/>
+                                            <Setter Property="Background" Value="Transparent"/>
+                                            <Setter Property="Foreground" Value="White"/>
+                                            <Setter Property="Padding" Value="10,5,10,5"/>
+                                            <Setter Property="VerticalContentAlignment" Value="Center"/>
+                                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                        </Style>
+                                    </MenuItem.ItemContainerStyle>
+                                    <MenuItem.Resources>
+                                        <HierarchicalDataTemplate DataType="{x:Type nodes:MenuItemNode}" ItemsSource="{Binding SubItems}">
+                                            <TextBlock Text="{Binding Name}" Background="Transparent" VerticalAlignment="Center"/>
+                                        </HierarchicalDataTemplate>
+                                    </MenuItem.Resources>
+                                </MenuItem>
+                                
+                            </ContextMenu>
+                        </Button.ContextMenu>
+                    </Button>
+                    
+                    <CheckBox Grid.Column="1" Margin="6,0,0,0" Width="20" Height="20" Style="{StaticResource CheckBoxLight}" ToolTip="Pin Prompt Preset from being modified automatically"
+                       IsChecked="{Binding SelectedPreset.Pinned, Mode=TwoWay}"
+                       FontSize="13">
+                        <TextBlock Text="📌" Margin="0 0 0 0" FontSize="10"/>
+                    </CheckBox>
+                    
+                </Grid>
+
+                <!--Content-->
+                <Grid x:Name="currentToolContext" DataContext="{Binding CurrentToolSpace}"
+                      Grid.Row="1" d:Background="{DynamicResource bg}">
+                <Border Margin="0 0 0 0" CornerRadius="16" d:Background="{DynamicResource bg5}">
+
+                    <Grid>
+
+
+                        <ScrollViewer Background="Transparent">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="20"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+
+                                    <TextBlock d:Text="Generation Tool" Text="{Binding name}" FontWeight="Bold" Opacity="0.56" HorizontalAlignment="Center"/>
+
+
+                                    <StackPanel Grid.Row="1" HorizontalAlignment="Stretch" Margin="5 0 3 0">
+                                    <ContentControl x:Name="contentBody" HorizontalAlignment="Stretch"/>
+
+                                </StackPanel>
+
+                            </Grid>
+                        </ScrollViewer>
+
+
+                    </Grid>
+                </Border>
+            </Grid>
+
+
+        </Grid>
+        </Grid>
+
+
+
+
+                <!--PALETTE-->
+                <Grid Grid.Row="2" DataContext="{Binding DataContext, RelativeSource={RelativeSource AncestorType=UserControl}}">
+
+                    <Grid>
+
+                        <Grid.Style>
+                            <Style TargetType="Grid">
+                                <!-- Valores por defecto -->
+                                <Setter Property="Height" Value="160"/>
+                                <Setter Property="Visibility" Value="Visible"/>
+
+                                <!-- Triggers -->
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding EnablePalette}" Value="False">
+                                        <Setter Property="Height" Value="0"/>
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Grid.Style>
+
+
+                        <Border Margin="0 2 0 0">
+                            <StackPanel HorizontalAlignment="Stretch">
+                                <MUI:M_ColorPicker DataContext="{x:Static ViewModel:AppModel.project}" 
+                                                   SelectedColor="{Binding SelectedColor}"
+                                                   SecondaryColor="{Binding SecondaryColor}" IsUpdateRender="False"/>
+                            </StackPanel>
+                        </Border>
+
+
+                    </Grid>
+
+
+                    <Button Command="{Binding SwitchPaletteCommand}" VerticalAlignment="Top" HorizontalAlignment="Left" Background="Transparent">
+                        <!--<Path
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Data="M 0 0 L 4 4 L 8 0"
+                    Stroke="{StaticResource fg}"
+                    StrokeThickness="2" />-->
+
+
+                <Rectangle Style="{StaticResource ArrowRect}" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0 2 -2 0"/>
+
+
+            </Button>
+
+                </Grid>
+
+
+        </Grid>
+</UserControl>

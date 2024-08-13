@@ -1,0 +1,31 @@
++++y_script_interpreter+++
+this is the rules of Y script
++++/y_script_interpreter+++
+
+
++++documentation_context type: "nodes"+++
+
+this is the
+documentation context
+
++++/documentation_context+++
+
+
++++y_script+++
+console log hello world
+
++++/y_script+++
+
+
++++results+++
+
++++interpreted_code type: "cs"+++
+Console.Log("hello world");
++++/interpreted_code+++
+
+
++++interpreted_code type: "py"+++
+print("hello world")
++++/interpreted_code+++
+
++++/results+++ 

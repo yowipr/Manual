@@ -1,0 +1,625 @@
+﻿<UserControl
+    x:Class="Manual.Editors.CanvasView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:core="clr-namespace:Manual.Core"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:Manual.Editors"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:objects="clr-namespace:Manual.Objects"
+    xmlns:ObjUI="clr-namespace:Manual.Objects.UI"
+    xmlns:themes="clr-namespace:ManualToolkit.Themes;assembly=ManualToolkit"
+    xmlns:nodes="clr-namespace:Manual.Core.Nodes"
+   
+    xmlns:mui="clr-namespace:Manual.MUI"
+    
+    xmlns:i="http://schemas.microsoft.com/xaml/behaviors" xmlns:wpf="clr-namespace:OpenTK.Wpf;assembly=GLWpfControl"
+    xmlns:api="clr-namespace:Manual.API"
+    
+    Width="Auto"
+    Height="Auto"
+    d:DataContext="{d:DesignInstance Type=core:Project}"
+    d:DesignHeight="606.103"
+    d:DesignWidth="606.103"
+    mc:Ignorable="d">
+    <!--  Style of the UserControl  -->
+    <UserControl.Resources>
+        <ResourceDictionary>
+
+
+            <!--#region LAYER OBJECTS-->
+
+            <DataTemplate DataType="{x:Type objects:LayerBase}">
+                <objects:LayerImage/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type objects:TextLayer}">
+                <objects:TextLayerView/>
+            </DataTemplate>
+            
+            <!--#endregion-->
+
+            
+            <!--UI-->
+
+            <DataTemplate DataType="{x:Type ObjUI:Camera2D}">
+                <ObjUI:Camera2DView/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type ObjUI:BoundingBox}">
+                <ObjUI:BoundingBoxView/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type ObjUI:Selector}">
+                <ObjUI:SelectorView/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type ObjUI:UI_Brush}">
+                <ObjUI:UI_BrushView/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type ObjUI:Lasso}">
+                <ObjUI:LassoView/>
+            </DataTemplate>
+
+            <Style TargetType="{x:Type TabControl}">
+                <Setter Property="OverridesDefaultStyle" Value="True" />
+                <Setter Property="SnapsToDevicePixels" Value="True" />
+                <Setter Property="ItemContainerStyle" Value="{StaticResource ShotTabItem}" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type TabControl}">
+                            <Grid KeyboardNavigation.TabNavigation="Local">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
+                                <TabPanel
+                                    Name="HeaderPanel"
+                                    Grid.Row="0"
+                                    Margin="0,0,4,-1"
+                                    Panel.ZIndex="1"
+                                    Background="Transparent"
+                                    IsItemsHost="True"
+                                    KeyboardNavigation.TabIndex="1" />
+                            </Grid>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsEnabled" Value="False">
+                                    <!--<Setter Property="Foreground" Value="{StaticResource DisabledForegroundBrush}" />-->
+                                    <Setter Property="Foreground" Value="Red" />
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+
+        </ResourceDictionary>
+
+
+
+
+    </UserControl.Resources>
+
+
+         <Grid x:Name="context">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="{StaticResource EditorHeaderHeight}" />
+                <!--DISABLED RELEASE: shot - cambiar a 25-->
+                <RowDefinition Height="5" /> 
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+        <Popup Name="searchPopup" Placement="MousePoint" StaysOpen="False" AllowsTransparency="True" PopupAnimation="Fade" PreviewKeyDown="searchPopup_PreviewKeyDown"
+         HorizontalOffset="-34" VerticalOffset="-12">
+            <mui:SearchMenuBox x:Name="searchBox" ItemsSource="{Binding RegisteredActions}"/>
+            <!-- Ajusta las dimensiones según sea necesario -->
+        </Popup>
+
+
+
+        <!--  nav bar  -->
+            <Grid Grid.Row="0" d:Background="{DynamicResource bg}">
+                <StackPanel
+                Margin="40,0,0,3"
+                HorizontalAlignment="left"
+                VerticalAlignment="Center"
+                DataContext="{Binding SelectedShot}"
+                Orientation="Horizontal"
+                Style="{x:Null}">
+
+
+
+                <themes:IconButton Command="{Binding OpenAssetStoreCommand}" IconSource="{StaticResource tag}" ToolTip="Open Asset Store..." Visibility="Collapsed"/>
+                    
+                <themes:IconButton Command="{Binding OpenPreferencesCommand}" IconSource="{StaticResource cog-6-tooth}" ToolTip="Preferences..."/>
+
+                <Separator />
+
+
+ 
+                    <!--DISABLED RELEASE: shot-->
+                    <themes:IconButton Visibility="Collapsed" Margin="9 0 7 0" Command="{Binding OpenAddShotCommand}" IconSource="{StaticResource plus}" FontSize="16" ToolTip="Add Shot..."/>
+           
+                    <!--DISABLED buttons unused on canvasview bar: folder, collection -->
+                <!--<themes:IconButton Command="{Binding AddShotCommand}" IconSource="{StaticResource folder-open}" />-->
+
+                    <themes:IconButton Command="{Binding UndoCommand}" IconSource="{StaticResource arrow-uturn-left}" ToolTip="Undo (Ctrl + Z)"/>
+
+                    <themes:IconButton Command="{Binding RedoCommand}" IconSource="{StaticResource arrow-uturn-right}" ToolTip="Redo (Ctrl + Shift + Z)"/>
+                    
+                  
+                    
+                
+                    <!--<themes:IconButton Command="{Binding AddShotCommand}" IconSource="{StaticResource archive-box}" />-->
+
+                <StackPanel Orientation="Horizontal">
+                    <i:Interaction.Behaviors>
+                        <core:WidthBasedVisibilityBehavior WidthLimit="580" ParentLevel="2"/>
+                    </i:Interaction.Behaviors>
+
+                 
+                    <Separator />
+
+                    <themes:IconButton FontSize="20" IconSource="{StaticResource view}" PreviewMouseDown="CenterCamera_Click" ToolTip="Fit to View" Margin="10 0 0 0"/>
+
+
+
+                    <CheckBox Style="{StaticResource CheckBoxLight}" Width="24" VerticalAlignment="Center" d:IsChecked="True" ToolTip="Show Grid"
+                              IsChecked="{Binding DataContext.EnableGrid, RelativeSource={RelativeSource AncestorType=UserControl}}" Padding="0" Margin="10 0 0 0">
+                        <Image Source="{StaticResource grid}" Margin="5" RenderOptions.BitmapScalingMode="Fant"/>
+                    </CheckBox>
+
+                    <CheckBox Style="{StaticResource CheckBoxLight}" Width="24" VerticalAlignment="Center" d:IsChecked="True" ToolTip="Snap"
+                              IsChecked="{Binding Snap}" Padding="0" Margin="10 0 0 0">
+                        <Image Source="{StaticResource snap}" Margin="5" RenderOptions.BitmapScalingMode="Fant"/>
+                    </CheckBox>
+
+                    
+                    <!--DISABLED RELEASE: animation-->
+                    <CheckBox Visibility="Collapsed" Style="{StaticResource CheckBoxLight}" Width="24" VerticalAlignment="Center" d:IsChecked="True" ToolTip="Onion Skin"
+                              IsChecked="{Binding Onion}" Padding="0" Margin="10 0 0 0">
+                        <Image Source="{StaticResource onion}" Margin="5" RenderOptions.BitmapScalingMode="Fant"/>
+                    </CheckBox>
+
+                </StackPanel>
+
+
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" DataContext="{Binding SelectedShot}" Margin="0 0 10 0">
+
+                <Button Content="⟳" Click="UpdateRender" Width="30" ToolTip="Update Render"/>
+
+
+                <CheckBox Style="{StaticResource CheckBoxLight}" Width="24" Content="UI" VerticalAlignment="Center" d:IsChecked="True" IsChecked="{Binding ShowUIElements}"  Padding="0" Margin="10 0 0 0"/>
+
+                <!--DISABLED RELEASE: effects-->
+                <CheckBox Visibility="Collapsed" Style="{StaticResource CheckBoxLight}" Width="24" Content="ƒx" VerticalAlignment="Center" d:IsChecked="True" IsChecked="{Binding EnableEffects}" Padding="0" Margin="10 0 20 0"/>
+
+
+                <!--DISABLED RELEASE: effects-->
+                <StackPanel Visibility="Collapsed" Orientation="Horizontal"
+                             DataContext="{x:Static api:UserManager.instance}" d:Visibility="{Binding User, Converter={StaticResource adminToVisibilityConverter}}">
+
+              
+                <ComboBox ItemsSource="{Binding Source={core:EnumBindingSourceExtension {x:Type core:Quality}}}"
+                          DataContext="{x:Static core:Settings.instance}"
+                          SelectedItem="{Binding Quality}" ToolTip="Quality"/>
+
+                <CheckBox 
+                    Style="{StaticResource CheckBoxLight}" Width="24" VerticalAlignment="Center" d:IsChecked="True" ToolTip="3D" Checked="c3D_Checked" Unchecked="c3D_Checked"
+           IsChecked="{Binding DataContext.Is3DView, RelativeSource={RelativeSource AncestorType=UserControl}}" Padding="0" Margin="10 0 0 0">
+                    🧊
+                </CheckBox>
+                    
+                </StackPanel>
+
+
+                <!--<CheckBox Content="Render" VerticalAlignment="Center" d:IsChecked="True" IsChecked="{Binding IsRenderMode}" Padding="3 0.5 0 0" Margin="10 0 0 0"/>-->
+             
+            </StackPanel>
+                
+            </Grid>
+
+
+             <!--DISABLED RELEASE: shot-->
+            <!--  Shots  -->
+        <Border Visibility="Collapsed" Grid.Row="1" CornerRadius="12 12 12 12" BorderThickness="1" BorderBrush="Transparent" d:Background="{DynamicResource bg4}">
+            <Border.Background>
+                <SolidColorBrush Color="Transparent"/>
+            </Border.Background>
+            <Grid>
+                <Rectangle Width="Auto" Height="2" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Fill="{DynamicResource fg2}" Margin="35 0 35 -1"/>
+                <StackPanel
+            Grid.Row="1"
+            Background="Transparent"
+            Orientation="Horizontal"
+            Style="{x:Null}">
+                    <TabControl
+                x:Name="shotsTab"
+                Grid.RowSpan="2"
+                Margin="40,0,0,-4"
+                VerticalAlignment="Center"
+                Background="Red"
+                BorderBrush="{x:Null}"
+                ItemsSource="{Binding ShotsCollectionOpened}"
+                SelectedItem="{Binding SelectedShot, Mode=TwoWay}"
+                        AllowDrop="True"
+                        Drop="shotsTab_Drop">
+
+                        <TabControl.ContentTemplate>
+                            <DataTemplate>
+                                <ContentControl Content="{Binding ShotsCollection}" />
+                            </DataTemplate>
+
+                        </TabControl.ContentTemplate>
+                        
+                    </TabControl>
+                    <Button
+                Width="20"
+                Height="20"
+                Margin="-4,0,0,0"
+                Padding="0"
+                Background="{x:Null}"
+                BorderBrush="{x:Null}"
+                Command="{Binding AddShotCommand}"
+                Content="➕"
+                FontSize="8"
+                Foreground="White"
+                Style="{StaticResource SubButton}" />
+
+                </StackPanel>
+              
+            </Grid>
+
+        </Border>
+             
+             
+        <!--  Content  -->
+        <Grid Grid.Row="2">
+
+         
+            <themes:Squircle x:Name="maskBorder" Background="{DynamicResource bg}" ClipToBounds="True" CacheMode="BitmapCache"/>
+            
+            <Grid x:Name="canvasGrid" d:Visibility="Collapsed">
+                <Grid.OpacityMask>
+                    <VisualBrush Visual="{Binding ElementName=maskBorder}"/>
+                </Grid.OpacityMask>
+
+                <!--<objects:DottedCanvas CanvasMatrix="{Binding DataContext.CanvasMatrix, RelativeSource={RelativeSource AncestorType=UserControl}}" 
+                                      RenderOptions.BitmapScalingMode="NearestNeighbor" RenderOptions.EdgeMode="Aliased"
+                                      Visibility="{Binding DataContext.EnableGrid, Converter={StaticResource boolToVisibilityConverter}, RelativeSource={RelativeSource AncestorType=UserControl}}"/>-->
+
+                <!--2D VIEW-->
+                <objects:CanvasArea
+                  x:Name="canvas"
+                  
+                  d:Visibility="{Binding DataContext.Is3DView, Converter={StaticResource boolToVisibilityConverterInverse}, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                  CanvasTransform="{Binding DataContext.CanvasMatrix, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                  DataContext="{Binding SelectedShot}" RenderTransformOrigin="0.5, 0.5">
+                    <i:Interaction.Behaviors>
+                        <core:CanvasFixedSizeBehaviour/>
+                    </i:Interaction.Behaviors>
+                </objects:CanvasArea>
+
+                <!--3D VIEW-->
+                <wpf:GLWpfControl x:Name="glControl" d:Margin="-1"
+                                  Visibility="{Binding DataContext.Is3DView, Converter={StaticResource boolToVisibilityConverter}, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                  d:Visibility="Collapsed" IsHitTestVisible="False" IsVisibleChanged="glControl_IsVisibleChanged"/>
+                
+
+                <!--INNER GLOW-->
+                <Grid x:Name="innerGlow" IsHitTestVisible="False">
+                    <Grid.OpacityMask>
+                        <VisualBrush Visual="{Binding ElementName=maskBorder}"/>
+                    </Grid.OpacityMask>
+
+                    <Border Background="Transparent"
+           BorderThickness="1" ClipToBounds="True">
+                        <Border Background="Transparent"
+              BorderThickness="40" Margin="-34" x:Name="innerGlowBorder" Opacity="0" CornerRadius="52">
+                            <Border.Effect>
+                                <BlurEffect Radius="50"/>
+                            </Border.Effect>
+
+                            <Border.BorderBrush>
+                                <LinearGradientBrush StartPoint="0,1" EndPoint="1,0">
+                                    <GradientStop Color="#BE6DFC" Offset="1" />
+                                    <GradientStop Color="#30B2FE" Offset="0" />
+                                    <GradientStop Color="#FB7267" Offset="0.33" />
+                                    <GradientStop Color="#FD9926" Offset="0.66" />
+                                </LinearGradientBrush>
+                            </Border.BorderBrush>
+
+                            
+                        </Border>
+                    </Border>
+                    
+
+                </Grid>
+                
+            </Grid>
+
+
+           
+
+            <Button Content="3D" Visibility="Collapsed" VerticalAlignment="Top" Width="30" HorizontalAlignment="Right" Click="Btn3D_Click" DataContext="{x:Static api:UserManager.instance}" d:Visibility="{Binding User.Admin, Converter={StaticResource boolToVisibilityConverter}}"/>
+        </Grid>
+
+
+
+
+        <!--________________________________________BOTTOM OPTIONS, APPLY PREVIEW______________-->
+        <Grid Grid.Row="2" DataContext="{Binding SelectedShot.SelectedLayer}">
+
+            <Grid.Style>
+                <Style TargetType="Grid">
+                    <Setter Property="VerticalAlignment" Value="Bottom"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding DataContext.IsTopSectionBottom, RelativeSource={RelativeSource AncestorType=UserControl}}" Value="True">
+                            <Setter Property="VerticalAlignment" Value="Top"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Grid.Style>
+
+            
+            <StackPanel
+             HorizontalAlignment="Center" Margin="10" Orientation="Horizontal">
+            
+            <i:Interaction.Behaviors>
+                <core:VisibilityBoolAnimationBehavior d:IsVisible="True" IsVisible="{Binding PreviewValue.IsFinished}" />
+            </i:Interaction.Behaviors>
+
+     
+            <StackPanel.Effect>
+                <DropShadowEffect BlurRadius="3" ShadowDepth="2" Direction="275" Color="Black" Opacity="0.30"/>
+            </StackPanel.Effect>
+            
+            <CheckBox IsChecked="{Binding PreviewValue.IsPreview}" VerticalAlignment="Center" 
+                      Style="{StaticResource CheckBoxLight}" Margin="20 0"
+                      ToolTip="Switch Preview (Tab)">
+                <Image Source="{StaticResource eye}"/>
+            </CheckBox>
+
+            <Button Content="Apply" Width="60" Style="{StaticResource ButtonInverseTheme}" ToolTip="Apply generation (Enter)"
+                    Command="{Binding PreviewValue.EndPreviewCommand}" CommandParameter="{StaticResource BoolTrue}"/>
+
+            <Button Content="✖" Width="24" Command="{Binding PreviewValue.EndPreviewCommand}" Foreground="White" Background="Transparent"
+                    CommandParameter="{StaticResource BoolFalse}" ToolTip="Discard Generation (Esc)"/>
+            
+        </StackPanel>
+
+
+            <Grid Margin="5" Opacity="0.9">
+                <i:Interaction.Behaviors>
+                    <core:VisibilityBoolAnimationBehavior d:IsVisible="True" ToOpacity="0.9" IsVisible="{Binding PreviewValue.IsFinished, Converter={StaticResource invertBooleanConverter}}" />
+                </i:Interaction.Behaviors>
+
+                <ContentPresenter x:Name="bottomSectionTool"/>
+            </Grid>
+        </Grid>
+
+             
+
+
+            <!--______________________________________PROMPT BOX_______________________-->
+
+            <!--:IsExpanded="{Binding CheckedPromptBox, RelativeSource={RelativeSource AncestorType=UserControl}}"-->
+        <StackPanel Grid.Row="2" Margin="0,3,0,0" Panel.ZIndex="20">
+
+            <StackPanel.Style>
+                <Style TargetType="StackPanel">
+                    <Setter Property="VerticalAlignment" Value="Top"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding DataContext.IsTopSectionBottom, RelativeSource={RelativeSource AncestorType=UserControl}}" Value="True">
+                            <Setter Property="VerticalAlignment" Value="Bottom"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </StackPanel.Style>
+            
+            <Expander Style="{StaticResource ExpandSplit}" Header="" 
+                  Foreground="#FFC8C8C8" ExpandDirection="Right" Background="{x:Null}"   
+                  IsExpanded="{Binding DataContext.TopSection, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                  Expanded="Expander_Expanded" Collapsed="Expander_Collapsed">
+
+                <!--Height ="132"-->
+
+            <StackPanel Margin="0 0 0 -30" Width="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=Expander}}" HorizontalAlignment="Right" VerticalAlignment="Top">
+                <!--generation manager context-->
+                <Grid x:Name="gridPromptContext" Background="{x:Null}" VerticalAlignment="Center" >
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition  Width="110" />
+                    </Grid.ColumnDefinitions>
+
+                    <Grid Background="{x:Null}" Margin="0,0,10,5" DataContext="{Binding SelectedPreset}">
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition Height="0"/>
+                        </Grid.RowDefinitions>
+
+
+                        <!--Prompt nodeOption context-->
+                        
+                            <!--<nodes:GridNodeOptionContextMultiple x:Name="gridContextPrompt">-->
+                                
+                            <!--<mui:PromptBox Prompt="{Binding FieldValue}"/>-->
+                            <Grid DataContext="{Binding Prompt}" Margin="2 2 0 0">
+                                <!--<Border CornerRadius="28" Background="{DynamicResource bg3}" Opacity="0.9"/>-->
+                                <themes:Squircle Background="{DynamicResource bg3}" Opacity="0.9"/>
+                                
+                                <mui:M_PromptBox x:Name="promptBox" Text="{Binding PositivePrompt, UpdateSourceTrigger=PropertyChanged}"
+                                                 Margin="28 0 0 0"
+                                                 Foreground="Transparent"
+                                                 PreviewKeyDown="promptBox_PreviewKeyDown" IsEnabled="True" VerticalAlignment="Top"
+                                                 MaxWidth="Infinity" themes:CustomFields.CornerRadius="28" MinHeight="0" Height="Auto" MaxHeight="256"
+                                                 AllowDrop="True" PreviewDrop="Prompt_Drop">
+                                </mui:M_PromptBox>
+                                <Grid.Effect>
+                                    <DropShadowEffect BlurRadius="1" ShadowDepth="2" Direction="275" Color="Black" Opacity="0.2"/>
+                                </Grid.Effect>
+                            </Grid>
+                            <!--<TextBox Text="{Binding FieldValue}"/>-->
+                        
+                        <!--</nodes:GridNodeOptionContextMultiple>-->
+
+
+                    </Grid>
+
+                        <!--__________________________GENERATE BUTTON______________________-->
+                        <Grid x:Name="minibuttonsGrid" Grid.Column="1" Margin="0 0 0 5" Background="{x:Null}" d:DataContext="{d:DesignInstance Type=nodes:GenerationManager}">
+                            <Grid.Style>
+                                <Style TargetType="Grid">
+                                    <Setter Property="VerticalAlignment" Value="Top"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding DataContext.IsTopSectionBottom, RelativeSource={RelativeSource AncestorType=UserControl}}" Value="True">
+                                            <Setter Property="VerticalAlignment" Value="Bottom"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Grid.Style>
+
+                            <mui:GeneratorButton ToolTip="Generate (Enter)" PreviewMouseDown="GeneratorButton_MouseDown" Margin="0 2 0 0"/>
+                        </Grid>
+
+                </Grid>
+
+                <!--EXTRA-->
+                    <!--datacontext: project-->
+                    <Grid Margin="0 -5 3 -5" DataContext="{Binding generationManager}">
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+
+                            <StackPanel Orientation="Horizontal">
+
+                            
+                                <CheckBox Background="Transparent" BorderBrush="Transparent" Style="{StaticResource CheckBoxLight}" IsChecked="{Binding Realtime}" VerticalAlignment="Center" ToolTip="Realtime" Cursor="Hand">
+                                    <!--<themes:IconButton IconSource="{StaticResource video-camera}" Margin="0" IsHitTestVisible="False"/>-->
+                                    <Image Source="{StaticResource video-camera}"/>
+                                </CheckBox>
+
+                                <themes:IconButton IconSource="{StaticResource sparkles}" ToolTip="Fix Face" Command="{Binding Execute_FixFaceCommand}" Cursor="Hand"/>
+                            
+                                <themes:IconButton IconSource="{StaticResource photo}" ToolTip="Remove Background" Command="{Binding Execute_RemoveBackgroundCommand}" Cursor="Hand"/>
+
+                                <!--<themes:IconButton IconSource="{StaticResource bell}" ToolTip="Enhance"/>
+                                <themes:IconButton IconSource="{StaticResource clock}" ToolTip="Enhance"/>
+                                <themes:IconButton IconSource="{StaticResource cog-6-tooth}" ToolTip="Enhance"/>
+                                <themes:IconButton IconSource="{StaticResource eye}" ToolTip="Enhance"/>-->
+
+                                <StackPanel.Effect>
+                                    <DropShadowEffect BlurRadius="1" ShadowDepth="2" Direction="275" Color="Black" Opacity="0.6" RenderingBias="Performance"/>
+                                </StackPanel.Effect>
+                            </StackPanel>
+
+                            <Grid VerticalAlignment="Center">
+                                <mui:M_ComboBox Margin="5 2 0 0" Height="22" Width="110" ItemsSource="{Binding Prompts}" 
+                                                SelectedItem="{Binding SelectedPreset.Prompt, Mode=TwoWay}" Padding="0 0 0 0"
+                                                AllowDrop="True"
+                                                DragEnter="Prompt_DragEnter"
+                                                Drop="Prompt_Drop">
+                                    <mui:M_ComboBox.RenderTransform>
+                                        <ScaleTransform ScaleX="0.9" ScaleY="0.9"/>
+                                    </mui:M_ComboBox.RenderTransform>
+                                </mui:M_ComboBox>
+                                
+                                <themes:ImageBorder  DataContext="{Binding SelectedPreset}" ImageSource="{Binding Prompt.Thumbnail}"
+                                                     Width="15" Height="15" HorizontalAlignment="Left" Margin="10 0 0 0" CornerRadius="5"/>
+                                
+                                <!--PROMPTPRESET MORE OPTIONS-->
+                                <Button Width="20" Margin="0 0 10 0" HorizontalAlignment="Right" Background="Transparent" ToolTip="Prompt more options" Click="Prompt_Click">
+                                    <TextBlock Text="⋮" FontWeight="Black" FontSize="10"/>
+                                    <Button.ContextMenu>
+                                        <ContextMenu>
+                                            <MenuItem Header="Open in Latent Nodes Editor" Click="PromptContextMenu_Click"/>
+                                            <MenuItem Header="Paste CivitAI Generation Data" Click="PromptContextMenu_Click"/>
+                                            <MenuItem Header="Duplicate" Click="PromptContextMenu_Click"/>
+                                            <Separator/>
+                                            <MenuItem Header="Delete" Click="PromptContextMenu_Click"/>
+                                            <Separator/>
+                                            <MenuItem Header="Templates" ItemsSource="{Binding PromptTemplates}">
+                                                <MenuItem.ItemContainerStyle>
+                                                    <Style TargetType="{x:Type MenuItem}">
+                                                        <EventSetter Event="Click" Handler="Templates_OnMenuItemClick"/>
+                                                        <Setter Property="Background" Value="Transparent"/>
+                                                        <Setter Property="Foreground" Value="White"/>
+                                                        <Setter Property="Padding" Value="10,5,10,5"/>
+                                                        <Setter Property="VerticalContentAlignment" Value="Center"/>
+                                                        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                                    </Style>
+                                                </MenuItem.ItemContainerStyle>
+                                                <MenuItem.Resources>
+                                                    <HierarchicalDataTemplate DataType="{x:Type nodes:MenuItemNode}" ItemsSource="{Binding SubItems}">
+                                                        <TextBlock Text="{Binding Name}" Background="Transparent" VerticalAlignment="Center"/>
+                                                    </HierarchicalDataTemplate>
+                                                </MenuItem.Resources>
+                                            </MenuItem>
+
+                                        </ContextMenu>
+                                    </Button.ContextMenu>
+                                </Button>
+                                
+                            </Grid>
+
+                            <!--__________STRENGTH SLIDER______-->
+                            <Grid Grid.Row="1" DataContext="{Binding SelectedPreset.Prompt}" Margin="0 6 -8 6">
+                                <Border CornerRadius="8" Height="15" Width="95" Background="{StaticResource TransparentPatternBrush}" Opacity="0.6"></Border>
+                                <mui:M_SliderBox Header="Strength" d:Header="Strength" Minimum="0" Maximum="1" Jump="0.05" Jumps="1800" IsLimited="True"
+                                                 RenderTransformOrigin="0.5 0.5" Width="120"
+                                                 Foreground="{DynamicResource fg_high}"
+                                                 Value="{Binding Strength, UpdateSourceTrigger=PropertyChanged}"
+                                                 IsUndo="False"
+                                                 ToolTip="Strength">
+
+                                    <mui:M_SliderBox.RenderTransform>
+                                        <ScaleTransform ScaleX="0.8" ScaleY="0.8"/>
+                                    </mui:M_SliderBox.RenderTransform>
+                                </mui:M_SliderBox>
+
+                            </Grid>
+
+                            
+    
+                         
+                        </StackPanel>
+                    </Grid>
+
+                    <ContentPresenter Content="{Binding DataContext.TopRegion, RelativeSource={RelativeSource AncestorType=UserControl}}" />
+        
+            </StackPanel>
+
+        </Expander>
+            
+            <!--datacontext: project-->
+            <!--DISABLED RELEASE: animation-->
+            <StackPanel Visibility="Hidden" Orientation="Horizontal" Margin="20 0 0 6" Opacity="0.56">
+                <TextBlock Text="frame"/>
+                <TextBlock DataContext="{Binding SelectedShot.Animation}" d:Text="FRAME 5" Width="Auto" Text="{Binding CurrentFrame}" Margin="5 0 0 0" FontWeight="Bold"/>
+
+                <StackPanel.Effect>
+                    <DropShadowEffect BlurRadius="1" ShadowDepth="2" Direction="275" Color="Black" Opacity="0.6" RenderingBias="Performance"/>
+                </StackPanel.Effect>
+
+            </StackPanel>
+        </StackPanel>
+
+        <!--<TextBlock
+            Grid.Row="1"
+            Height="50"
+            Margin="10,150,0,0"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Top"
+            Panel.ZIndex="30"
+            Foreground="White"
+            Opacity="0.6"
+            Text="{Binding TestLog}"
+            Visibility="Hidden" />-->
+
+        </Grid>
+
+
+</UserControl>

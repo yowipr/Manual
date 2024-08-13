@@ -1,0 +1,193 @@
+﻿<UserControl
+    x:Class="MLauncher.Sections.LaunchView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:core="clr-namespace:MLauncher.Core"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:MLauncher.Sections"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:theme="clr-namespace:ManualToolkit.Themes;assembly=ManualToolkit"
+    d:DataContext="{d:DesignInstance Type=local:Launch}"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d">
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+
+            <Style
+                x:Key="MenuRadioButton"
+                BasedOn="{StaticResource {x:Type ToggleButton}}"
+                TargetType="{x:Type RadioButton}">
+                <Style.Setters>
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="RadioButton">
+                                <Border
+                                    Margin="5,0,5,0"
+                                    Background="{TemplateBinding Background}"
+                                    CornerRadius="10">
+                                    <ContentPresenter
+                                        x:Name="contentPresenter"
+                                        Margin="10,0,0,0"
+                                        HorizontalAlignment="Left"
+                                        VerticalAlignment="Center"
+                                        TextBlock.FontFamily="{StaticResource span}" />
+                                </Border>
+                            </ControlTemplate>
+                        </Setter.Value>
+
+                    </Setter>
+
+                    <Setter Property="Background" Value="Transparent" />
+                    <Setter Property="BorderThickness" Value="0" />
+                    <Setter Property="Foreground" Value="{StaticResource fg}" />
+                    <Setter Property="Height" Value="60" />
+                    <Setter Property="Width" Value="Auto" />
+
+                </Style.Setters>
+
+                <Style.Triggers>
+                    <Trigger Property="IsChecked" Value="True">
+                        <Setter Property="Background" Value="{StaticResource fg2}" />
+                    </Trigger>
+                </Style.Triggers>
+
+
+
+            </Style>
+
+
+
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <Grid>
+
+        <Grid Grid.Row="1" Margin="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="0.18*" />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+
+
+            <!--  options  -->
+            <StackPanel HorizontalAlignment="Stretch">
+                <Image
+                    Height="40"
+                    Margin="30,30"
+                    VerticalAlignment="Top"
+                    Source="/Assets/icon.png" RenderOptions.BitmapScalingMode="HighQuality"/>
+                <StackPanel Grid.Row="1" HorizontalAlignment="Stretch">
+
+                    <RadioButton
+                        Command="{Binding SoftwareCardViewCommand}"
+                        IsChecked="True"
+                        Style="{StaticResource MenuRadioButton}">
+                        <theme:IconText IconSource="{StaticResource photo}" Texto="App" />
+                    </RadioButton>
+
+                    <RadioButton Command="{Binding MyPlanViewCommand}" Style="{StaticResource MenuRadioButton}">
+                        <theme:IconText IconSource="{StaticResource tag}" Texto="My Plan" />
+                    </RadioButton>
+
+                    <!--  ADMIN  -->
+                    <RadioButton
+                        Command="{Binding OutputViewCommand}"
+                        Style="{StaticResource MenuRadioButton}"
+                        Visibility="{Binding User, Converter={StaticResource adminToVisibilityConverter}}">
+                        <theme:IconText IconSource="{StaticResource document-text}" Texto="Output" />
+                    </RadioButton>
+
+
+                    <RadioButton
+                        Command="{Binding AdminPanelViewCommand}"
+                        Style="{StaticResource MenuRadioButton}"
+                        Visibility="{Binding User, Converter={StaticResource adminToVisibilityConverter}}">
+                        <theme:IconText
+                            Cursor=""
+                            IconSource="{StaticResource wrench-screwdriver}"
+                            Texto="Admin" />
+                    </RadioButton>
+
+
+                </StackPanel>
+            </StackPanel>
+
+            <Grid Grid.Column="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="80" />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+
+                <!--  header  -->
+                <!--  user logged  -->
+                <StackPanel
+                    x:Name="userZone"
+                    Margin="10,3"
+                    HorizontalAlignment="Right"
+                    d:Visibility="Visible"
+                    Cursor="Hand"
+                    MouseLeftButtonDown="UserZone_MouseLeftButtonDown"
+                    Orientation="Horizontal"
+                    Visibility="{Binding User, Converter={StaticResource objToVisibilityConverter}}">
+
+                    <theme:IconButton IconSource="{StaticResource bell}" />
+
+                    <Label
+                        d:Content="Rodrigo García"
+                        Content="{Binding User.Name}"
+                        Visibility="Collapsed" />
+
+
+                    <Grid
+                        x:Name="userIcon"
+                        Width="35"
+                        Height="35">
+                        <Ellipse>
+                            <Ellipse.Fill>
+                                <ImageBrush d:ImageSource="https://lh3.googleusercontent.com/a/ACg8ocIGnhLhFegwCFkUp4qrCRIAGvMgWGU2ZJomdICFddxB=s96-c" ImageSource="{Binding User.ImageSource}" />
+                            </Ellipse.Fill>
+                        </Ellipse>
+
+                        <Grid.Resources>
+                            <ContextMenu x:Key="UserContextMenu" Opened="ContextMenu_Opened">
+                                <MenuItem Click="MenuItem_Click" Header="Log Out" />
+                            </ContextMenu>
+                        </Grid.Resources>
+                    </Grid>
+
+                </StackPanel>
+
+                <!--  login  -->
+                <Button
+                    x:Name="logInButton"
+                    Width="100"
+                    Height="40"
+                    Margin="10,0"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Center"
+                    d:Visibility="Collapsed"
+                    Background="{StaticResource fg_high}"
+                    Click="ClickSignIn"
+                    Content="Sign In"
+                    Visibility="{Binding User, Converter={StaticResource objToVisibilityConverterInverse}}" Cursor="Hand" />
+
+
+
+
+                <!--  content  -->
+                <Grid Grid.Row="1" Margin="30,0,0,0">
+                    <ContentControl Content="{Binding CurrentView}" />
+                    <!--<local:SoftwareCard/>-->
+
+                </Grid>
+
+
+
+            </Grid>
+
+        </Grid>
+
+    </Grid>
+</UserControl>

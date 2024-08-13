@@ -1,0 +1,44 @@
+﻿<UserControl x:Class="Manual.Editors.EditorControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Manual.Editors"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="400">
+
+
+    <Grid Background="{StaticResource bg}">
+
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="{StaticResource EditorHeaderHeight}"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+
+
+        <!--nav bar-->
+        <Grid Margin="40,0,0,0" Grid.Row="0" Background="{StaticResource bg}">
+            <StackPanel Style="{x:Null}">
+                
+            </StackPanel>
+        </Grid>
+
+        <!--Content-->
+        <Grid Grid.Row="1">
+            <Border>
+
+                <ScrollViewer>
+
+                    <Grid>
+                        <ContentControl Content="{Binding DataContext.body, RelativeSource={RelativeSource AncestorType=UserControl}}"/>
+                     
+                    </Grid>
+                    
+                   
+                </ScrollViewer>
+
+            </Border>
+        </Grid>
+    </Grid>
+</UserControl>

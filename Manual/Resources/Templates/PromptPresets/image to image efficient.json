@@ -1,0 +1,433 @@
+{
+  "last_node_id": 1,
+  "last_link_id": 1,
+  "nodes": [
+    {
+      "bgcolor": "#FF553333",
+      "id": 2,
+      "type": "Efficient Loader",
+      "pos": [
+        96.75778,
+        143.27567
+      ],
+      "size": {
+        "0": 400.0,
+        "1": 805.0
+      },
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "lora_stack",
+          "type": "LORA_STACK",
+          "link": null
+        },
+        {
+          "name": "cnet_stack",
+          "type": "CONTROL_NET_STACK",
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            1
+          ],
+          "slot_index": 0
+        },
+        {
+          "name": "CONDITIONING+",
+          "type": "CONDITIONING",
+          "links": [
+            2
+          ],
+          "slot_index": 1
+        },
+        {
+          "name": "CONDITIONING-",
+          "type": "CONDITIONING",
+          "links": [
+            3
+          ],
+          "slot_index": 2
+        },
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "links": null
+        },
+        {
+          "name": "VAE",
+          "type": "VAE",
+          "links": [
+            4,
+            7
+          ],
+          "slot_index": 4
+        },
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "links": null
+        },
+        {
+          "name": "DEPENDENCIES",
+          "type": "DEPENDENCIES",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "Efficient Loader"
+      },
+      "widgets_values": [
+        "animeScreencapStyle_assV13.safetensors",
+        "anything-v4.0.vae.pt",
+        -2,
+        "None",
+        1,
+        1,
+        "girl, glasses, white short hair, dynamic pose, close up, potrait, perspective, painting on canvas, colorfuface focus, masterpiece, best quality, amelia watson, bokeh, cute, 1girl, solo, monocle white hair ornament, glasses, medium hair, brown eyewear, black sweater, painting on canvas, looking at something, green eyes, colors, colorful, perspective, compositing, anime screencap, flat shading, detailed l, colors, palette",
+        "(worst quality, low quality:1.4),(((asymmetry, asymmetrical-shapes))),(((english text:1.9, text:1.9, watermark))),",
+        "none",
+        "comfy",
+        512,
+        512,
+        1
+      ]
+    },
+    {
+      "bgcolor": "#FF335555",
+      "id": 1,
+      "type": "KSampler (Efficient)",
+      "pos": [
+        545.22595,
+        48.900578
+      ],
+      "size": {
+        "0": 325.0,
+        "1": 601.0
+      },
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 1
+        },
+        {
+          "name": "positive",
+          "type": "CONDITIONING",
+          "link": 2
+        },
+        {
+          "name": "negative",
+          "type": "CONDITIONING",
+          "link": 3
+        },
+        {
+          "name": "latent_image",
+          "type": "LATENT",
+          "link": 6
+        },
+        {
+          "name": "optional_vae",
+          "type": "VAE",
+          "link": 4
+        },
+        {
+          "name": "script",
+          "type": "SCRIPT",
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": null
+        },
+        {
+          "name": "CONDITIONING+",
+          "type": "CONDITIONING",
+          "links": null
+        },
+        {
+          "name": "CONDITIONING-",
+          "type": "CONDITIONING",
+          "links": null
+        },
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "links": null
+        },
+        {
+          "name": "VAE",
+          "type": "VAE",
+          "links": null
+        },
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            5
+          ],
+          "slot_index": 5
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "KSampler (Efficient)"
+      },
+      "widgets_values": [
+        551580206917930.94,
+        "randomize",
+        20,
+        7,
+        "euler",
+        "normal",
+        0.6,
+        "auto",
+        "true"
+      ]
+    },
+    {
+      "bgcolor": "#FF443366",
+      "id": 3,
+      "title": "Output",
+      "type": "M_Output",
+      "pos": [
+        900.3794,
+        161.29161
+      ],
+      "size": {
+        "0": 438.96753,
+        "1": 421.80624
+      },
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "Result",
+          "type": "LAYER",
+          "link": 5
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "M_Output"
+      }
+    },
+    {
+      "bgcolor": "#FF644065",
+      "id": 4,
+      "title": "VAE Encode",
+      "type": "VAEEncode",
+      "pos": [
+        518.9537,
+        682.54736
+      ],
+      "size": {
+        "0": 200.0,
+        "1": 127.0
+      },
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "pixels",
+          "type": "IMAGE",
+          "link": 9
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": 7
+        }
+      ],
+      "outputs": [
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "links": [
+            6
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VAEEncode"
+      }
+    },
+    {
+      "bgcolor": "#FF443366",
+      "id": 5,
+      "title": "Layer",
+      "type": "M_Layer",
+      "pos": [
+        -211.6539,
+        341.90912
+      ],
+      "size": {
+        "0": 284.41174,
+        "1": 454.50464
+      },
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "Layer",
+          "type": "LAYER",
+          "links": [
+            8
+          ],
+          "slot_index": 0
+        },
+        {
+          "name": "Alpha",
+          "type": "LAYER",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "M_Layer"
+      },
+      "widgets_values": [
+        "Selected",
+        true,
+        false
+      ]
+    },
+    {
+      "bgcolor": "#FF553355",
+      "id": 6,
+      "title": "Upscale Image",
+      "type": "ImageScale",
+      "pos": [
+        -129.78868,
+        146.63342
+      ],
+      "size": {
+        "0": 200.0,
+        "1": 187.0
+      },
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "link": 8
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            9
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ImageScale"
+      },
+      "widgets_values": [
+        "bilinear",
+        512,
+        512,
+        "center"
+      ]
+    }
+  ],
+  "links": [
+    [
+      1,
+      2,
+      0,
+      1,
+      0,
+      "MODEL"
+    ],
+    [
+      2,
+      2,
+      1,
+      1,
+      1,
+      "CONDITIONING"
+    ],
+    [
+      3,
+      2,
+      2,
+      1,
+      2,
+      "CONDITIONING"
+    ],
+    [
+      4,
+      2,
+      4,
+      1,
+      4,
+      "VAE"
+    ],
+    [
+      5,
+      1,
+      5,
+      3,
+      0,
+      "IMAGE"
+    ],
+    [
+      6,
+      4,
+      0,
+      1,
+      3,
+      "LATENT"
+    ],
+    [
+      7,
+      2,
+      4,
+      4,
+      1,
+      "VAE"
+    ],
+    [
+      8,
+      5,
+      0,
+      6,
+      0,
+      "LAYER"
+    ],
+    [
+      9,
+      6,
+      0,
+      4,
+      0,
+      "IMAGE"
+    ]
+  ],
+  "groups": [],
+  "config": {},
+  "extra": {
+    "manual_config": {
+      "canvas_position": "0.5738386638542625,0,0,0.5738386638542625,164.68429056493073,43.99275617609912"
+    }
+  },
+  "version": 0.4
+}

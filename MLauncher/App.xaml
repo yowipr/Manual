@@ -1,0 +1,49 @@
+﻿<Application x:Class="MLauncher.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:MLauncher"
+             xmlns:sec="clr-namespace:MLauncher.Sections"
+             xmlns:spec="clr-namespace:ManualToolkit.Specific;assembly=ManualToolkit"
+             StartupUri="MainWindow.xaml">
+    <Application.Resources>
+        <ResourceDictionary>
+
+            <ResourceDictionary.MergedDictionaries>
+                <!--color palette-->
+                <ResourceDictionary Source="pack://application:,,,/ManualToolkit;component/Themes/ColorThemes/HumbleTheme.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/ManualToolkit;component/Themes/IconsStyle.xaml" />
+
+                <!-- Referencia al Style.xaml en el proyecto ManualToolkit -->
+                <ResourceDictionary Source="pack://application:,,,/ManualToolkit;component/Themes/Style.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+
+
+            <DataTemplate DataType="{x:Type spec:Login}">
+                <sec:LoginView/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type sec:Launch}">
+                <sec:LaunchView/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type sec:Loading}">
+                <sec:LoadingView/>
+            </DataTemplate>
+
+
+            <DataTemplate DataType="{x:Type sec:SoftwareCard}">
+                <sec:SoftwareCardView/>
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type sec:Output}">
+                <sec:OutputView/>
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type sec:MyPlan}">
+                <sec:MyPlanView/>
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type sec:AdminPanel}">
+                <sec:AdminPanelView/>
+            </DataTemplate>
+            
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

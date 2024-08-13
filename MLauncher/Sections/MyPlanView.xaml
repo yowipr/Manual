@@ -1,0 +1,180 @@
+﻿<UserControl
+    x:Class="MLauncher.Sections.MyPlanView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:design="clr-namespace:ManualToolkit.Themes;assembly=ManualToolkit"
+    xmlns:local="clr-namespace:MLauncher.Sections"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:themes="clr-namespace:ManualToolkit.Themes;assembly=ManualToolkit"
+    d:Width="900"
+    mc:Ignorable="d">
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <design:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+            <design:BoolToVisibilityConverterInverse x:Key="BoolToVisibilityConverterInverse" />
+            <design:BoolToSolidColorBrushConverter x:Key="BoolToSolidColorBrushConverter" />
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <Grid>
+        <themes:Loader Visibility="{Binding IsLoading, Converter={StaticResource BoolToVisibilityConverter}}" />
+
+        <ScrollViewer
+            Padding="0,0,10,0"
+            ScrollChanged="ScrollViewer_ScrollChanged"
+            VerticalScrollBarVisibility="Auto"
+            Visibility="{Binding IsLoading, Converter={StaticResource BoolToVisibilityConverterInverse}}">
+            <StackPanel HorizontalAlignment="Stretch">
+                <TextBlock FontSize="50" FontWeight="Bold">
+                    My Plan
+                </TextBlock>
+                <Separator
+                    Margin="0,20"
+                    Opacity="0.3"
+                    Style="{x:Null}" />
+                <Grid Margin="0,0,0,35">
+                    <StackPanel HorizontalAlignment="Stretch">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock
+                                FontSize="35"
+                                FontWeight="Bold"
+                                Text="{Binding PlanName}" />
+                            <Button
+                                Name="Cta"
+                                Grid.Column="1"
+                                Width="145"
+                                MinHeight="40"
+                                HorizontalAlignment="Right"
+                                VerticalAlignment="Center"
+                                Click="Cta_Click"
+                                Content="{Binding Cta}" />
+                        </Grid>
+                        <TextBlock
+                            FontSize="30"
+                            FontWeight="Bold"
+                            Foreground="{StaticResource fg_sub}"
+                            Visibility="{Binding HasPaymentInfo, Converter={StaticResource BoolToVisibilityConverter}}">
+                            <TextBlock.Text>
+                                <MultiBinding StringFormat="{}US${0} per {1}">
+                                    <Binding Path="Subscription.Price" />
+                                    <Binding Path="Subscription.Interval" />
+                                </MultiBinding>
+                            </TextBlock.Text>
+                        </TextBlock>
+                        <TextBlock FontSize="25" Text="{Binding Subscription.NextBillingTime}" />
+                    </StackPanel>
+                </Grid>
+                <StackPanel HorizontalAlignment="Stretch" Visibility="{Binding HasPaymentInfo, Converter={StaticResource BoolToVisibilityConverter}}">
+                    <Grid Margin="0,0,0,30">
+                        <StackPanel HorizontalAlignment="Stretch">
+                            <TextBlock FontSize="20" FontWeight="Bold">PAYMENT METHOD</TextBlock>
+                            <Separator
+                                Margin="0,8,0,13"
+                                Opacity="0.2"
+                                Style="{x:Null}" />
+                            <Button
+                                Name="ChangePayment"
+                                MinHeight="40"
+                                Click="ChangePayment_Click">
+                                Change your payment method through PayPal
+                            </Button>
+                        </StackPanel>
+                    </Grid>
+                    <Grid Margin="0,0,0,30">
+                        <StackPanel HorizontalAlignment="Stretch">
+                            <TextBlock FontSize="20" FontWeight="Bold">BILLING DATA</TextBlock>
+                            <Separator
+                                Margin="0,8,0,13"
+                                Opacity="0.2"
+                                Style="{x:Null}" />
+                            <Grid Margin="0,0,0,5">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock FontSize="15">Name:</TextBlock>
+                                <TextBlock
+                                    Grid.Column="1"
+                                    FontSize="15"
+                                    Text="{Binding Subscription.GivenName}" />
+                            </Grid>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock FontSize="15">Billing address:</TextBlock>
+                                <TextBlock
+                                    Grid.Column="1"
+                                    FontSize="15"
+                                    Text="{Binding Subscription.Address}" />
+                            </Grid>
+                        </StackPanel>
+                    </Grid>
+                    <Grid>
+                        <StackPanel HorizontalAlignment="Stretch">
+                            <TextBlock FontSize="20" FontWeight="Bold">BILLING HISTORY</TextBlock>
+                            <Separator
+                                Margin="0,8,0,13"
+                                Opacity="0.2"
+                                Style="{x:Null}" />
+                            <Grid>
+                                <themes:Loader
+                                    Padding="0,5"
+                                    Panel.ZIndex="1"
+                                    Visibility="{Binding IsTransactionsLoading, Converter={StaticResource BoolToVisibilityConverter}}" />
+
+                                <Border Padding="15,10">
+                                    <ItemsControl Foreground="{StaticResource fg}" ItemsSource="{Binding Transactions}">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <Border Padding="5">
+                                                    <Grid HorizontalAlignment="Stretch">
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition />
+                                                            <ColumnDefinition />
+                                                            <ColumnDefinition />
+                                                            <ColumnDefinition />
+                                                        </Grid.ColumnDefinitions>
+                                                        <TextBlock FontSize="15" Text="{Binding Time}" />
+                                                        <TextBlock
+                                                            Grid.Column="1"
+                                                            FontSize="15"
+                                                            Text="{Binding Path=GrossAmount, StringFormat='{}US${0}'}" />
+                                                        <Grid Grid.Column="2" HorizontalAlignment="Left">
+                                                            <Border
+                                                                Width="50"
+                                                                Background="{Binding IsCompleted, Converter={StaticResource BoolToSolidColorBrushConverter}}"
+                                                                CornerRadius="10"
+                                                                Opacity="0.2" />
+                                                            <TextBlock
+                                                                HorizontalAlignment="Center"
+                                                                VerticalAlignment="Center"
+                                                                FontWeight="Bold"
+                                                                Foreground="{Binding IsCompleted, Converter={StaticResource BoolToSolidColorBrushConverter}}"
+                                                                Text="{Binding StatusText}" />
+                                                        </Grid>
+                                                        <TextBlock
+                                                            Grid.Column="3"
+                                                            FontSize="15"
+                                                            Text="MANUAL PRO" />
+                                                    </Grid>
+                                                </Border>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </Border>
+                            </Grid>
+                        </StackPanel>
+                    </Grid>
+                </StackPanel>
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</UserControl>

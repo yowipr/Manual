@@ -1,0 +1,173 @@
+﻿<UserControl x:Class="MLauncher.Sections.SoftwareCardView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:MLauncher.Sections"
+             xmlns:core="clr-namespace:MLauncher.Core"
+             xmlns:themes="clr-namespace:ManualToolkit.Themes;assembly=ManualToolkit"
+             
+             mc:Ignorable="d" 
+             d:DesignHeight="570" d:DesignWidth="900"
+             d:Height="170" Width="Auto" Margin="10">
+    
+  
+    <Border CornerRadius="17" BorderThickness="0" BorderBrush="{StaticResource fg2}">
+
+        <Border.Background>
+            <ImageBrush ImageSource="/Assets/splash.png" Stretch="UniformToFill"/>
+        </Border.Background>
+
+
+        <Grid>
+            <Rectangle Opacity="0.2" RadiusX="17" RadiusY="17" Fill="{StaticResource bg}"/>
+            <Rectangle RadiusX="17" RadiusY="17" Opacity="0.4" Width="415" HorizontalAlignment="Left">
+                <Rectangle.Fill>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                        <GradientStop Color="#151515" Offset="0.6" />
+                        <GradientStop Color="#10101000" Offset="1" />
+                    </LinearGradientBrush>
+                </Rectangle.Fill>
+            </Rectangle>
+
+
+            <Rectangle Opacity="0" Fill="Black" RadiusX="15" RadiusY="15"/>
+
+            <StackPanel Margin="30" HorizontalAlignment="Left" VerticalAlignment="Bottom">
+
+                <StackPanel Margin="10 0" HorizontalAlignment="Left" Orientation="Horizontal">
+                    <Image Margin="0, 30" Height="50" Source="{StaticResource manuallogo}" RenderOptions.BitmapScalingMode="HighQuality"/>
+                    <Label Margin="5 5 0 0" FontSize="16" d:Content="1.0.1" Foreground="white" Content="{Binding currentApplicationVersion}" VerticalAlignment="Center"/>
+                </StackPanel>
+
+                <StackPanel d:Visibility="Visible" x:Name="btnsStackPanel" Visibility="{Binding IsUpdating, Converter={StaticResource boolToVisibilityConverterInverse}}"
+                            Orientation="Horizontal" HorizontalAlignment="Left">
+                    <!--open button-->
+                    <Button Content="Open" Visibility="{Binding IsInstalled, Converter={StaticResource boolToVisibilityConverter}}"
+                            Margin="10 0" FontWeight="Bold" Style="{StaticResource ButtonBig}"
+                             HorizontalAlignment="Left" Click="Button_Click_Open"/>
+
+                    <!--install button-->
+                    <Button Content="Install" d:Visibility="Collapsed" Visibility="{Binding IsInstalled, Converter={StaticResource boolToVisibilityConverterInverse}}"
+                            IsEnabled="{Binding IsInstalling, Converter={StaticResource invertBooleanConverter}}"
+                            Margin="10 0" FontWeight="Bold" Style="{StaticResource ButtonBig}"
+                             HorizontalAlignment="Left" Click="Button_Click_Open"/>
+
+                    <!--update button-->
+                    <Button d:Visibility="Visible" Visibility="{Binding IsLatestVersion, Converter={StaticResource boolToVisibilityConverterInverse}}"
+Margin="10 0" FontWeight="Bold" Width="150" Height="40" Background="{StaticResource fg_high}" HorizontalAlignment="Left" Click="Button_Click_Update">
+                        <Grid>
+                           <Label FontSize="14" Content="Update"/>
+                           <Label Margin="0 0 -35 -10" FontSize="12" d:Content="1.0.1" Opacity="0.7"
+                                  Content="{Binding NewVersion}" VerticalAlignment="Bottom"/>
+                        </Grid>
+                    </Button>
+
+                </StackPanel>
+                
+                <!--on updating-->
+                <StackPanel d:Visibility="Collapsed" Visibility="{Binding IsUpdating, Converter={StaticResource boolToVisibilityConverter}}" HorizontalAlignment="Right">
+                    <Label Content="Updating..." FontSize="16"/>
+                </StackPanel>
+                <!--on updating-->
+                <StackPanel d:Visibility="Collapsed" Visibility="{Binding IsInstalling, Converter={StaticResource boolToVisibilityConverter}}" HorizontalAlignment="Right">
+                    <Label Content="Installing..." FontSize="16"/>
+                </StackPanel>
+
+            </StackPanel>
+
+            
+            
+            
+            <!--admin-->
+            <Border x:Name="adminPanel" Background="{StaticResource bg}" d:Width="240" Width="240" HorizontalAlignment="Right" Margin="10" Visibility="{Binding User, Converter={StaticResource adminToVisibilityConverter}}" >
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="50"/>
+                    </Grid.RowDefinitions>
+
+                    <ScrollViewer>
+                        <StackPanel>
+
+                            <Label Content="Admin Panel"
+                                   FontSize="30" HorizontalAlignment="Center" Margin="0 10"/>
+
+                            <Grid Margin="10 3">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Label Content="Version" HorizontalAlignment="Right"  VerticalAlignment="Center"/>
+                        <TextBox d:Text="0.7.1" Text="{Binding BuildNewVersion}"   Grid.Column="1" Margin="0" Width="Auto" Height="30" VerticalAlignment="Center"/>
+                    </Grid>
+
+                    <Grid Margin="10 3">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Label Content="Suffix" HorizontalAlignment="Right"  VerticalAlignment="Center"/>
+                        <TextBox d:Text="alpha" Text="{Binding Suffix}"   Grid.Column="1" Margin="0" Width="Auto" Height="30" VerticalAlignment="Center"/>
+                    </Grid>
+
+                    <Grid Margin="10 3">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Label Content="Splash Author" HorizontalAlignment="Right"  VerticalAlignment="Center"/>
+                        <TextBox d:Text="mariprrum" Text="{Binding SplashAuthor}"   Grid.Column="1" Margin="0" Width="Auto" Height="30"  VerticalAlignment="Center"/>
+                    </Grid>
+
+                            <CheckBox Content="Delete folders: publish and Releases" IsChecked="{Binding DeletePublishReleaseFolders}" Margin="0 10"/>
+
+                            <Button Margin="10 3" Click="Button_Click_ProjectFolder" VerticalAlignment="Stretch">
+                                <themes:IconText Texto="Open Solution Folder" IconSource="{StaticResource folder-open}"/>
+                            </Button>
+                            
+                            <Button Margin="10 5" Content="Test Button" Click="Button_Click_Test" VerticalAlignment="Stretch"/>
+
+                                <Grid Margin="10 3">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <Label Content="Build Target" HorizontalAlignment="Right"  VerticalAlignment="Center"/>
+                                <TextBox d:Text="Manual" Text="{Binding AppName}"   Grid.Column="1" Margin="0" Width="Auto" Height="30" VerticalAlignment="Center"/>
+                            </Grid>
+                            <Separator Margin="0 10"/>
+                            <Label FontWeight="Bold" FontSize="16" Content="Launcher Settings"/>
+                            <Button Margin="10 5" Content="load launcher settings" Background="{StaticResource bg2}" Click="Button_Click_LauncherLoad" VerticalAlignment="Stretch"/>
+
+
+
+                            <Button Margin="10 3" Click="Button_Click_MoveRelease" VerticalAlignment="Stretch">
+                                <themes:IconText Texto="Move release to web repo" IconSource="{StaticResource archive-box}"/>
+                            </Button>
+
+                            <Button Margin="10 3" FontWeight="Bold" Height="40" Background="{StaticResource fg_high}" Click="Button_Click_Publish" VerticalAlignment="Stretch">
+                                <themes:IconText Texto="Publish" IconSource="{StaticResource globe-alt}"/>
+                            </Button>
+
+                        </StackPanel>
+            </ScrollViewer>
+
+                    <Grid Height="50" Grid.Row="1">
+                        <Button Margin="10 0" FontWeight="Bold" Height="40" Background="{StaticResource fg_sub}" Click="Button_Click_Build" VerticalAlignment="Stretch">
+                            <themes:IconText Texto="Build" IconSource="{StaticResource wrench-screwdriver}"/>
+                        </Button>
+
+                    </Grid>
+                    
+                </Grid>
+            </Border>
+            
+            <!--close admin button-->
+            <Button Background="{StaticResource fg_sub}" x:Name="adminOpenBtn" Click="Button_Click_AdminOpenPanel" Visibility="{Binding User, Converter={StaticResource adminToVisibilityConverter}}" Margin="10" Width="22" Height="22" Padding="0" Content="⚙️" HorizontalAlignment="Right" VerticalAlignment="Top"/>
+
+
+        </Grid>
+    </Border>
+    
+</UserControl>

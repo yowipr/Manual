@@ -1,0 +1,33 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0-windows7.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="BrushPlugin.cs" />
+    <Compile Remove="ControlNetEx.cs" />
+    <Compile Remove="InspectorPlugin.cs" />
+    <Compile Remove="MyToolPlugin.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="ControlNetEx.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
+    <PackageReference Include="System.ComponentModel.Composition" Version="7.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MANUAL2222\MANUAL2222.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Nodes\" />
+  </ItemGroup>
+
+</Project>

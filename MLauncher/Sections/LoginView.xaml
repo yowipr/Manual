@@ -1,0 +1,60 @@
+﻿<UserControl x:Class="MLauncher.Sections.LoginView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:MLauncher.Sections"
+xmlns:spec="clr-namespace:ManualToolkit.Specific;assembly=ManualToolkit"
+             mc:Ignorable="d" 
+             
+              d:DataContext="{d:DesignInstance Type=spec:Login}"
+             
+             Height="300" Width="350" Background="Transparent">
+
+    
+    <Border CornerRadius="15" BorderThickness="1">
+    <Grid Background="Transparent">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="120"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+
+            <StackPanel Margin="20" HorizontalAlignment="Center">
+                <Image Source="/Assets/logo.png" Width="300"/>
+                <Label Margin="10" Content="" FontSize="30" FontWeight="Medium"  HorizontalAlignment="Center"/>
+            </StackPanel>
+
+
+            <StackPanel Margin="20" Grid.Row="1" HorizontalAlignment="Center">
+                
+                <Button x:Name="loginBtn" Width="200" Height="60" Background="{StaticResource fg_high}"
+                        HorizontalAlignment="Center" VerticalAlignment="Center" Click="Button_ClickLogin">
+
+                    <StackPanel Margin="0 -20">
+                           <Label FontWeight="Bold" Margin="0, -2" FontSize="18" Content="Sign In" HorizontalAlignment="Center"/>
+                           <Label Opacity="0.7" FontSize="11" Margin="0, -10" Content="or register" HorizontalAlignment="Center"/>
+                    </StackPanel>
+
+                </Button>
+
+                <StackPanel x:Name="loginLoading" Visibility="Collapsed" HorizontalAlignment="Center">
+                    <Label FontSize="16" Content="login via web browser..."/>
+                </StackPanel>
+
+                <Button Opacity="0.7" Margin="0 10" x:Name="btnLink" d:Visibility="Visible" Visibility="Collapsed" Cursor="Hand" Click="Button_Click_Link" Background="Transparent" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Bottom">
+                    <StackPanel Orientation="Horizontal">
+                      <TextBlock>if you browser hasn't opened, you can</TextBlock>
+                        <TextBlock Margin="5 0" TextDecorations="Underline">copy the URL 📋</TextBlock>
+                    </StackPanel>
+                </Button>
+                <TextBlock x:Name="copiedText" d:Visibility="Visible" Visibility="Collapsed" Opacity="0.7" Text="Copied to Clipboard!" HorizontalAlignment="Center"/>
+
+            </StackPanel>
+
+            <Button Cursor="Hand" Click="Button_ClickGoLaunch" Background="Transparent" Grid.Row="1" Margin="0, 10" HorizontalAlignment="Center" VerticalAlignment="Bottom">
+            <TextBlock TextDecorations="Underline" >maybe later</TextBlock>
+            </Button>
+        </Grid>
+    </Border>
+    
+</UserControl>

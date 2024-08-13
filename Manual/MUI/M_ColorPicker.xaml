@@ -1,0 +1,43 @@
+﻿<UserControl x:Class="Manual.MUI.M_ColorPicker"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Manual.MUI"
+             xmlns:colorpicker="clr-namespace:ColorPicker;assembly=ColorPicker" 
+             xmlns:core="clr-namespace:Manual.Core" d:DataContext="{d:DesignInstance Type=core:Project}"
+             mc:Ignorable="d" 
+             d:DesignHeight="400" d:DesignWidth="500">
+    <!--DataContext="{Binding DataContext.SelectedColor, RelativeSource={RelativeSource AncestorType=UserControl}}"-->
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition Height="20"/>
+        </Grid.RowDefinitions>
+        <!--<colorpicker:StandardColorPicker x:Name="main" MinWidth="50" MinHeight="50"/> -->
+
+        <!--SelectedColor="{Binding Path=ColorBrush, Mode=TwoWay, UpdateSourceTrigger=Explicit}"-->
+        <colorpicker:SquarePicker x:Name="main" SelectedColor="{Binding SelectedColor, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource AncestorType=UserControl}}"  
+                                  Height="130" Width="130" MinWidth="100" MinHeight="100" Margin="0 5 0 0"
+                                  PreviewMouseLeftButtonUp="main_PreviewMouseLeftButtonUp"/>
+        
+        <!---->
+        <colorpicker:ColorDisplay ColorState="{Binding ElementName=main, Path=ColorState, Mode=TwoWay}" PreviewMouseDown="ColorDisplay_PreviewMouseDown"
+            SecondaryColor="{Binding SecondaryColor, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource AncestorType=UserControl}}"                                       
+                                  HorizontalAlignment="Left" VerticalAlignment="Bottom" Width="36" Height="36" Margin="3 0 0 0"
+                                  CornerRadius="5"/>
+
+        <Grid Grid.Row="1">
+
+            <CheckBox x:Name="eraserCheck" Style="{StaticResource CheckBoxLight}" IsChecked="{Binding IsColorEraser}"
+                      Height="14"  Width="39" Padding="0" HorizontalAlignment="Left" Margin="3 0 0 0">
+                <Rectangle Fill="{StaticResource TransparentPatternBrush}" Stroke="gray" StrokeThickness="2" RadiusX="4" RadiusY="4"  Height="10"  Width="35"  />
+            </CheckBox>
+
+            <!--<colorpicker:AlphaSlider ColorState="{Binding ElementName=main, Path=ColorState, Mode=TwoWay}" Width="40" HorizontalAlignment="Left"/>-->
+            <colorpicker:HexColorTextBox ColorState="{Binding ElementName=main, Path=ColorState, Mode=TwoWay}" HorizontalAlignment="Right"/>
+
+        </Grid>
+        
+    </Grid>
+</UserControl>
