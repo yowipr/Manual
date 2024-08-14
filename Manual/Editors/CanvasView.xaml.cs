@@ -56,6 +56,10 @@ public partial class CanvasView : UserControl
         Settings.instance.PropertyChanged += Instance_PropertyChanged;
         GenerationManager.OnGenerated += GenerationManager_OnGenerated;
         ToolManager.OnToolChanged += ToolManager_OnToolChanged;
+
+
+        stylePromptBox.IsExtraItemsSelectable = false;
+        stylePromptBox.ItemsSourceExtra = [new Item("More Styles...")];
     }
 
     private void ToolManager_OnToolChanged(Tool? oldTool, Tool newTool)
@@ -493,6 +497,44 @@ public partial class CanvasView : UserControl
         }
         first3D = false;
     }
+
+    private void stylePromptBox_SelectedItemChanged(object value)
+    {
+        if(value is Item item)
+        {
+            OpenTemplatesMenu();
+        }
+    }
+    private void OpenTemplatesMenu()
+    {
+        // Encuentra el botón
+        Button promptButton = stylePromptMore;
+
+        // Obtén el ContextMenu del botón
+        ContextMenu contextMenu = promptButton.ContextMenu;
+
+        // Asegúrate de que el ContextMenu esté disponible
+        if (contextMenu != null)
+        {
+            // Abre el ContextMenu en la posición del botón
+            contextMenu.PlacementTarget = promptButton;
+            contextMenu.Placement = System.Windows.Controls.Primitives.PlacementMode.Bottom;
+            contextMenu.IsOpen = true;
+
+            // Encuentra el MenuItem de Templates
+            MenuItem templatesMenuItem = contextMenu.Items
+                .OfType<MenuItem>()
+                .FirstOrDefault(item => (string)item.Header == "Templates");
+
+            // Asegúrate de que el MenuItem Templates esté disponible
+            if (templatesMenuItem != null)
+            {
+                // Expande el submenú de Templates
+                templatesMenuItem.IsSubmenuOpen = true;
+            }
+        }
+    }
+
 }
 
 

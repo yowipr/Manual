@@ -164,5 +164,9 @@ namespace Manual.Editors
             tbox.IsReadOnly = true;
         }
 
+        private void Button_LocateComfy(object sender, RoutedEventArgs e)
+        {
+            AppModel.V_LocateComfy();
+        }
     }
 }

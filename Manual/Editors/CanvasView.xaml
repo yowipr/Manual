@@ -517,11 +517,13 @@
                             </StackPanel>
 
                             <Grid VerticalAlignment="Center">
-                                <mui:M_ComboBox Margin="5 2 0 0" Height="22" Width="110" ItemsSource="{Binding Prompts}" 
+                                <mui:M_ComboBox x:Name="stylePromptBox" Margin="5 2 0 0" Height="22" Width="110" ItemsSource="{Binding Prompts}"  ToolTip="Style Prompt: you can use many text prompts here"
                                                 SelectedItem="{Binding SelectedPreset.Prompt, Mode=TwoWay}" Padding="0 0 0 0"
                                                 AllowDrop="True"
                                                 DragEnter="Prompt_DragEnter"
-                                                Drop="Prompt_Drop">
+                                                Drop="Prompt_Drop"
+                                                SelectedItemChanged="stylePromptBox_SelectedItemChanged">
+                                    
                                     <mui:M_ComboBox.RenderTransform>
                                         <ScaleTransform ScaleX="0.9" ScaleY="0.9"/>
                                     </mui:M_ComboBox.RenderTransform>
@@ -530,8 +532,8 @@
                                 <themes:ImageBorder  DataContext="{Binding SelectedPreset}" ImageSource="{Binding Prompt.Thumbnail}"
                                                      Width="15" Height="15" HorizontalAlignment="Left" Margin="10 0 0 0" CornerRadius="5"/>
                                 
-                                <!--PROMPTPRESET MORE OPTIONS-->
-                                <Button Width="20" Margin="0 0 10 0" HorizontalAlignment="Right" Background="Transparent" ToolTip="Prompt more options" Click="Prompt_Click">
+                                <!--STYLE PROMPT MORE OPTIONS-->
+                                <Button x:Name="stylePromptMore" Width="20" Margin="0 0 10 0" HorizontalAlignment="Right" Background="Transparent" ToolTip="Prompt more options" Click="Prompt_Click">
                                     <TextBlock Text="⋮" FontWeight="Black" FontSize="10"/>
                                     <Button.ContextMenu>
                                         <ContextMenu>

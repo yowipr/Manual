@@ -167,13 +167,25 @@ public partial class M_ComboBox : UserControl, IManualElement
         SelectedItemChanged?.Invoke(newValue);
     }
 
+    public bool IsExtraItemsSelectable = true;
     public object SelectedItem
     {
         get { return GetValue(SelectedItemProperty); }
         set
-        { 
-            SetValue(SelectedItemProperty, value);
-            AsignInputText(value);
+        {
+            if (ItemsSourceExtra != null && ItemsSourceExtra.Contains(value))
+            {
+                if (IsExtraItemsSelectable)
+                {
+                    SetValue(SelectedItemProperty, value);
+                    AsignInputText(value);
+                }
+            }
+            else
+            {
+                SetValue(SelectedItemProperty, value);
+                AsignInputText(value);
+            }
         }
     }
 
@@ -327,7 +339,7 @@ public partial class M_ComboBox : UserControl, IManualElement
 
     internal void UpdateTextBoxDisplayValue(object selectedItem) // ON SELECTED ITEM CHANGED
     {
-        if (selectedItem == null)
+        if (selectedItem == null || (ItemsSourceExtra != null && ItemsSourceExtra.Contains(selectedItem) && !IsExtraItemsSelectable) )
             return;
 
 
@@ -349,6 +361,8 @@ public partial class M_ComboBox : UserControl, IManualElement
     }
     internal virtual void AsignInputText(object selectedItem)
     {
+    
+
 
         if (selectedItem == null)
         {
@@ -357,6 +371,9 @@ public partial class M_ComboBox : UserControl, IManualElement
         }
         else if (!string.IsNullOrEmpty(DisplayMemberPath))
         {
+            if (ItemsSourceExtra != null && ItemsSourceExtra.Contains(selectedItem) && !IsExtraItemsSelectable)
+                return;
+
             var propertyInfo = selectedItem.GetType().GetProperty(DisplayMemberPath);
             if (propertyInfo != null)
             {

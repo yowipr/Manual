@@ -94,7 +94,8 @@
                                         <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
                                         <Label Content="FolderPath" />
                                         <TextBox Width="400" Text="{Binding AIServer.DirPath}" Background="{StaticResource bg}"/>
-                                    </StackPanel>
+                                            <Button Content="Locate Comfy" Width="100" Click="Button_LocateComfy"  Background="{StaticResource bg}" BorderBrush="{StaticResource fg}" BorderThickness="1"/>
+                                        </StackPanel>
 
                                         <StackPanel Margin="0 5" HorizontalAlignment="Right" Orientation="Horizontal" >
                                         <Label Content="Arguments" />

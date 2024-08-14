@@ -310,41 +310,10 @@ public partial class W_Launcher : W_WindowContent
 
     private void Click_comfyLocate(object sender, RoutedEventArgs e)
     {
-        using (var dialog = new CommonOpenFileDialog())
-        {
-            dialog.IsFolderPicker = true; // Establece el diálogo para seleccionar carpetas
-            dialog.Title = "Select the folder for ComfyUI"; // Título del diálogo
-            dialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyComputer); // Directorio inicial
-
-            // Establecer el texto personalizado para el botón
-            //  dialog.OkButtonLabel = "Select Folder"; // Personalizar el texto del botón de aceptar
-            dialog.EnsurePathExists = true; // Asegurarse de que el camino exista
-
-            if (dialog.ShowDialog() == CommonFileDialogResult.Ok && !string.IsNullOrWhiteSpace(dialog.FileName))
-            {
-                string selectedPath = dialog.FileName;
-
-                // Verificar si el nombre de la carpeta final es "ComfyUI"
-                DirectoryInfo directoryInfo = new DirectoryInfo(selectedPath);
-                if (directoryInfo.Name.Equals("ComfyUI", StringComparison.OrdinalIgnoreCase))
-                {
-                    // Cambiar a la carpeta padre, si existe
-                    if (directoryInfo.Parent != null)
-                    {
-                        selectedPath = directoryInfo.Parent.FullName;
-                    }
-                }
-
-                // Asignar la ruta ajustada
-                Settings.instance.AIServer.DirPath = selectedPath;
-                Settings.instance.AIServer.IsDownloaded = true;
-
-
-                Setup_comfyFinal();
-
-            }
-        }
+        var succed = AppModel.V_LocateComfy();
+        if(succed) Setup_comfyFinal();
     }
+
 
     private void Click_comfyDownload(object sender, RoutedEventArgs e)
     {
