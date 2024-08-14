@@ -9,7 +9,7 @@ This initially supposed to be a paid app, but since it's impossible to monetize 
 # Use:
 - download the Manual_Portable.zip: https://github.com/yowipr/Manual/releases/tag/1.0.0-beta
 - you need ComfyUI-Manual custom nodes in ComfyUI: https://github.com/yowipr/ComfyUI-Manual
-- in preferences you need to copy and paste the ComfyUI folder path
+- you need to copy and paste the ComfyUI folder path in Manual, editor -> preferences
 - in the bottom right corner, there are a circle, click and choose Open Local Server, and wait until the server starts, the circle will turn blue
 - in the Latent Nodes Editor, click view -> Refresh, to load your nodes and models
 - be sure to select a model that you have downloaded
