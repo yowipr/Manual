@@ -36,6 +36,7 @@ using Manual.Editors.Displays;
 using SkiaSharp;
 using Newtonsoft.Json.Converters;
 using CefSharp.DevTools.CSS;
+using System.Windows.Controls;
 
 namespace Manual.Core.Nodes.ComfyUI;
 
@@ -808,6 +809,11 @@ public static class Comfy
                         nodeUI.NameType = node.name;
                         nodeUI.Name = node.display_name;
                       
+                        if(nodeUI.Name == "MaskBlur+")
+                        {
+
+                        }
+
                         //IS OUTPUT
                         nodeUI.IsOutput = output_node;
                         if (nodeUI.IsOutput)
@@ -843,9 +849,45 @@ public static class Comfy
                         //---------------------------------------------------------------------------------------INPUT_TYPES
                         var inputsRequired = node.input.required;
                         var inputsOptional = node.input.optional;
-                        void SetInputs(dynamic inputsR)
+
+                        var inputsOrderRequired = node["input_order"]?["required"] as JArray;
+                        var inputsOrderOptional = node["input_order"]?["optional"] as JArray;
+
+                        void SetInputs(dynamic inputsR, JArray inputOrder)
                         {
                             if (inputsR == null) return; //ignore optional usually
+
+
+                            //reorder list
+                            if (inputOrder != null)
+                            {
+                                var orderedInputs = new List<JProperty>();
+
+                                // Reordenar inputsRequired según inputOrderRequired
+                                foreach (var inputName in inputOrder)
+                                {
+                                    var property = inputsR[inputName.ToString()] as JProperty;
+                                    if (property != null)
+                                    {
+                                        orderedInputs.Add(property);
+                                    }
+                                }
+
+                                // Añadir cualquier input que no estuviera en inputOrderRequired (si lo deseas)
+                                foreach (JProperty property in inputsR)
+                                {
+                                    if (!orderedInputs.Any(p => p.Name == property.Name))
+                                    {
+                                        orderedInputs.Add(property);
+                                    }
+                                }
+
+                                // Reemplazar inputsRequired con la lista ordenada
+                                inputsR = new JObject(orderedInputs);
+                            }
+
+
+
 
                             foreach (var input in inputsR) // list combobox field
                             {
@@ -859,6 +901,7 @@ public static class Comfy
                                 float stepUI = 1;
                                 NodeOptionDirection directionUI = NodeOptionDirection.Field;
 
+                                string tooltip = "";
 
 
                                 string input_name = input.Name;
@@ -868,17 +911,6 @@ public static class Comfy
                                 bool handledUI = false;
                                 if (inputDetails[0] is IList)
                                 {
-
-
-                                    if (nodeDisplayName.Contains("RIFE"))
-                                    {
-                                        if(input_name == "scale_factor")
-                                        {
-
-                                        }
-                                    }
-
-
                                     directionUI = NodeOptionDirection.Field;
                                     
                                     // Manejar cuando el primer elemento es una lista
@@ -920,6 +952,9 @@ public static class Comfy
                                         case string _:
                                             type = FieldTypes.STRING;
                                             break;
+                                        case bool _:
+                                            type = FieldTypes.BOOLEAN;
+                                            break;
                                         default:
                                             type = FieldTypes.STRING;
                                             break;
@@ -935,9 +970,12 @@ public static class Comfy
 
                                 else // input field widget
                                 {
+                                    //determine if field or input
                                     type = inputDetails[0];
+                                    bool isField = type == "INT" || type == "FLOAT" || type == "STRING" || type == "BOOLEAN";
+                                   
 
-                                    if (input.Value.Count == 1)
+                                    if (!isField)
                                     {
                                         directionUI = NodeOptionDirection.Input;
                                     }
@@ -986,6 +1024,12 @@ public static class Comfy
                                     }
                                 }
 
+                                if (inputDetails.Count > 1)
+                                {
+                                    tooltip = inputDetails[1] is JObject detailsObject && detailsObject.ContainsKey("tooltip")
+                                   ? detailsObject["tooltip"].ToString()
+                                   : string.Empty;
+                                }
 
                                 //---------------------------------------------------------------------ASIGN ELEMENT
                                 if (handledUI)
@@ -1028,6 +1072,7 @@ public static class Comfy
                                     element = new M_TextBox();
 
 
+
                                 NodeOption nodeoption = null;
                                 if (directionUI == NodeOptionDirection.Field)
                                 {
@@ -1040,12 +1085,18 @@ public static class Comfy
                                     Inputs.Add(nodeoption);
                                 }
 
+
+                                //TOOLTIP
+                                if (nodeoption != null)
+                                {
+                                    nodeoption.ToolTip = tooltip;
+                                }
                             }
 
 
                         }
-                        SetInputs(inputsRequired);
-                        SetInputs(inputsOptional);
+                        SetInputs(inputsRequired, inputsOrderRequired);
+                        SetInputs(inputsOptional, inputsOrderOptional);
 
 
 

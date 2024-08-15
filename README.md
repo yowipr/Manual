@@ -28,7 +28,7 @@ Designed to be friendly to traditional artists (now digital artists are traditio
 
 [Watch the full video on YouTube](https://www.youtube.com/watch?v=3NynPgEyLNA)
 
-<img src="docs/sketch.gif" alt="Multiple Workflows">
+<img src="docs/sketch.gif" alt="User Interface">
 
 ### Multiple Workflows and Templates
 Manual has Templates for workflow nodes and Prompt Styles.
@@ -45,7 +45,7 @@ for exporting: File -> Export -> Export Prompt Preset (PromptPreset is a workflo
 All workflow nodes are linked to a Prompt Style, even this can be deactivated in every workflow node and have their own Prompt Style.
 Prompt Styles are useful for testing different text prompts or making characters
 
-<img src="docs/prompt_styles.gif" alt="Multiple Workflows" width="400">
+<img src="docs/prompt_styles.gif" alt="Multiple Workflows">
 
 ### Drivers
 With Drivers you can link the fields to the Prompt Style or provide a lambda expression.
@@ -60,19 +60,19 @@ for an advanced driver, you can use "source." followed by the property name.
 - example 2: source.Strength / 2
 - example 3: source.Strength + source.CFG
 
-<img src="docs/drivers.gif" alt="Multiple Workflows" width="400">
+<img src="docs/drivers.gif" alt="Drivers" width="400">
 
 
 ### Manual Nodes
 - Layer Node
 - Output Node
 
- <img src="docs/manual_nodes.gif" alt="Multiple Workflows" width="400">
+ <img src="docs/manual_nodes.gif" alt="Manual Nodes" width="400">
 
 ### More
 Manual might contain things I don't even remember, a lot of easter eggs lol.
 
- <img src="docs/bypass_lora.gif" alt="Multiple Workflows" width="400">
+ <img src="docs/bypass_lora.gif" alt="More" width="400">
 
 ## Considerations
 

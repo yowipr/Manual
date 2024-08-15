@@ -10,7 +10,8 @@
              mc:Ignorable="d" 
              d:Height="20" d:DesignWidth="200" Margin="0 2"
              IsEnabled="{Binding IsReachable}"
-             IsHitTestVisible="True">
+             IsHitTestVisible="True"
+             ToolTip="{Binding ToolTip}">
     
     <UserControl.Style>
         <Style TargetType="UserControl">
@@ -92,7 +93,7 @@ ConverterParameter={x:Static local:NodeOptionDirection.Output}}">
                     <ToolTip Content="input"/>
                 </Grid.ToolTip>
 
-                <Ellipse  Width="10" Height="10"  Fill="{Binding TypeColor, RelativeSource={RelativeSource AncestorType=UserControl}}" />
+                <Ellipse  Width="10" Height="10" Fill="{Binding TypeColor, RelativeSource={RelativeSource AncestorType=UserControl}}" />
             </Grid>
 
 

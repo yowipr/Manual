@@ -1852,6 +1852,8 @@ public partial class NodeOption : ObservableObject, IId, IDisposable, INamable, 
 
     [ObservableProperty] bool isReachable = true;
 
+    [ObservableProperty] string toolTip = "";
+
     [JsonIgnore] public Point Position
     {
         get => AttachedNode.GetPosition();
