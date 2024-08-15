@@ -34,8 +34,11 @@ Designed to be friendly to traditional artists (now digital artists are traditio
 Manual has Templates for workflow nodes and Prompt Styles.
 
 Add, Duplicate, Save, Load
+
 you can drop a .json file with your workflows made with ComfyUI, but for some reason you can't do it from Manual to ComfyUI, who knows
+
 for exporting: File -> Export -> Export Prompt Preset (PromptPreset is a workflow node)
+
 ![Multiple Workflows](docs/multiple_workflows.gif)
 
 ### Prompt Styles
@@ -46,9 +49,11 @@ Prompt Styles are useful for testing different text prompts or making characters
 
 ### Drivers
 With Drivers you can link the fields to the Prompt Style or provide a lambda expression.
+
 **Attach a Prompt Style to a workflow node automatically**: in the nav bar of Latent Nodes Editor -> PromptPreset -> Automatic Drivers
 
 **Custom Drivers setup**: right click in a node field -> Edit Driver -> write Prompt Style property name (usually Manual recommends a name)
+
 for an advanced driver, you can use "source." followed by the property name.
 
 - example 1: Strength
