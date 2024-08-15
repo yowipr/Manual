@@ -107,9 +107,9 @@
                         </MenuItem.Resources>
                     </MenuItem>
 
-                    <MenuItem Header="View">
+                    <!--<MenuItem Header="View">-->
                         <MenuItem Header="Refresh" Click="MenuItem_Click" Style="{x:Null}" />
-                    </MenuItem>
+                    <!--</MenuItem>-->
 
                     <MenuItem Header="Templates" ItemsSource="{Binding PromptPresetTemplates}">
                         <MenuItem.ItemContainerStyle>
@@ -191,7 +191,7 @@
 
                         <obj:CanvasAreaControl.ContextMenu>
                             <ContextMenu>
-                                <MenuItem Header="Wrap Nodes" Click="RightClickMenu"/>
+                                <!--<MenuItem Header="Wrap Nodes" Click="RightClickMenu"/>-->
                                 <MenuItem Header="Paste" Click="RightClickMenu"/>
                                 <MenuItem Header="Connect By Pass" Click="RightClickMenu"/>
 
@@ -211,6 +211,9 @@
                                     <MenuItem Header="Orange" Click="RightClickMenu" Background="#7E544C" Template="{StaticResource NoHoverEffectMenuItem}"/>
                                     <MenuItem Header="Black" Click="RightClickMenu" Background="#000" Template="{StaticResource NoHoverEffectMenuItem}"/>
                                 </MenuItem>
+
+                                <MenuItem Header="Delete Node" Click="RightClickMenu"/>
+
                             </ContextMenu>
                         </obj:CanvasAreaControl.ContextMenu>
                     </obj:CanvasAreaControl>

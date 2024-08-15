@@ -222,7 +222,14 @@ public partial class LatentNodesView : UserControl
                 Core.Output.Log("Select only 2 nodes to connect by pass");
 
         }
+        if (header == "Delete Node")
+        {
+            nodes.Delete();
+            return;
+        }
 
+
+        //COLOR
         var parent = s.Parent as MenuItem;
         if (parent == null) return;
 

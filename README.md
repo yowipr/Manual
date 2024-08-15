@@ -1,40 +1,83 @@
-# Manual
+﻿# Manual
 
-![Screenshot of Manual](https://manualai.art/manual.jpg "Manual")
-Manual is an advanced user interface built on the ComfyUI backend. I developed it from scratch to be compatible with any AI that will be created in the future (and it's still a work in progress). I've written 100,000 lines of code for this project.
+[![Manual Video](docs/cover.png)](https://www.youtube.com/watch?v=3NynPgEyLNA)
+
+Manual is an advanced ComfyUI Frontend. I developed it from scratch to be compatible with any AI that will be created in the future (and it's still a work in progress). I've written 100,000 lines of code for this project.
 
 ## Platforms
 
 -   Windows only (for now).
 
-## Use
+## Installation
 
 -   Download the [**Manual_Portable.zip**](https://github.com/yowipr/Manual/releases/download/1.0.0-beta/Manual_Portable.zip).
 -   or in Civitai: https://civitai.com/models/644188/manual
+-   You need **ComfyUI-Manual custom node** in ComfyUI: [ComfyUI-Manual](https://github.com/yowipr/ComfyUI-Manual).
 -   Copy and paste the ComfyUI folder path into Manual by navigating to Editor -> Preferences.
 -   In the bottom right corner, click the circle, choose Open Local Server, and wait until the server starts (the circle will turn blue).
 -   In the Latent Nodes Editor, click View -> Refresh to load your nodes and models.
 -   Select the models and LoRa you have downloaded and wish to use.
--   You need **ComfyUI-Manual custom node** in ComfyUI: [ComfyUI-Manual](https://github.com/yowipr/ComfyUI-Manual).
 -   Write a prompt, click generate, and you're done. Enjoy all the tools!
 
-## What's Special About Manual
+Alternative use: Is not necesary need to open the server inside Manual, you can open ComfyUI server externally and use Manual
 
-Manual stands out due to its advanced user experience and seamless integration of tools. Key features include:
+# Main Features
 
--   **Universal AI Compatibility:** Works with all AI models, ensuring broad compatibility and flexibility.
--   **Unified Workflow Integration:** Keeps your models seamlessly integrated across all workflows and tools, enhancing consistency and efficiency.
--   **Custom Drivers:** Ensures your models work seamlessly across various tools and platforms.
--   **Enhanced Functionality:** Access to advanced features not commonly found in standard interfaces.
+### User Interface
+Designed to be friendly to traditional artists (now digital artists are traditionals? 🤔)
+
+[Watch the full video on YouTube](https://www.youtube.com/watch?v=3NynPgEyLNA)
+
+<img src="docs/sketch.gif" alt="Multiple Workflows">
+
+### Multiple Workflows and Templates
+Manual has Templates for workflow nodes and Prompt Styles.
+
+Add, Duplicate, Save, Load
+you can drop a .json file with your workflows made with ComfyUI, but for some reason you can't do it from Manual to ComfyUI, who knows
+for exporting: File -> Export -> Export Prompt Preset (PromptPreset is a workflow node)
+![Multiple Workflows](docs/multiple_workflows.gif)
+
+### Prompt Styles
+All workflow nodes are linked to a Prompt Style, even this can be deactivated in every workflow node and have their own Prompt Style.
+Prompt Styles are useful for testing different text prompts or making characters
+
+<img src="docs/prompt_styles.gif" alt="Multiple Workflows" width="400">
+
+### Drivers
+With Drivers you can link the fields to the Prompt Style or provide a lambda expression.
+**Attach a Prompt Style to a workflow node automatically**: in the nav bar of Latent Nodes Editor -> PromptPreset -> Automatic Drivers
+
+**Custom Drivers setup**: right click in a node field -> Edit Driver -> write Prompt Style property name (usually Manual recommends a name)
+for an advanced driver, you can use "source." followed by the property name.
+
+- example 1: Strength
+- example 2: source.Strength / 2
+- example 3: source.Strength + source.CFG
+
+<img src="docs/drivers.gif" alt="Multiple Workflows" width="400">
+
+
+### Manual Nodes
+- Layer Node
+- Output Node
+
+ <img src="docs/manual_nodes.gif" alt="Multiple Workflows" width="400">
+
+### More
+Manual might contain things I don't even remember, a lot of easter eggs lol.
+
+ <img src="docs/bypass_lora.gif" alt="Multiple Workflows" width="400">
 
 ## Considerations
 
--   The tools in Manual work with SDXL; however, consider changing the CLIP Encoders to use a different AI.
 -   To make all the tools work, you'll need some additional custom nodes from ComfyUI:
     -   [ComfyUI Impact Pack](https://github.com/ltdrdata/ComfyUI-Impact-Pack)
     -   [ComfyUI Essentials](https://github.com/cubiq/ComfyUI_essentials)
     -   [ComfyUI ControlNet Aux](https://github.com/Fannovel16/comfyui_controlnet_aux)
-    -   Manual projects do not save generation history (the editor on the right); always place your images in layers.
+-   The tools in Manual by default work with SDXL; however, you can modify the Templates in the folder Manual/Resources/Templates/PromptPresets
+-   Manual projects do not save generation history (the editor on the right); always place your images in layers.
+-   Be CAREFUL with Save Projects, Manual is still in beta.
 
 ## Licence
 
@@ -51,6 +94,6 @@ Manual stands out due to its advanced user experience and seamless integration o
 ## Goals
 
 -   Make AI accessible for everyone.
--   Establish AI as a standard tool for professional artwork, films, anime, etc.
+-   Establish AI as a standard tool for professional and monetizable artwork; like films, anime, etc.
 
 :sparkles: _Made with love._ :sparkles:
