@@ -43,6 +43,8 @@ public class BrushTool : IPlugin
         Tool.Register(new T_Fill());
         Tool.Register(new T_Distort());
         Tool.Register(new T_Lasso());
+
+        Tool.Register(new T_Shape());
     }
 
 }
@@ -1258,4 +1260,201 @@ public class T_Lasso : T_BrushCustom
 
 
 
+
+
+
+
+
+
+public partial class T_Shape : T_BrushCustom
+{
+
+    [ObservableProperty] int thickness = 7;
+    [ObservableProperty] Color color = Colors.Black;
+    [ObservableProperty] Color color2 = Colors.White;
+
+    [ObservableProperty] bool fill = true;
+    public enum ShapeType
+    {
+        Rectangle,
+        Line
+    }
+    [ObservableProperty] ShapeType selectedShape = ShapeType.Rectangle;
+    public T_Shape()
+    {
+        
+        name = "Shape";
+        //iconPath = $"{App.LocalPath}Resources/Scripts/Selector/icon.png";
+        brush.Type = "Shape";
+        brush.isCustomCursor = true;
+        cursor = Cursors.Cross;
+
+        HotKey hotKey = new(Key.T, ChangeToolToThis, "Shape Tool");
+
+
+        add(new M_ComboBoxEnum(typeof(ShapeType), "SelectedShape") { OnSelectedChanged = SelectedChanged}, body);
+        add(new M_SliderBox("Thickness", 0, 100, 100, 1), body);
+        add(new M_ColorPicker("Color"), body);
+
+        add(new M_CheckBox("Fill", "Fill"), body);
+        add(new M_ColorPicker("Color2"), body);
+    }
+
+    void SelectedChanged(object value)
+    {
+        SelectedShape = AppModel.ParseEnum<ShapeType>(value.ToString());  
+    }
+
+    public override void OnToolSelected()
+    {
+        base.OnToolSelected();
+    }
+
+
+    public override void OnToolDeselected()
+    {
+        base.OnToolDeselected();
+    }
+
+    SKPoint initialPoint;
+    SKBitmap original;
+    public override void OnMouseDown(LayerBase layer, PointF initialPosition, PointF finalPosition)
+    {
+        initialPoint = initialPosition.ToSKPoint();
+        original = layer.Image.Copy();
+    }
+    public override void OnDraw(LayerBase layer, PointF initialPosition, PointF finalPosition)
+    {
+        if (SelectedShape == ShapeType.Rectangle)
+            layer.Image = DrawRectangle(original, initialPoint, finalPosition.ToSKPoint());
+        else if (SelectedShape == ShapeType.Line)
+        {
+            if (Shortcuts.IsAltPressed || SelectedShot.Snap)
+                finalPosition = CalculateSnap(new PointF(initialPoint.X, initialPoint.Y), finalPosition);           
+
+            layer.Image = DrawLine(original, initialPoint, finalPosition.ToSKPoint());
+        }
+    }
+    public override void OnMouseUp(LayerBase layer, PointF initialPosition, PointF finalPosition)
+    {
+        original = null;
+    }
+
+
+    PointF CalculateSnap(PointF initialPosition, PointF finalPosition)
+    {
+        // Calcular las diferencias
+        float deltaX = finalPosition.X - initialPosition.X;
+        float deltaY = finalPosition.Y - initialPosition.Y;
+
+        // Umbral para snapear
+        float snapThreshold = 10.0f;
+
+        if (Math.Abs(deltaX) < snapThreshold)
+        {
+            // Snapeo a línea vertical
+            finalPosition.X = initialPosition.X;
+        }
+        else if (Math.Abs(deltaY) < snapThreshold)
+        {
+            // Snapeo a línea horizontal
+            finalPosition.Y = initialPosition.Y;
+        }
+        else if (Math.Abs(deltaX - deltaY) < snapThreshold)
+        {
+            // Snapeo a 45 grados (diagonal ascendente)
+            finalPosition.Y = initialPosition.Y + deltaX;
+        }
+        else if (Math.Abs(deltaX + deltaY) < snapThreshold)
+        {
+            // Snapeo a 45 grados (diagonal descendente)
+            finalPosition.Y = initialPosition.Y - deltaX;
+        }
+        return finalPosition;
+    }
+
+    public SKBitmap DrawRectangle(SKBitmap originalBitmap, SKPoint startPoint, SKPoint endPoint)
+    {
+        // Crear un nuevo SKBitmap con el mismo tamaño que el original
+        SKBitmap newBitmap = new SKBitmap(originalBitmap.Width, originalBitmap.Height);
+
+        // Crear un SKCanvas para el nuevo bitmap
+        using (var canvas = new SKCanvas(newBitmap))
+        {
+            // Copiar el contenido del bitmap original al nuevo
+            canvas.DrawBitmap(originalBitmap, 0, 0);
+
+            // Crear un rectángulo basado en los puntos del mouse
+            var rect = new SKRect(
+                Math.Min(startPoint.X, endPoint.X),
+                Math.Min(startPoint.Y, endPoint.Y),
+                Math.Max(startPoint.X, endPoint.X),
+                Math.Max(startPoint.Y, endPoint.Y)
+            );
+
+            if (Fill)
+            {
+                // Dibujar el relleno del rectángulo
+                using (var fillPaint = new SKPaint())
+                {
+                    fillPaint.Color = Color2.ToSKColor();          // Color de relleno (rojo)
+                    fillPaint.Style = SKPaintStyle.Fill;      // Rellenar el rectángulo
+                    fillPaint.IsAntialias = true;
+                    fillPaint.FilterQuality = SKFilterQuality.High;
+
+                    canvas.DrawRect(rect, fillPaint);
+                }
+            }
+
+            // Dibujar el borde del rectángulo
+            using (var strokePaint = new SKPaint())
+            {
+                strokePaint.Color = Color.ToSKColor();    // Color del borde
+                strokePaint.Style = SKPaintStyle.Stroke;  // Dibujar solo el borde
+                strokePaint.StrokeWidth = Thickness;      // Grosor del borde
+                strokePaint.IsAntialias = true;
+                strokePaint.FilterQuality = SKFilterQuality.High;
+
+                canvas.DrawRect(rect, strokePaint);
+            }
+        }
+
+        // Retornar el nuevo bitmap con el rectángulo dibujado
+        return newBitmap;
+    }
+
+
+
+    public SKBitmap DrawLine(SKBitmap originalBitmap, SKPoint startPoint, SKPoint endPoint)
+    {
+        // Crear un nuevo SKBitmap con el mismo tamaño que el original
+        SKBitmap newBitmap = new SKBitmap(originalBitmap.Width, originalBitmap.Height);
+
+        // Crear un SKCanvas para el nuevo bitmap
+        using (var canvas = new SKCanvas(newBitmap))
+        {
+            // Copiar el contenido del bitmap original al nuevo
+            canvas.DrawBitmap(originalBitmap, 0, 0);
+
+            // Configurar la pintura
+            using (var paint = new SKPaint())
+            {
+                paint.Color = Color.ToSKColor();        // Color de la línea
+                paint.Style = SKPaintStyle.Stroke;      // Dibujar solo el borde
+                paint.StrokeWidth = Thickness;          // Grosor de la línea
+                paint.IsAntialias = true;
+                paint.FilterQuality = SKFilterQuality.High;
+
+                // Dibujar la línea entre los puntos de inicio y final
+                canvas.DrawLine(startPoint, endPoint, paint);
+            }
+        }
+
+        // Retornar el nuevo bitmap con la línea dibujada
+        return newBitmap;
+    }
+
+
+
+}
 

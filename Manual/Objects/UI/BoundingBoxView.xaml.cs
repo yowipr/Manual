@@ -53,7 +53,6 @@ public partial class BoundingBoxView : UICanvasElement
         
     }
 
-  
 
     bool isDragging = false;
     FrameworkElement? currentPoint;
@@ -92,6 +91,7 @@ public partial class BoundingBoxView : UICanvasElement
     private void PointMouseUp(object sender, MouseButtonEventArgs e)
     {
         isDragging = false;
+        ActionHistory.FinalizeAction();
     }
     private void PointMouseMove(object sender, MouseEventArgs e)
     {
@@ -224,6 +224,13 @@ public partial class BoundingBoxView : UICanvasElement
 
             currentPoint = point;
             isDragging = true;
+
+            if(point.Name == "inside")
+                ActionHistory.StartAction(transformer, nameof(transformer.Position));
+            else
+                ActionHistory.StartAction(transformer, nameof(transformer.ImageScale));
+
+
         }
 
 

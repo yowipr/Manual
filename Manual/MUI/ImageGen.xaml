@@ -63,7 +63,7 @@
 
         <Grid>
 
-            <themes:Squircle x:Name="borderMask" Background="Black" Curvature="4.5"/>
+            <themes:Squircle x:Name="borderMask" Background="{DynamicResource bg3}" Curvature="4.5"/>
             <Image Source="{Binding PreviewImage, Converter={StaticResource SKBitmapToImageSourceConverter}}" Margin="0">
                 <Image.OpacityMask>
                     <VisualBrush Visual="{Binding ElementName=borderMask}"/>

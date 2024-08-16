@@ -186,8 +186,11 @@ public partial class M_ComboBox : UserControl, IManualElement
                 SetValue(SelectedItemProperty, value);
                 AsignInputText(value);
             }
+            OnSelectedChanged?.Invoke(value);
         }
     }
+
+    public Action<object> OnSelectedChanged;
 
     public string Header
     {
