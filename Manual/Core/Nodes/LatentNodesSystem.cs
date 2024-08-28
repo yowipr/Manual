@@ -98,8 +98,27 @@ public partial class GenerationManager : ObservableObject
 
     public GenerationManager()
     {
-        
+        Prompts.CollectionChanged += Prompts_CollectionChanged;
     }
+
+    private void Prompts_CollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+    {
+        if(e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Add)
+        {
+            foreach (Prompt item in e.NewItems)
+            {
+                item.Init();
+            }
+        }
+        else if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Remove)
+        {
+            foreach(Prompt item in e.OldItems)
+            {
+                item.Dispose();
+            }
+        }
+    }
+
     public void InvokeNodesRegistered()
     {
         OnNodesRegistered?.Invoke();
@@ -378,7 +397,7 @@ public partial class GenerationManager : ObservableObject
     {
         isNodesRegistered = false;
 
-        Mouse.OverrideCursor = Cursors.Wait;
+        AppModel.mainW?.SetProgress(1, "refreshing...");
         // RegisterNode("Number", () => new NumberNode(), "Numbers");
 
         ClearRegisterNodes();
@@ -421,13 +440,59 @@ public partial class GenerationManager : ObservableObject
         }
 
 
+        //LOAD MODELS
+        await RegisterModels();
+
+
+
         IsLoadingNodes = false;
 
         OnNodesRegistered?.Invoke();
         isNodesRegistered = true;
 
-        Mouse.OverrideCursor = null;
+        AppModel.mainW?.StopProgress();
     }
+
+
+
+    //----------------------------------------------------------------------------------------------- MODELS LIST
+
+    public MvvmHelpers.ObservableRangeCollection<string> Models { get; private set; } = [];
+    public MvvmHelpers.ObservableRangeCollection<string> Loras { get; private set; } = [];
+
+    public MvvmHelpers.ObservableRangeCollection<string> Samplers { get; private set; } = [];
+    public MvvmHelpers.ObservableRangeCollection<string> Schedulers { get; private set; } = [];
+
+
+    public static async Task RegisterModels()
+    {
+        await SetModel(Instance.Models, "CheckpointLoaderSimple", "input.required.ckpt_name");        
+        await SetModel(Instance.Loras, "LoraLoader", "input.required.lora_name");
+
+        var ksampler = await Comfy.GetNodeInfo("KSampler");
+        if (ksampler != null)
+        {
+            SetModel(Instance.Samplers, ksampler, "KSampler.input.required.sampler_name");
+            SetModel(Instance.Schedulers, ksampler, "KSampler.input.required.scheduler");
+        }
+
+    }
+
+    static async Task SetModel(MvvmHelpers.ObservableRangeCollection<string> models, string nodeType, string path)
+    {
+        var modelsList = await Comfy.GetModelList(nodeType, path);
+            AppModel.Invoke(() =>
+            {
+                models.ReplaceRange(modelsList);
+            });
+    }
+    static void SetModel(MvvmHelpers.ObservableRangeCollection<string> models, JToken nodeType, string fullPath)
+    {
+        var modelsList = Comfy.ExtractListNames(nodeType, fullPath);
+        models.ReplaceRange(modelsList);
+    }
+    
+
 
 
     private void ActionHistory_OnActionChange(IUndoableAction action)
@@ -552,9 +617,10 @@ public partial class GenerationManager : ObservableObject
     {
         if (!preset.HasErrors()) return;
 
-        List<string> s = preset.Errors.MissingNodeTypes;
+        List<string> s = preset.Requirements.MissingNodeTypes;
         string concatenatedNodes = String.Join("\n", s);
-        M_MessageBox.Show($"You have to install missing nodes or Refresh PromptPreset:\n{concatenatedNodes}", "Missing nodes", System.Windows.MessageBoxButton.OK);
+        string concatenatedModels = String.Join("\n", preset.Requirements.MissingModels);
+        M_MessageBox.Show($"You have to install missing nodes and models, or Refresh PromptPreset:\n{concatenatedNodes}\n{concatenatedModels}", "Missing nodes or models", System.Windows.MessageBoxButton.OK);
 
     }
 
@@ -615,8 +681,11 @@ public partial class GenerationManager : ObservableObject
             changedOnce2 = true;
         }
 
-        if (oldValue != null && newValue != null)
-            newValue.UpdateDriversSourcePrompt(newValue.Prompt, oldValue.Prompt);
+        if (oldValue != null && newValue != null && newValue.IsUpdateDriversPrompt)
+        {
+            // newValue.UpdateDriversSourcePrompt(newValue.Prompt, oldValue.Prompt);
+            newValue.Prompt = oldValue.Prompt;
+        }
         
 
         InvokeUpdatePromptPreset(newValue);
@@ -812,6 +881,7 @@ public partial class GenerationManager : ObservableObject
             OnNodesRegistered -= GenerationManager_OnNodesRegistered;
         }
     }
+
 
 
 
@@ -1358,67 +1428,43 @@ public partial class NodeBase : ObservableObject, IPositionable, ISelectable, IN
 
     public NodeOption AddInputField(string name, string type, object? fieldValue, Type elementType)
     {
-        var direction = NodeOptionDirection.InputField;
-        var n = new NodeOption(name, direction, type);
-        Fields.Add(n);
-        n.FieldValue = fieldValue;
-        n.AttachedNode = this;
-
+        var n = _setNodeopField(name, type, fieldValue, null, NodeOptionDirection.InputField);
         AsignElement(n, elementType);
-       
         return n;
     }
     public NodeOption AddInputField(string name, string type, object? fieldValue, IManualElement element)
     {
-        return AddInputField(name, type, fieldValue, () => element.Clone());
-    }
-    public NodeOption AddInputField(string name, string type, object? fieldValue, Func<IManualElement> element)
-    {
-        var direction = NodeOptionDirection.InputField;
-        var n = new NodeOption(name, direction, type);
-        Fields.Add(n);
-        n.AttachedNode = this;
-
-        n.FieldValue = fieldValue;
-        n.FieldElement = element;
-
-
-        return n;
+        return AddInputField(name, type, fieldValue, element);
     }
     public NodeOption AddField(string name, string type, object? fieldValue, IManualElement element)
     {
-        return AddField(name, type, fieldValue, () => element.Clone() );
+        return _setNodeopField(name, type, fieldValue, element, NodeOptionDirection.Field);
     }
-     private NodeOption AddField(string name, string type, object? fieldValue, Func<IManualElement> element)
-    {
-        var direction = NodeOptionDirection.Field;
-        var n = new NodeOption(name, direction, type);
-        Fields.Add(n);
-        n.AttachedNode = this;
 
-        n.FieldValue = fieldValue;
-        n.FieldElement = element;
-
-        return n;
-    }
     public NodeOption AddField(string name, string type, object? fieldValue, Type elementType)
     {
-        var direction = NodeOptionDirection.Field;
-        var n = new NodeOption(name, direction, type);
-        Fields.Add(n);
-        n.AttachedNode = this;
-
-        n.FieldValue = fieldValue;
-
+        var n = _setNodeopField(name, type, fieldValue, null, NodeOptionDirection.Field);  
         AsignElement(n, elementType);
         return n;
     }
+
+    NodeOption _setNodeopField(string name, string type, object? fieldValue, IManualElement element, NodeOptionDirection direction)
+    {
+        var n = new NodeOption(name, direction, type);
+        Fields.Add(n);
+        n.AttachedNode = this;
+
+        n.FieldValue = fieldValue;
+        n.FieldElementDefault = element;
+        return n;
+    }
+
 
     void AsignElement(NodeOption n, Type elementType)
     {
         if (typeof(IManualElement).IsAssignableFrom(elementType))
         {
-            n.FieldElement = () => (IManualElement)AppModel.Instantiate(elementType);
+            n.FieldElementDefault = (IManualElement)AppModel.Instantiate(elementType);
         }
         else
         {
@@ -1853,7 +1899,7 @@ public partial class NodeOption : ObservableObject, IId, IDisposable, INamable, 
     [ObservableProperty] bool isReachable = true;
 
     [ObservableProperty] string toolTip = "";
-
+    [ObservableProperty] bool isError = false;
     [JsonIgnore] public Point Position
     {
         get => AttachedNode.GetPosition();
@@ -1868,7 +1914,7 @@ public partial class NodeOption : ObservableObject, IId, IDisposable, INamable, 
         DefaultValue = dv;
         FieldValue = defaultValue;
 
-        FieldElement = () => element.Clone();
+        FieldElementDefault = element;
     }
     public NodeOption(string name, NodeOptionDirection direction, string type, Func<Task<object?>> defaultValue)
     {
@@ -1901,7 +1947,12 @@ public partial class NodeOption : ObservableObject, IId, IDisposable, INamable, 
 
     }
 
-    [JsonIgnore] public Func<IManualElement> FieldElement;
+
+    [JsonIgnore] public IManualElement? FieldElementDefault;
+    public IManualElement? GetFieldElement()
+    {
+        return FieldElementDefault?.Clone();
+    }
     
     Func<Task<object?>> _defaultValue  = async () => await Task.FromResult<object?>(null);
     [JsonIgnore]  public Func<Task<object?>> DefaultValue 
@@ -1978,6 +2029,12 @@ public partial class NodeOption : ObservableObject, IId, IDisposable, INamable, 
     [ObservableProperty] [property: JsonIgnore] object? fieldValue = null;
     partial void OnFieldValueChanged(object? value)
     {
+        if (IsError)
+        {
+            AttachedNode.IsError = false;
+            IsError = false; 
+        }
+
         InvokeFieldValueChanged(value);
     }
     internal void InvokeFieldValueChanged(object? value)

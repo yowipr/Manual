@@ -1289,7 +1289,7 @@ public partial class T_Shape : T_BrushCustom
         brush.isCustomCursor = true;
         cursor = Cursors.Cross;
 
-        HotKey hotKey = new(Key.T, ChangeToolToThis, "Shape Tool");
+        HotKey hotKey = new(Key.Q, ChangeToolToThis, "Shape Tool");
 
 
         add(new M_ComboBoxEnum(typeof(ShapeType), "SelectedShape") { OnSelectedChanged = SelectedChanged}, body);

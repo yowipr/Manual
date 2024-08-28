@@ -106,8 +106,8 @@ public partial class T_ImageGenerator : Tool
         var sp2 = new M_StackPanel("SelectedPreset.Prompt");
         add(sp2, sp);
 
-        // PRESET
-        var p0 = section(sp2, "Preset",
+        // PROMPT STYLE
+        var p0 = section(sp2, "Prompt Style",
 
            spp,
            grid
@@ -141,32 +141,47 @@ public partial class T_ImageGenerator : Tool
           new M_SliderBox("Height", 64, 1024, jump: 64, isLimited: true)
           );
 
+        // MODEL
+        var model = new M_ComboBox("GetAllModels", "Model") { Header = "" };
+        model.InputTextBox.HorizontalAlignment = HorizontalAlignment.Left;
+        var sampler = new M_ComboBox("GetAllSamplers", "Sampler") { Header = "sampler" };
+        var scheduler = new M_ComboBox("GetAllSchedulers", "Scheduler") { Header = "scheduler" };
+        var p4 = section(sp2, "Model",
+        // new M_TextBox("Model"),
+        model,
+        sampler,
+        scheduler
+         );
+
 
         // PARAMETERS
+        var controlSeed = new M_ComboBox(["randomize", "fixed", "increment", "decrement"], "ControlSeed") { Header = ""};
         var p3 = section(sp2, "Parameters",
            // params
            new M_NumberBox("Steps"),
            new M_NumberBox("CFG"),
            new M_NumberBox("Seed"),
+           controlSeed,
              new M_NumberBox("ClipSkip")
            );
 
-        // MODEL
-        var p4 = section(sp2, "Model",
-         new M_TextBox("Model"),
-         new M_TextBox("Sampler"),
-         new M_TextBox("Scheduler")
-         );
-
-        // LORAS
-        var p5 = section(sp2, "LoRAs",
-         new M_TextBox("Lora0"),
-         new M_SliderBox("Lora0Strength", 0, 1, jump: 0.01, isLimited: true),
-
-         new M_TextBox("Lora1"),
-         new M_SliderBox("Lora1Strength", 0, 1, jump: 0.01, isLimited: true)
+        // LORA1
+        var loras0 = new M_ComboBox("GetAllLoras", "Lora0") { Header = "" }; 
+        loras0.InputTextBox.HorizontalAlignment = HorizontalAlignment.Left;
+        var p5 = section(sp2, "Lora0",
+         loras0,
+         new M_SliderBox("Lora0Strength", 0, 1, jump: 0.01, isLimited: true)
 
          );
+
+        //LORA1
+        var loras1 = new M_ComboBox("GetAllLoras", "Lora1") { Header = "" };
+        loras1.InputTextBox.HorizontalAlignment = HorizontalAlignment.Left;
+        var p6 = section(sp2, "Lora1",
+       loras1,
+       new M_SliderBox("Lora1Strength", 0, 1, jump: 0.01, isLimited: true)
+
+       );
 
     }
     void NewPrompt()

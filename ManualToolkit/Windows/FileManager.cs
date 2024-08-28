@@ -641,8 +641,48 @@ public static partial class FileManager
     }
 
 
+    public static string ToReadableJson(string content)
+    {
+        var jsonObject = JToken.Parse(content);
+        var formattedContent = jsonObject.ToString(Formatting.Indented);
+        return formattedContent;
+    }
+
+    public static string ToReadableJson(JToken content)
+    {
+        return ToReadableJson(content.ToString());
+    }
 
 
+    // Método para verificar si un proceso específico ya está en ejecución
+    public static bool IsProcessRunning(string processName, string scriptName)
+    {
+        // Obtener todos los procesos con el nombre especificado
+        var processes = Process.GetProcessesByName(processName);
+
+        foreach (var process in processes)
+        {
+            try
+            {
+                // Verificar el título de la ventana o los argumentos del proceso
+                if (!string.IsNullOrEmpty(process.MainWindowTitle) && process.MainWindowTitle.Contains(scriptName))
+                {
+                    return true;
+                }
+                else if (process.MainModule != null && process.MainModule.FileName.Contains(scriptName))
+                {
+                    return true;
+                }
+            }
+            catch
+            {
+                // Puede haber procesos a los que no se tiene acceso, manejar excepciones según sea necesario
+                continue;
+            }
+        }
+
+        return false;
+    }
 
 
 }
@@ -682,27 +722,60 @@ public class BatFile
         {
             FileName = python_embededPath, //@".\python_embeded\python.exe",
             Arguments = programPath + " " + arguments, // @"ComfyUI\main.py --windows-standalone-build --multi-user",
-            UseShellExecute = false,
+            UseShellExecute = window, // Usar el shell para abrir en una ventana si se requiere
             CreateNoWindow = !window,
-            RedirectStandardOutput = true,
-            RedirectStandardError = true
+            RedirectStandardOutput = !window, // No redirigir si se desea una ventana con la salida visible
+            RedirectStandardError = !window  // No redirigir si se desea una ventana con los errores visibles
         };
 
         BatProcess = new Process() { StartInfo = startInfo };
         BatProcess.Start();
 
-        // Para capturar la salida y los errores
-        BatProcess.BeginOutputReadLine();
-        BatProcess.BeginErrorReadLine();
+        if (!window)
+        {
+            // Solo capturar la salida y los errores si no se está en modo ventana
+            BatProcess.BeginOutputReadLine();
+            BatProcess.BeginErrorReadLine();
 
+            OutputDataReceived = outputDataReceived;
+            ErrorDataReceived = errorDataReceived;
 
-        OutputDataReceived = outputDataReceived;
-        ErrorDataReceived = errorDataReceived;
-
-        BatProcess.OutputDataReceived += outputDataReceived;
-        BatProcess.ErrorDataReceived += errorDataReceived;
-
+            BatProcess.OutputDataReceived += outputDataReceived;
+            BatProcess.ErrorDataReceived += errorDataReceived;
+        }
     }
+
+    public static bool CheckPython()
+    {
+        try
+        {
+            using (var process = new Process())
+            {
+                process.StartInfo.FileName = "python";
+                process.StartInfo.Arguments = "--version";
+                process.StartInfo.RedirectStandardOutput = true;
+                process.StartInfo.RedirectStandardError = true;
+                process.StartInfo.UseShellExecute = false;
+                process.StartInfo.CreateNoWindow = true;
+
+                process.Start();
+
+                // Captura la salida del proceso
+                string output = process.StandardOutput.ReadToEnd();
+                string error = process.StandardError.ReadToEnd();
+
+                process.WaitForExit();
+
+                // Verifica si la salida contiene "Python"
+                return output.Contains("Python") || error.Contains("Python");
+            }
+        }
+        catch
+        {
+            return false; // Python no está instalado o hubo un error
+        }
+    }
+
 
 
 

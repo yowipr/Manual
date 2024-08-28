@@ -505,7 +505,7 @@
                     <Border
                         Margin="1"
                         Background="{TemplateBinding Background}"
-                        CornerRadius="5">
+                        CornerRadius="11">
 
                         <DockPanel>
 

@@ -125,5 +125,10 @@ ConverterParameter={x:Static local:NodeOptionDirection.Output}}">
         <!--DRIVER-->
         <Border CornerRadius="13" BorderThickness="2" BorderBrush="{StaticResource fg_sub}" Opacity="1" IsHitTestVisible="False" Margin="12 -3"
                 Visibility="{Binding Driver, Converter={StaticResource nullOrEmptyToVisibilityConverter}}"/>
+
+        <Border CornerRadius="13" BorderThickness="2" BorderBrush="{StaticResource log_error}" Background="{StaticResource log_error}" Margin="12 -3"
+                Opacity="0.56" d:Visibility="Collapsed" IsHitTestVisible="False"
+                Visibility="{Binding IsError, Converter={StaticResource boolToVisibilityConverter}}"/>
+
     </Grid>
 </UserControl>

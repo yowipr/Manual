@@ -13,6 +13,7 @@ publisher.bat
 Manual.rar
 .vscode
 *.rar
+Setup/Output/*
 
 # User-specific files
 *.rsuser

@@ -827,7 +827,101 @@ public static class Namer
 
         return newId;
     }
- 
+
+
+
+
+
+    //------------------------------------------------------------------------------------------------- FIND SIMILAR STRING
+    private static readonly HashSet<string> TrivialWords = new HashSet<string>
+    {
+        "v1", "v2", "v3", "v4", "v5", "final", "latest"
+        // Agrega aquí más palabras triviales según sea necesario
+    };
+
+    private static List<string> SplitIntoWords(string input)
+    {
+        // Usar una expresión regular para dividir en delimitadores comunes y cambios de mayúsculas
+        var words = Regex.Split(input, @"(?<!^)(?=[A-Z])|[\s._-]+");
+
+        return words.Where(word => !string.IsNullOrWhiteSpace(word)).ToList();
+    }
+
+    private static double SubstringSimilarityScore(string input, string target)
+    {
+        var inputWords = SplitIntoWords(input);
+        var targetWords = SplitIntoWords(target);
+
+        int exactMatchCount = 0;
+        int partialMatchCount = 0;
+        int trivialMatchCount = 0;
+        int totalLength = 0;
+
+        foreach (var inputWord in inputWords)
+        {
+            foreach (var targetWord in targetWords)
+            {
+                if (string.Equals(inputWord, targetWord, StringComparison.OrdinalIgnoreCase))
+                {
+                    if (TrivialWords.Contains(inputWord.ToLower()))
+                    {
+                        trivialMatchCount++;
+                    }
+                    else
+                    {
+                        exactMatchCount++;
+                        totalLength += inputWord.Length;
+                    }
+                }
+                else if (targetWord.IndexOf(inputWord, StringComparison.OrdinalIgnoreCase) >= 0)
+                {
+                    if (!TrivialWords.Contains(inputWord.ToLower()))
+                    {
+                        partialMatchCount++;
+                        totalLength += inputWord.Length;
+                    }
+                }
+            }
+        }
+
+        // Ponderar más las coincidencias exactas que las parciales
+        double score = exactMatchCount * 1.5 + partialMatchCount;
+
+        // Añadir ponderación basada en la longitud total de las subcadenas coincidentes
+        score += totalLength * 0.1;
+
+        // Penalización por coincidencias triviales
+        score -= trivialMatchCount * 0.5;
+
+        // Si la única coincidencia es trivial, reducir la puntuación drásticamente
+        if (exactMatchCount == 0 && partialMatchCount == 0 && trivialMatchCount > 0)
+        {
+            score = 0;
+        }
+
+        return score;
+    }
+
+    public static string? FindMostSimilarString(string input, IEnumerable<string> stringList)
+    {
+        string? mostSimilar = null;
+        double highestScore = 0.0;
+
+        foreach (string s in stringList)
+        {
+            double score = SubstringSimilarityScore(input, s);
+
+            if (score > highestScore)
+            {
+                highestScore = score;
+                mostSimilar = s;
+            }
+        }
+
+        return highestScore > 1 ? mostSimilar : null; // Retorna null si la puntuación más alta es baja
+    }
+
+
 
 }
 

@@ -62,7 +62,7 @@
 
                     <!--  SPLASH  -->
                     <themes:Squircle x:Name="splashMask" Background="Black"/>
-                    <Image Source="/Assets/splash4.png" Stretch="UniformToFill" Margin="0 0 0 0">
+                    <Image Source="/Assets/splash5.png" Stretch="UniformToFill" Margin="0 0 0 0">
                         <Image.OpacityMask>
                             <VisualBrush Visual="{Binding ElementName=splashMask}">
                             </VisualBrush>

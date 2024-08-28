@@ -715,10 +715,10 @@ public partial class Editor : ObservableObject
         { "Tools", () => new ED_Tools() },
         { "Canvas", () => new ED_CanvasView() },
         { "Layers", () => new ED_LayerView() },
-        //{ "Timeline", () => new ED_TimelineView() }, //DISABLED RELEASE: animation
+        { "Timeline", () => new ED_TimelineView() },
         { "History 5D", () => new ED_History() },
         { "Properties", () => new ED_ToolProperties() },
-        //{ "Code Editor", () => new ED_CodeEditorView() }, //DISABLED RELEASE: code
+        { "Code Editor", () => new ED_CodeEditorView() },
         { "Output", () => new ED_Output() },
          { "Latent Nodes Editor", () => new ED_LatentNodes() },
         // 9 EDITORS

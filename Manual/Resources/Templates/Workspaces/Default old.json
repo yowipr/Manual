@@ -1,6 +1,6 @@
 {
   "fullScreen": false,
-  "tool": "Inspector",
+  "tool": "Image Generator",
   "FloatingEditors": [],
   "Id": 0,
   "Name": "Default",
@@ -32,6 +32,8 @@
               "EditorObject": {
                 "$type": "Manual.Editors.ED_CanvasView, Manual",
                 "ID": "66656692-e373-4e41-9b9d-5e0724a04e22",
+                "ViewportCamera": {},
+                "Is3DView": false,
                 "EnableGrid": true,
                 "TopSection": true,
                 "CanvasMatrix": "Identity",
@@ -44,21 +46,6 @@
               "Name": "Layers",
               "EditorObject": {
                 "$type": "Manual.Editors.ED_LayerView, Manual"
-              }
-            },
-            {
-              "Name": "Timeline",
-              "EditorObject": {
-                "$type": "Manual.Editors.ED_TimelineView, Manual",
-                "loaded": false,
-                "GridWidth": 0.0,
-                "GridHeight": 0.0,
-                "CanvasScaleX": 14.15,
-                "CanvasScaleY": 0.28,
-                "CanvasMatrix": "1,0,0,1,19,97",
-                "TimelineMode": 0,
-                "LeftSection": 100.0,
-                "RightSection": 170.0
               }
             },
             {
@@ -78,12 +65,6 @@
               }
             },
             {
-              "Name": "Code Editor",
-              "EditorObject": {
-                "$type": "Manual.Editors.ED_CodeEditorView, Manual"
-              }
-            },
-            {
               "Name": "Output",
               "EditorObject": {
                 "$type": "Manual.Editors.ED_Output, Manual",
@@ -97,13 +78,7 @@
                 "loaded": false,
                 "GridWidth": 0.0,
                 "GridHeight": 0.0,
-                "CanvasMatrix": "0.5504406007549368,0,0,0.5504406007549368,-37.35635516230254,-2.601580860260915"
-              }
-            },
-            {
-              "Name": "UndoRedo History",
-              "EditorObject": {
-                "$type": "Plugins.ED_UndoRedoHistory, Manual"
+                "CanvasMatrix": "0.48314244798567996,0,0,0.48314244798567996,230.51859935768547,-82.90405355021053"
               }
             }
           ],
@@ -128,6 +103,8 @@
               "EditorObject": {
                 "$type": "Manual.Editors.ED_CanvasView, Manual",
                 "ID": "ba34aead-2ebd-4a45-b928-e73ec33f980b",
+                "ViewportCamera": {},
+                "Is3DView": false,
                 "EnableGrid": true,
                 "TopSection": true,
                 "CanvasMatrix": "Identity",
@@ -140,21 +117,6 @@
               "Name": "Layers",
               "EditorObject": {
                 "$type": "Manual.Editors.ED_LayerView, Manual"
-              }
-            },
-            {
-              "Name": "Timeline",
-              "EditorObject": {
-                "$type": "Manual.Editors.ED_TimelineView, Manual",
-                "loaded": false,
-                "GridWidth": 0.0,
-                "GridHeight": 0.0,
-                "CanvasScaleX": 14.15,
-                "CanvasScaleY": 0.28,
-                "CanvasMatrix": "1,0,0,1,19,97",
-                "TimelineMode": 0,
-                "LeftSection": 100.0,
-                "RightSection": 170.0
               }
             },
             {
@@ -174,12 +136,6 @@
               }
             },
             {
-              "Name": "Code Editor",
-              "EditorObject": {
-                "$type": "Manual.Editors.ED_CodeEditorView, Manual"
-              }
-            },
-            {
               "Name": "Output",
               "EditorObject": {
                 "$type": "Manual.Editors.ED_Output, Manual",
@@ -193,13 +149,7 @@
                 "loaded": false,
                 "GridWidth": 0.0,
                 "GridHeight": 0.0,
-                "CanvasMatrix": "0.5504406007549368,0,0,0.5504406007549368,-37.35635516230254,-2.601580860260915"
-              }
-            },
-            {
-              "Name": "UndoRedo History",
-              "EditorObject": {
-                "$type": "Plugins.ED_UndoRedoHistory, Manual"
+                "CanvasMatrix": "0.48314244798567996,0,0,0.48314244798567996,230.51859935768547,-82.90405355021053"
               }
             }
           ],
@@ -233,33 +183,20 @@
               "EditorObject": {
                 "$type": "Manual.Editors.ED_CanvasView, Manual",
                 "ID": "d61a9ca0-1df3-42a8-aca0-fa4541ebfefd",
+                "ViewportCamera": {},
+                "Is3DView": false,
                 "EnableGrid": true,
                 "TopSection": true,
-                "CanvasMatrix": "0.6513671875,0,0,0.6513671875,516.2269388652021,363.2544704264099",
+                "CanvasMatrix": "0.6513671875,0,0,0.6513671875,516.2269388652022,373.25447042641",
                 "ShowOverlays": true,
                 "GridWidth": 1042.7962264951288,
-                "GridHeight": 727.0
+                "GridHeight": 747.0
               }
             },
             {
               "Name": "Layers",
               "EditorObject": {
                 "$type": "Manual.Editors.ED_LayerView, Manual"
-              }
-            },
-            {
-              "Name": "Timeline",
-              "EditorObject": {
-                "$type": "Manual.Editors.ED_TimelineView, Manual",
-                "loaded": false,
-                "GridWidth": 0.0,
-                "GridHeight": 0.0,
-                "CanvasScaleX": 14.15,
-                "CanvasScaleY": 0.28,
-                "CanvasMatrix": "1,0,0,1,19,97",
-                "TimelineMode": 0,
-                "LeftSection": 100.0,
-                "RightSection": 170.0
               }
             },
             {
@@ -279,12 +216,6 @@
               }
             },
             {
-              "Name": "Code Editor",
-              "EditorObject": {
-                "$type": "Manual.Editors.ED_CodeEditorView, Manual"
-              }
-            },
-            {
               "Name": "Output",
               "EditorObject": {
                 "$type": "Manual.Editors.ED_Output, Manual",
@@ -298,13 +229,7 @@
                 "loaded": false,
                 "GridWidth": 0.0,
                 "GridHeight": 0.0,
-                "CanvasMatrix": "0.5504406007549368,0,0,0.5504406007549368,-37.35635516230254,-2.601580860260915"
-              }
-            },
-            {
-              "Name": "UndoRedo History",
-              "EditorObject": {
-                "$type": "Plugins.ED_UndoRedoHistory, Manual"
+                "CanvasMatrix": "0.48314244798567996,0,0,0.48314244798567996,230.51859935768547,-82.90405355021053"
               }
             }
           ],
@@ -313,12 +238,14 @@
             "EditorObject": {
               "$type": "Manual.Editors.ED_CanvasView, Manual",
               "ID": "d61a9ca0-1df3-42a8-aca0-fa4541ebfefd",
+              "ViewportCamera": {},
+              "Is3DView": false,
               "EnableGrid": true,
               "TopSection": true,
-              "CanvasMatrix": "0.6513671875,0,0,0.6513671875,516.2269388652021,363.2544704264099",
+              "CanvasMatrix": "0.6513671875,0,0,0.6513671875,516.2269388652022,373.25447042641",
               "ShowOverlays": true,
               "GridWidth": 1042.7962264951288,
-              "GridHeight": 727.0
+              "GridHeight": 747.0
             }
           }
         },
@@ -336,6 +263,8 @@
               "EditorObject": {
                 "$type": "Manual.Editors.ED_CanvasView, Manual",
                 "ID": "6f1fba7e-a5d1-4721-bf20-b41599a81962",
+                "ViewportCamera": {},
+                "Is3DView": false,
                 "EnableGrid": true,
                 "TopSection": true,
                 "CanvasMatrix": "Identity",
@@ -348,21 +277,6 @@
               "Name": "Layers",
               "EditorObject": {
                 "$type": "Manual.Editors.ED_LayerView, Manual"
-              }
-            },
-            {
-              "Name": "Timeline",
-              "EditorObject": {
-                "$type": "Manual.Editors.ED_TimelineView, Manual",
-                "loaded": false,
-                "GridWidth": 0.0,
-                "GridHeight": 0.0,
-                "CanvasScaleX": 14.15,
-                "CanvasScaleY": 0.28,
-                "CanvasMatrix": "1,0,0,1,19,97",
-                "TimelineMode": 1,
-                "LeftSection": 100.0,
-                "RightSection": 170.0
               }
             },
             {
@@ -382,12 +296,6 @@
               }
             },
             {
-              "Name": "Code Editor",
-              "EditorObject": {
-                "$type": "Manual.Editors.ED_CodeEditorView, Manual"
-              }
-            },
-            {
               "Name": "Output",
               "EditorObject": {
                 "$type": "Manual.Editors.ED_Output, Manual",
@@ -399,31 +307,20 @@
               "EditorObject": {
                 "$type": "Manual.Editors.ED_LatentNodes, Manual",
                 "loaded": false,
-                "GridWidth": 0.0,
+                "GridWidth": 1042.7962264951288,
                 "GridHeight": 0.0,
-                "CanvasMatrix": "0.5504406007549368,0,0,0.5504406007549368,-37.35635516230254,-2.601580860260915"
-              }
-            },
-            {
-              "Name": "UndoRedo History",
-              "EditorObject": {
-                "$type": "Plugins.ED_UndoRedoHistory, Manual"
+                "CanvasMatrix": "0.48314244798567996,0,0,0.48314244798567996,230.51859935768547,-82.90405355021053"
               }
             }
           ],
           "SelectedEditor": {
-            "Name": "Timeline",
+            "Name": "Latent Nodes Editor",
             "EditorObject": {
-              "$type": "Manual.Editors.ED_TimelineView, Manual",
+              "$type": "Manual.Editors.ED_LatentNodes, Manual",
               "loaded": false,
-              "GridWidth": 0.0,
+              "GridWidth": 1042.7962264951288,
               "GridHeight": 0.0,
-              "CanvasScaleX": 14.15,
-              "CanvasScaleY": 0.28,
-              "CanvasMatrix": "1,0,0,1,19,97",
-              "TimelineMode": 1,
-              "LeftSection": 100.0,
-              "RightSection": 170.0
+              "CanvasMatrix": "0.48314244798567996,0,0,0.48314244798567996,230.51859935768547,-82.90405355021053"
             }
           }
         }
@@ -447,6 +344,8 @@
             "EditorObject": {
               "$type": "Manual.Editors.ED_CanvasView, Manual",
               "ID": "41972fdb-648e-43a7-bb1f-5266e2341743",
+              "ViewportCamera": {},
+              "Is3DView": false,
               "EnableGrid": true,
               "TopSection": true,
               "CanvasMatrix": "Identity",
@@ -459,21 +358,6 @@
             "Name": "Layers",
             "EditorObject": {
               "$type": "Manual.Editors.ED_LayerView, Manual"
-            }
-          },
-          {
-            "Name": "Timeline",
-            "EditorObject": {
-              "$type": "Manual.Editors.ED_TimelineView, Manual",
-              "loaded": false,
-              "GridWidth": 0.0,
-              "GridHeight": 0.0,
-              "CanvasScaleX": 14.15,
-              "CanvasScaleY": 0.28,
-              "CanvasMatrix": "1,0,0,1,19,97",
-              "TimelineMode": 0,
-              "LeftSection": 100.0,
-              "RightSection": 170.0
             }
           },
           {
@@ -493,12 +377,6 @@
             }
           },
           {
-            "Name": "Code Editor",
-            "EditorObject": {
-              "$type": "Manual.Editors.ED_CodeEditorView, Manual"
-            }
-          },
-          {
             "Name": "Output",
             "EditorObject": {
               "$type": "Manual.Editors.ED_Output, Manual",
@@ -512,13 +390,7 @@
               "loaded": false,
               "GridWidth": 0.0,
               "GridHeight": 0.0,
-              "CanvasMatrix": "0.5504406007549368,0,0,0.5504406007549368,-37.35635516230254,-2.601580860260915"
-            }
-          },
-          {
-            "Name": "UndoRedo History",
-            "EditorObject": {
-              "$type": "Plugins.ED_UndoRedoHistory, Manual"
+              "CanvasMatrix": "0.48314244798567996,0,0,0.48314244798567996,230.51859935768547,-82.90405355021053"
             }
           }
         ],
@@ -543,6 +415,8 @@
             "EditorObject": {
               "$type": "Manual.Editors.ED_CanvasView, Manual",
               "ID": "301bb190-f4b9-40e9-9147-dc62f4afa444",
+              "ViewportCamera": {},
+              "Is3DView": false,
               "EnableGrid": true,
               "TopSection": true,
               "CanvasMatrix": "Identity",
@@ -555,21 +429,6 @@
             "Name": "Layers",
             "EditorObject": {
               "$type": "Manual.Editors.ED_LayerView, Manual"
-            }
-          },
-          {
-            "Name": "Timeline",
-            "EditorObject": {
-              "$type": "Manual.Editors.ED_TimelineView, Manual",
-              "loaded": false,
-              "GridWidth": 0.0,
-              "GridHeight": 0.0,
-              "CanvasScaleX": 14.15,
-              "CanvasScaleY": 0.28,
-              "CanvasMatrix": "1,0,0,1,19,97",
-              "TimelineMode": 0,
-              "LeftSection": 100.0,
-              "RightSection": 170.0
             }
           },
           {
@@ -589,12 +448,6 @@
             }
           },
           {
-            "Name": "Code Editor",
-            "EditorObject": {
-              "$type": "Manual.Editors.ED_CodeEditorView, Manual"
-            }
-          },
-          {
             "Name": "Output",
             "EditorObject": {
               "$type": "Manual.Editors.ED_Output, Manual",
@@ -608,13 +461,7 @@
               "loaded": false,
               "GridWidth": 0.0,
               "GridHeight": 0.0,
-              "CanvasMatrix": "0.5504406007549368,0,0,0.5504406007549368,-37.35635516230254,-2.601580860260915"
-            }
-          },
-          {
-            "Name": "UndoRedo History",
-            "EditorObject": {
-              "$type": "Plugins.ED_UndoRedoHistory, Manual"
+              "CanvasMatrix": "0.48314244798567996,0,0,0.48314244798567996,230.51859935768547,-82.90405355021053"
             }
           }
         ],

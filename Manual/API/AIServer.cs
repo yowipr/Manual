@@ -146,7 +146,27 @@ public partial class ComfyUIServer : AIServer// ObservableObject, IAIServer
 
     public async override void Run()
     {
-        AppModel.mainW.SetProgress(0.5f);
+        //check if its already opened externally
+        if (FileManager.IsProcessRunning("python", "ComfyUI"))
+        {
+            Cancel();
+            if (await IsServerReachable(Url))
+            {       
+                AppModel.mainW.CheckServerStatus();
+            }
+            Output.Log("ComfyUI server detected externally");
+            return;
+        }
+        else if (await IsServerReachable(Url))
+        {
+            AppModel.mainW.CheckServerStatus();
+            Cancel();
+            return;
+        }
+
+
+        if (!IsInNewWindow)
+         AppModel.mainW.SetProgress(0.5f);
         //DirPath: C:\Users\lazar\AppData\Local\Manual\Dependencies\ComfyUI_windows_portable\ComfyUI
 
         var server = Settings.instance.AIServer;
@@ -154,11 +174,12 @@ public partial class ComfyUIServer : AIServer// ObservableObject, IAIServer
         if(IsOpened || IsOpening)
         {
             Output.Log("Server already opened");
+            AppModel.mainW?.StopProgress();
             return;
         }
         if(string.IsNullOrEmpty(DirPath) || !Directory.Exists(DirPath))
         {
-            Output.Log("Comfy Server not installed or directory not recognized");
+            Output.Log("Comfy Server not installed or directory not recognized, check in Edit -> Preferences -> System -> ComfyUI");
             Cancel();
             return;
         }
@@ -173,9 +194,17 @@ public partial class ComfyUIServer : AIServer// ObservableObject, IAIServer
             string filePath = Path.Combine(dirInfo.FullName, "run_nvidia_gpu.bat");
             batFile = new BatFile(filePath);
 
-            Output.Log("Opening Server...");
-            AppModel.mainW?.ChangeServerStatus(MainWindow.ServerStatus.Connecting);
-
+            if (IsInNewWindow)
+            {
+                Output.Log("Server startig, wait until you see the comfy URL in the console window");
+                AppModel.mainW?.ChangeServerStatus(MainWindow.ServerStatus.Connected);
+              
+            }
+            else
+            {
+                Output.Log("Opening Server...");
+                AppModel.mainW?.ChangeServerStatus(MainWindow.ServerStatus.Connecting);
+            }
 
             var realPath = Path.Combine(dirInfo.FullName, "python_embeded/python.exe");
             var mainpyPath = "ComfyUI/main.py";
@@ -185,9 +214,21 @@ public partial class ComfyUIServer : AIServer// ObservableObject, IAIServer
                 realPath = "python";
                 mainpyPath = "main.py";
             }
+            if (!File.Exists(realPath))
+            {
+                Output.Log("Comfy Server not installed or directory not recognized, check in Edit -> Preferences -> System -> ComfyUI");
+                Cancel();
+                return;
+            }
 
+            if (!BatFile.CheckPython())
+            {
+                Output.Log("cannot open Comfy Server: missing python. try using portable embeded Comfy as directory");
+                Cancel();
+                return;
+            }
 
-            await batFile.OpenPython(
+           await batFile.OpenPython(
                 python_embededPath: realPath,
                 programPath: Path.Combine(dirInfo.FullName, mainpyPath),
                 arguments: server.StartArguments,
@@ -204,7 +245,7 @@ public partial class ComfyUIServer : AIServer// ObservableObject, IAIServer
 
     public override void Close()
     {
-        if (batFile != null)
+        if (batFile != null && IsOpened)
         {
             Core.Nodes.ComfyUI.Comfy.Disconnect();
 
@@ -219,8 +260,9 @@ public partial class ComfyUIServer : AIServer// ObservableObject, IAIServer
     void Cancel()
     {
         IsOpened = false;
+        IsOpening = false;
         AppModel.mainW?.ChangeServerStatus(MainWindow.ServerStatus.Disconnected);
-        AppModel.mainW?.FinishedProgress();
+        AppModel.mainW?.StopProgress();
     }
 
     private void OutputDataReceived(object sender, DataReceivedEventArgs e)
@@ -235,11 +277,12 @@ public partial class ComfyUIServer : AIServer// ObservableObject, IAIServer
 
     static void ManageData(string? data, OutputType type)
     {
+        if (data == null)
+            return;
 
         if (data.StartsWith(prefix))
         {
             AppModel.Invoke(() => ServerStarted(data));
-        
             return;
         }
 
@@ -253,7 +296,7 @@ public partial class ComfyUIServer : AIServer// ObservableObject, IAIServer
     const string prefix = "To see the GUI go to:";
     static void ServerStarted(string? data)
     {
-        AppModel.mainW?.FinishedProgress();
+        AppModel.mainW?.StopProgress();
 
         var server = Settings.instance.AIServer;
         server.IsDownloaded = true;
@@ -279,10 +322,14 @@ public partial class ComfyUIServer : AIServer// ObservableObject, IAIServer
 
     public override async Task<bool> IsServerReachable()
     {
+        return await IsServerReachable(Settings.instance.CurrentURL);
+    }
+    public async Task<bool> IsServerReachable(string url)
+    {
         using HttpClient httpClient = new();
         try
         {
-            HttpResponseMessage response = await httpClient.GetAsync(Settings.instance.CurrentURL);
+            HttpResponseMessage response = await httpClient.GetAsync(url);
 
             // Si la respuesta es exitosa (código de estado 2xx)
             return response.IsSuccessStatusCode;
@@ -303,7 +350,6 @@ public partial class ComfyUIServer : AIServer// ObservableObject, IAIServer
             return false;
         }
     }
-
 
 
     public static void InstallComfy(Action OnFinalized)

@@ -267,12 +267,14 @@ namespace Manual.Core
                     Debug.WriteLine(message, title);
                     return;
                 }
+                if (string.IsNullOrEmpty(message))
+                    message = "null";
 
                 var entry = new LogMessage(message, title);
                 instance.LogEntries.Add(entry);
                 instance.LastLog = entry;
 
-                ChangeLogFooter($"🛈 {title}; {message.ToSingleLine()}");
+                ChangeLogFooter($"🛈 {title}; {message.ToSingleLine()}", OutputType.Message);
             });
         }
         public static void Log(string message, string title, Color color)
@@ -283,12 +285,12 @@ namespace Manual.Core
 
         public static void LogError(string message, string title = "")
         {
-            var log = new LogMessage(message, title) { MessageColor = Colors.IndianRed };
+            var log = new LogMessage(message, title) { MessageColor = Colors.IndianRed, OutputType = OutputType.Error };
             Log(log);
         }
         public static void LogWarning(string message, string title)
         {
-            var log = new LogMessage(message, title) { MessageColor = Colors.Orange };
+            var log = new LogMessage(message, title) { MessageColor = Colors.Orange, OutputType = OutputType.Warning };
             Log(log);
         }
         public static void Log(LogMessage log)
@@ -304,7 +306,7 @@ namespace Manual.Core
                 instance.LogEntries.Add(log);
                 instance.LastLog = log;
 
-                ChangeLogFooter($"🛈 {log.Title}; {log.Message.ToSingleLine()}");
+                ChangeLogFooter($"🛈 {log.Title}; {log.Message.ToSingleLine()}", log.OutputType);
             });
         }
         public static void Log(SKBitmap image, string title = "image")
@@ -393,13 +395,13 @@ namespace Manual.Core
             Log(messageCascade, title?.ToString() ?? "null");
         }
 
-        public static void ChangeLogFooter(string message)
+        public static void ChangeLogFooter(string message, OutputType type = OutputType.Message)
         {
             try
             {
                 if (AppModel.mainW != null)
                     //AppModel.mainW.logFooter.Text = message;
-                    AppModel.mainW.SetAlert(message);
+                    AppModel.mainW.SetAlert(message, type);
             }
             catch (Exception ex)
             {
@@ -675,8 +677,34 @@ namespace Manual.Core
 
                 Shot.UpdateCurrentRender();
             }
+            else if (message.StartsWith("object info"))
+            {
+                // Obtener el tipo de nodo del mensaje
+                string nodeType = message.Substring("object info".Length).Trim();
 
+                // Asegurarse de que nodeType no esté vacío
+                if (!string.IsNullOrEmpty(nodeType))
+                {
+                    // Obtener la información del nodo
+                    Task.Run(async () =>
+                    {
+                        var content = await Nodes.ComfyUI.Comfy.GetNodeInfo(nodeType);
+                        Core.Output.Log(FileManager.ToReadableJson(content), nodeType);
+                    });
+                  
+                }
+            }
+            else if (message.StartsWith("system info"))
+            {
+                Nodes.ComfyUI.Comfy.GetSystemInfo();
+            }
+            else if (message.StartsWith("similar model"))
+            {
+                string input = message.Substring("similar model".Length).Trim();
 
+                var similar = Namer.FindMostSimilarString(input, ManualAPI.SelectedPreset.Prompt.GetAllModels);
+                Output.Log(similar);
+            }
 
             instance.UploadedFiles.Clear();
         }

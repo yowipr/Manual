@@ -28,7 +28,7 @@ namespace Manual.Properties {
         [global::System.Configuration.DefaultSettingValueAttribute("0.74-chun")]
         public string Version {
             get {
-            return "1.0.0-beta";
+            return "1.1.0-beta";
             }
         }
         

@@ -1158,6 +1158,11 @@ private void mainwindow_SourceInitialized(object sender, EventArgs e)
     {
         AppModel.project.editorsSpace.NewEditorWindow(Core.Editors.Output);
     }
+
+    private void Click_OpenOutput(object sender, RoutedEventArgs e)
+    {
+        AppModel.project.editorsSpace.NewEditorWindow(Core.Editors.Output);
+    }
 }
 
 
@@ -1217,10 +1222,30 @@ public partial class MainWindow
 
     private DispatcherTimer alertTimer;
 
-    public void SetAlert(string message)
-    {
-        logFooter.Text = message;
 
+    public void SetAlert(string message, OutputType type = OutputType.Message)
+    {
+        // Asignamos el color dependiendo del tipo de mensaje
+        string resourceColor = "log_message";
+        switch (type)
+        {
+            case OutputType.Message:
+                resourceColor = "log_message";
+                break;
+            case OutputType.Error:
+                resourceColor = "log_error";
+                break;
+            case OutputType.Warning:
+                resourceColor = "log_warning";
+                break;
+            default:
+                resourceColor = "log_message";
+                break;
+        }
+        logFooterText.Foreground = AppModel.GetThemeColorBrush(resourceColor);
+        if (logFooterText.Foreground == null)
+            logFooterText.Foreground = "#FFD1D6DD".ToSolidColorBrush();
+        logFooterText.Text = message;
         // Si el logFooter ya es visible, simplemente reinicia el temporizador
         if (logFooter.Visibility == Visibility.Visible)
         {
@@ -1294,15 +1319,20 @@ public partial class MainWindow
 
                 info_breath?.Stop();
                 info_elipse.Opacity = 1;
-              //  info_loader.Visibility = Visibility.Collapsed;
-                break;
+                    
+                    //  info_loader.Visibility = Visibility.Collapsed;
+                    break;
 
             case ServerStatus.Disconnected:
                 resource = "neutral";
                 toolTipMessage = "Offline mode";
                     info_breath?.Stop();
-               // info_loader.Visibility = Visibility.Collapsed;
-                break;
+                    Settings.instance.AIServer.IsOpened = false;
+                    Settings.instance.AIServer.IsOpening = false;
+                    AppModel.mainW.StopProgress();
+
+                    // info_loader.Visibility = Visibility.Collapsed;
+                    break;
 
             case ServerStatus.Connecting:
                 resource = "log_warning";
@@ -1316,14 +1346,16 @@ public partial class MainWindow
                     toolTipMessage = $"Local Server starting...";
                   //  info_loader.Visibility = Visibility.Visible;
                     info_breath.Begin();
+                    Output.Log(toolTipMessage);
                     break;
 
                 case ServerStatus.Error:
                 resource = "log_error";
                 toolTipMessage = "Error";
                     info_breath?.Stop();
-               // info_loader.Visibility = Visibility.Collapsed;
-                break;
+                    Output.Log(toolTipMessage);
+                    // info_loader.Visibility = Visibility.Collapsed;
+                    break;
             default:
                 resource = "log_warning"; // Default case, si necesitas uno.
                 toolTipMessage = "Unknown status"; // Mensaje por defecto, ajusta según sea necesario.

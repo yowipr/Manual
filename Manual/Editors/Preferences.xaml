@@ -25,7 +25,7 @@
             Foreground="#FFCACACA"
             TabStripPlacement="Left">
             <TabItem Header="System" IsSelected="true">
-                <Grid Background="{StaticResource bg}">
+                <Grid>
 
                     <Border>
 
@@ -93,14 +93,14 @@
                                     <StackPanel Margin="5">
                                         <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
                                         <Label Content="FolderPath" />
-                                        <TextBox Width="400" Text="{Binding AIServer.DirPath}" Background="{StaticResource bg}"/>
-                                            <Button Content="Locate Comfy" Width="100" Click="Button_LocateComfy"  Background="{StaticResource bg}" BorderBrush="{StaticResource fg}" BorderThickness="1"/>
+                                        <TextBox Width="280" Text="{Binding AIServer.DirPath}"/>
+                                            <Button Content="Locate Comfy" Width="100" Click="Button_LocateComfy" Background="{StaticResource bg}" BorderBrush="{StaticResource fg}" BorderThickness="1"/>
                                         </StackPanel>
 
                                         <StackPanel Margin="0 5" HorizontalAlignment="Right" Orientation="Horizontal" >
                                         <Label Content="Arguments" />
-                                        <TextBox Width="330" Text="{Binding AIServer.StartArguments}" Background="{StaticResource bg}"/>
-                                            <Button Width="60" BorderBrush="{StaticResource fg}" BorderThickness="1" Content="Reset" Command="{Binding ResetArgumentsCommand}"/>
+                                        <TextBox Width="330" Text="{Binding AIServer.StartArguments}"/>
+                                            <Button Width="60" BorderBrush="{StaticResource fg}" BorderThickness="1" Content="Reset" Command="{Binding ResetArgumentsCommand}" Background="{StaticResource bg}"/>
 
                                         </StackPanel>
                                         
@@ -113,8 +113,8 @@
                                 </Expander>
 
                              
-                                <!--DISABLED RELEASE: animation-->
-                                <Expander Visibility="Collapsed" Header="Animation">
+                               
+                                <Expander Header="Animation">
                                     <StackPanel Margin="1 0 0 0" Orientation="Vertical" Style="{x:Null}" HorizontalAlignment="Right">
 
                                         <!--<CheckBox
@@ -293,8 +293,8 @@
                     <Expander Header="Appearance">
                         <StackPanel Margin="10">
                             
-                            <!--DISABLED RELEASE: themes-->
-                  <StackPanel x:Name="themePanel" Visibility="Collapsed" Background="{StaticResource log_warning}">
+                            
+                  <StackPanel x:Name="themePanel">
                     <TextBlock Margin="0,0,0,5" Text="Theme" />
                     <ComboBox
                         Margin="0,0,0,7"

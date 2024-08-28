@@ -79,7 +79,7 @@ public partial class M_NodeOptionVisualizerView : UserControl, IManualElement
         {
             if (nodeop.Direction == NodeOptionDirection.InputField || nodeop.Direction == NodeOptionDirection.Field) // colocar el manualElement en el view
             {
-                var manualElement = nodeop.FieldElement?.Invoke();
+                var manualElement = nodeop.GetFieldElement();
                 if (manualElement is null)
                 {
                     if (Output.DEBUGGING_MODE)

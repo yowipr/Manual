@@ -345,7 +345,7 @@ public partial class App : Application
             string IconPath(string iconName) => Path.Combine(applicationDirectory, "Resources", $"{iconName}.ico");
 
             //PROJECT
-            SetIcon(".manual", "ManualFileType", "MANUAL project File", IconPath("projectIcon"), applicationPath);
+            SetIcon(".manual", "ManualFileType", "MANUAL Project File", IconPath("projectIcon"), applicationPath);
 
             //SHOT
             SetIcon(".shot", "ManualShotFileType", "MANUAL Shot File", IconPath("shotIcon"), applicationPath);

@@ -493,9 +493,9 @@ public static class Shortcuts
         HotKey UndoKey = new(KeyComb.Ctrl, Key.Z, ActionHistory.Undo, "Undo");
         HotKey RedoKey = new(KeyComb.CtrlShift, Key.Z, ActionHistory.Redo, "Redo");
 
-        //DISABLED RELEASE: animation
-        //HotKey RenderImageKey = new(Key.F11, AppModel.Animation_RenderImage, "Open Render Export");
-        //HotKey RenderKey = new(KeyComb.Ctrl, Key.M, ManualAPI.ShowRenderAnimationWindow, "Open Render Export");
+    
+        HotKey RenderImageKey = new(Key.F11, AppModel.Animation_RenderImage, "Open Render Export");
+        HotKey RenderKey = new(KeyComb.Ctrl, Key.M, ManualAPI.ShowRenderAnimationWindow, "Open Render Export");
 
         HotKey DuplicateLayerKey = new(KeyComb.Ctrl, Key.D, DuplicateLayer, "Duplicate Layer");
        //HotKey ClearLayerKey = new(KeyComb.None, Key.Back, ClearLayer, "Clear Layer");
@@ -504,16 +504,15 @@ public static class Shortcuts
    
         HotKey FlipCanvasKey = new(KeyComb.Ctrl, Key.N, FlipCanvas, "Flip Canvas");
 
-        //DISABLED RELEASE: animation
-        //PlayKey = new(KeyComb.Alt, Key.A, Play, "Play");
-        //HotKey PreviusFrameKey = new(KeyComb.None, Key.Left, PreviusFrame, "Previus Frame");
-        //PreviusFrameKey.CapsLock = true;
-        //HotKey NextFrameKey = new(KeyComb.None, Key.Right, NextFrame, "Next Frame");
-        //NextFrameKey.CapsLock = true;
-        //HotKey PreviusKeyframeKey = new(KeyComb.None, Key.Down, PreviusKeyframe, "Previus Keyframe");
-        //PreviusKeyframeKey.CapsLock = true;
-        //HotKey NextsKeyframeKey = new(KeyComb.None, Key.Up, NextKeyframe, "Next Keyframe");
-        //NextsKeyframeKey.CapsLock = true;
+        PlayKey = new(KeyComb.Alt, Key.A, Play, "Play");
+        HotKey PreviusFrameKey = new(KeyComb.None, Key.Left, PreviusFrame, "Previus Frame");
+        PreviusFrameKey.CapsLock = true;
+        HotKey NextFrameKey = new(KeyComb.None, Key.Right, NextFrame, "Next Frame");
+        NextFrameKey.CapsLock = true;
+        HotKey PreviusKeyframeKey = new(KeyComb.None, Key.Down, PreviusKeyframe, "Previus Keyframe");
+        PreviusKeyframeKey.CapsLock = true;
+        HotKey NextsKeyframeKey = new(KeyComb.None, Key.Up, NextKeyframe, "Next Keyframe");
+        NextsKeyframeKey.CapsLock = true;
 
 
 
@@ -524,14 +523,15 @@ public static class Shortcuts
         HotKey topSectionKey = new(KeyComb.None, Key.OemComma, ChangeTopSection, "Hide/See TopSection Canvas");
         HotKey searchKey = new(KeyComb.None, Key.F3, OpenSearch, "Search");
 
-        //DISABLED RELEASE: animation
-        //HotKey insertKeyframeKey = new(KeyComb.None, Key.Y, InsertKeyframeHotKey, "Insert Keyframe");
+
+        HotKey insertKeyframeKey = new(KeyComb.None, Key.Y, InsertKeyframeHotKey, "Insert Keyframe");
 
         HotKey focusCameraKey = new(KeyComb.None, Key.NumPad0, FocusCamera, "Focus Camera");
         HotKey focusCameraLayerKey = new(KeyComb.None, Key.Decimal, FocusSelectedLayers, "Focus Layer");
 
 
         HotKey RenderImage = new(KeyComb.None, Key.F11, AppModel.Animation_RenderImage, "Render Image");
+        HotKey RenderAnimation = new(KeyComb.Ctrl, Key.M, AppModel.Animation_RenderAnimation, "Render Animation");
     }
 
     static void GenerateImage()

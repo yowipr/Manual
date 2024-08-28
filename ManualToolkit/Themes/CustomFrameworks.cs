@@ -110,7 +110,7 @@ public class ImageBorder : Border
 public class Squircle : Border
 {
     // Define la propiedad de dependencia para la curvatura
-    public static readonly DependencyProperty CurvatureProperty =                                  //DISABLED RELEASE: themes - cambiar a 4.0
+    public static readonly DependencyProperty CurvatureProperty =                                
         DependencyProperty.Register(nameof(Curvature), typeof(double), typeof(Squircle), new FrameworkPropertyMetadata(8.0, FrameworkPropertyMetadataOptions.AffectsRender));
 
     public double Curvature

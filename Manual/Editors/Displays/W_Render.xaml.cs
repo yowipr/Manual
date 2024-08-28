@@ -53,18 +53,7 @@ public partial class W_Render : W_WindowContent
     {
         if (e.ChangedButton == MouseButton.Left && e.ClickCount == 2)
         {
-            RenderSettings renderSettings = Render_Manager.SelectedRenderSettings;
-            string fileType = renderSettings.Format.ToString().ToLower();
-
-            SaveFileDialog saveFileDialog = new SaveFileDialog();
-            saveFileDialog.Filter = $"{fileType} Files|*.{fileType}";
-            saveFileDialog.FileName = Render_Manager.OutputName;
-
-            if (saveFileDialog.ShowDialog() == true)
-            {
-                string filePath = saveFileDialog.FileName;
-               Render_Manager.SetPath(filePath);
-            }
+            SelectFolder();
         }
     }
 
@@ -75,13 +64,25 @@ public partial class W_Render : W_WindowContent
         Render_Manager.RenderAnimation();
         //window.Close();
     }
+    void SelectFolder()
+    {
+        RenderSettings renderSettings = Render_Manager.SelectedRenderSettings;
+        string fileType = renderSettings.Format.ToString().ToLower();
 
+        SaveFileDialog saveFileDialog = new SaveFileDialog();
+        saveFileDialog.Filter = $"{fileType} Files|*.{fileType}";
+        saveFileDialog.FileName = Render_Manager.OutputName;
 
-
-
-
-
-
+        if (saveFileDialog.ShowDialog() == true)
+        {
+            string filePath = saveFileDialog.FileName;
+            Render_Manager.SetPath(filePath);
+        }
+    }
+    private void Button_Click(object sender, RoutedEventArgs e)
+    {
+        SelectFolder();
+    }
 }
 
 

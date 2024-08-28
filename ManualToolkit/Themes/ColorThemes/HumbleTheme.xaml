@@ -10,13 +10,14 @@
     <SolidColorBrush x:Key="fg_sub" Color="#FF5E42E2" />
 
     <SolidColorBrush x:Key="bg" Color="#3B3B3B" />
-    <SolidColorBrush x:Key="bg2" Color="#3D3D3D" />
+    <SolidColorBrush x:Key="bg2" Color="#404040" />
     <SolidColorBrush x:Key="bg3" Color="#343434" />
     <SolidColorBrush x:Key="bg4" Color="#161616" />
     <SolidColorBrush x:Key="bg5" Color="#222222" />
 
     <SolidColorBrush x:Key="log_error" Color="#B22222" />
     <SolidColorBrush x:Key="log_warning" Color="#DAA520" />
+    <SolidColorBrush x:Key="log_message" Color="#4682B4" />
     <SolidColorBrush x:Key="log_success" Color="#4682B4" />
 
     

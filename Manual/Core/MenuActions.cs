@@ -50,7 +50,8 @@ public partial class AppModel
 
     public static void V_File_New()
     {
-        ShotBuilder.instance.Open();
+        //ShotBuilder.instance.Open();
+        File_New();
     }
 
     public static void File_New(bool instantiateThings = true)

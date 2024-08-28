@@ -106,8 +106,8 @@
          <Grid x:Name="context">
             <Grid.RowDefinitions>
                 <RowDefinition Height="{StaticResource EditorHeaderHeight}" />
-                <!--DISABLED RELEASE: shot - cambiar a 25-->
-                <RowDefinition Height="5" /> 
+               
+                <RowDefinition Height="25" /> 
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
@@ -139,8 +139,8 @@
 
 
  
-                    <!--DISABLED RELEASE: shot-->
-                    <themes:IconButton Visibility="Collapsed" Margin="9 0 7 0" Command="{Binding OpenAddShotCommand}" IconSource="{StaticResource plus}" FontSize="16" ToolTip="Add Shot..."/>
+                  
+                    <themes:IconButton Margin="9 0 7 0" Command="{Binding OpenAddShotCommand}" IconSource="{StaticResource plus}" FontSize="16" ToolTip="Add Shot..."/>
            
                     <!--DISABLED buttons unused on canvasview bar: folder, collection -->
                 <!--<themes:IconButton Command="{Binding AddShotCommand}" IconSource="{StaticResource folder-open}" />-->
@@ -177,8 +177,8 @@
                     </CheckBox>
 
                     
-                    <!--DISABLED RELEASE: animation-->
-                    <CheckBox Visibility="Collapsed" Style="{StaticResource CheckBoxLight}" Width="24" VerticalAlignment="Center" d:IsChecked="True" ToolTip="Onion Skin"
+                   
+                    <CheckBox Style="{StaticResource CheckBoxLight}" Width="24" VerticalAlignment="Center" d:IsChecked="True" ToolTip="Onion Skin"
                               IsChecked="{Binding Onion}" Padding="0" Margin="10 0 0 0">
                         <Image Source="{StaticResource onion}" Margin="5" RenderOptions.BitmapScalingMode="Fant"/>
                     </CheckBox>
@@ -195,24 +195,24 @@
 
                 <CheckBox Style="{StaticResource CheckBoxLight}" Width="24" Content="UI" VerticalAlignment="Center" d:IsChecked="True" IsChecked="{Binding ShowUIElements}"  Padding="0" Margin="10 0 0 0"/>
 
-                <!--DISABLED RELEASE: effects-->
-                <CheckBox Visibility="Collapsed" Style="{StaticResource CheckBoxLight}" Width="24" Content="ƒx" VerticalAlignment="Center" d:IsChecked="True" IsChecked="{Binding EnableEffects}" Padding="0" Margin="10 0 20 0"/>
+                
+                <CheckBox Style="{StaticResource CheckBoxLight}" Width="24" Content="ƒx" VerticalAlignment="Center" d:IsChecked="True" IsChecked="{Binding EnableEffects}" Padding="0" Margin="10 0 20 0"/>
 
 
-                <!--DISABLED RELEASE: effects-->
-                <StackPanel Visibility="Collapsed" Orientation="Horizontal"
+               
+                <StackPanel Orientation="Horizontal"
                              DataContext="{x:Static api:UserManager.instance}" d:Visibility="{Binding User, Converter={StaticResource adminToVisibilityConverter}}">
 
               
-                <ComboBox ItemsSource="{Binding Source={core:EnumBindingSourceExtension {x:Type core:Quality}}}"
+                <!--<ComboBox ItemsSource="{Binding Source={core:EnumBindingSourceExtension {x:Type core:Quality}}}"
                           DataContext="{x:Static core:Settings.instance}"
-                          SelectedItem="{Binding Quality}" ToolTip="Quality"/>
+                          SelectedItem="{Binding Quality}" ToolTip="Quality"/>-->
 
-                <CheckBox 
+                <!--<CheckBox 
                     Style="{StaticResource CheckBoxLight}" Width="24" VerticalAlignment="Center" d:IsChecked="True" ToolTip="3D" Checked="c3D_Checked" Unchecked="c3D_Checked"
            IsChecked="{Binding DataContext.Is3DView, RelativeSource={RelativeSource AncestorType=UserControl}}" Padding="0" Margin="10 0 0 0">
                     🧊
-                </CheckBox>
+                </CheckBox>-->
                     
                 </StackPanel>
 
@@ -224,9 +224,9 @@
             </Grid>
 
 
-             <!--DISABLED RELEASE: shot-->
+           
             <!--  Shots  -->
-        <Border Visibility="Collapsed" Grid.Row="1" CornerRadius="12 12 12 12" BorderThickness="1" BorderBrush="Transparent" d:Background="{DynamicResource bg4}">
+        <Border  Grid.Row="1" CornerRadius="12 12 12 12" BorderThickness="1" BorderBrush="Transparent" d:Background="{DynamicResource bg4}">
             <Border.Background>
                 <SolidColorBrush Color="Transparent"/>
             </Border.Background>
@@ -597,8 +597,8 @@
         </Expander>
             
             <!--datacontext: project-->
-            <!--DISABLED RELEASE: animation-->
-            <StackPanel Visibility="Hidden" Orientation="Horizontal" Margin="20 0 0 6" Opacity="0.56">
+          
+            <StackPanel Orientation="Horizontal" Margin="20 0 0 6" Opacity="0.56">
                 <TextBlock Text="frame"/>
                 <TextBlock DataContext="{Binding SelectedShot.Animation}" d:Text="FRAME 5" Width="Auto" Text="{Binding CurrentFrame}" Margin="5 0 0 0" FontWeight="Bold"/>
 

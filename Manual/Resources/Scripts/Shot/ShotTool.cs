@@ -104,22 +104,20 @@ namespace Plugins
             //});
 
 
-            //DISABLED RELEASE: shot
-            if (AppModel.DebugMode)
-            {
-                var shotColl = new M_AssetCollection("ShotsCollection");
-                shotColl.MouseDoubleClick += ShotColl_MouseDoubleClick;
-                shotColl.AddMenuItem("Open", OpenItem_Click);
-                shotColl.AddMenuItem("Close", CloseItem_Click);
-                shotColl.AddMenuItem("Insert as Layer", InsertItem_Click);
-                shotColl.AddMenuItem("Remove from Project", DeleteItem_Click);
 
-                M_Expander inspector_shots = new(t.body, "Shots Collection");
-                inspector_shots.AddRange(
-                [
-                   shotColl
-                ]);
-            }
+            var shotColl = new M_AssetCollection("ShotsCollection");
+            shotColl.MouseDoubleClick += ShotColl_MouseDoubleClick;
+            shotColl.AddMenuItem("Open", OpenItem_Click);
+            shotColl.AddMenuItem("Close", CloseItem_Click);
+            shotColl.AddMenuItem("Insert as Layer", InsertItem_Click);
+            shotColl.AddMenuItem("Remove from Project", DeleteItem_Click);
+
+            M_Expander inspector_shots = new(t.body, "Shots Collection");
+            inspector_shots.AddRange(
+            [
+               shotColl
+            ]);
+
 
 
         }

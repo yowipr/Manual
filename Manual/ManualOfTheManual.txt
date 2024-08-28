@@ -1,20 +1,20 @@
 ﻿DISABLEADOS:
 
-DISABLED RELEASE: effects
+DISABLED RELEASE: effects (V)
 
-DISABLED RELEASE: animation
+DISABLED RELEASE: animation (V)
 templates workflows disableados:
     animatediff 2 frame interpolation
     dynami interpolation
     linear interpolation
 
-DISABLED RELEASE: code
+DISABLED RELEASE: code (V)
 
-DISABLED RELEASE: themes
+DISABLED RELEASE: themes (V)
 
-DISABLED RELEASE: shot
+DISABLED RELEASE: shot (V)
 
-DISABLED RELEASE: workspaces
+DISABLED RELEASE: workspaces (V)
 templates disableados:
     todos menos Default
 

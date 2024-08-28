@@ -430,7 +430,34 @@ public partial class Launch : ObservableObject
         var r = Path.Combine(SolutionPath, instance.AppName, $"{instance.AppName}.csproj");
         return r;
     }
+
+
     private static List<string> PublishCommand()
+    {
+        string realName = GetRealName();
+
+
+        return new List<string>
+    {
+        "@echo off",
+        ":: Variables",
+        $"set VERSION={instance.BuildNewVersion}",
+        $"set APPNAME={realName}",
+        $"dotnet publish \"{GetLocalCsprojPath()}\" -c Release -o \".\\publish\" --self-contained -r win-x64",
+        "set SQUIRREL=\"%USERPROFILE%\\.nuget\\packages\\clowd.squirrel\\2.9.42\\tools\\Squirrel.exe\"",
+        "color 0A",
+        "echo ^|--------------------------------------------------^|",
+        "echo ^|                                                  ^|",
+        "echo ^|         Compilacion completada exitosamente!     ^|",
+        "echo ^|                                                  ^|",
+        "echo ^|--------------------------------------------------^|",
+        "color"
+    };
+    }
+
+
+
+    private static List<string> PublishCommandSquirrel()
     {
         string realName = GetRealName();
       

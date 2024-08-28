@@ -16,6 +16,7 @@
 
     <SolidColorBrush x:Key="log_error" Color="#B22222" />
     <SolidColorBrush x:Key="log_warning" Color="#DAA520" />
+    <SolidColorBrush x:Key="log_message" Color="#4682B4" />
     <SolidColorBrush x:Key="log_success" Color="#4682B4" />
 
 

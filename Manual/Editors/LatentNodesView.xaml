@@ -76,7 +76,7 @@
                     <TextBlock Text="📌" Margin="0 0 0 0" FontSize="10"/>
                 </CheckBox>
                 
-                <TextBox Text="{Binding SelectedPreset.Name}"/>
+                <TextBox Text="{Binding SelectedPreset.Name}" ToolTip="change preset name"/>
 
                 <themes:IconButton IconSource="{StaticResource plus}" Command="{Binding AddPresetCommand}" Margin="6 0 4 0" FontSize="16" ToolTip="Add New Preset"/>
                 <Button Foreground="{StaticResource fg_full}" Content="📋" Command="{Binding DuplicatePresetCommand}" Margin="6 3 4 0" FontSize="16" ToolTip="Duplicate Preset"/>

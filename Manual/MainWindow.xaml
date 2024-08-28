@@ -91,7 +91,7 @@
             </Grid.ColumnDefinitions>
 
             <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,0,5,0">
-            <Button x:Name="WMin" Content="―" Width="25" Height="25" BorderBrush="Transparent" Background="Transparent" Foreground="#FFD1D6DD" Click="WMin_Click" FontSize="10" Margin="0,2,0,0"/>
+            <Button x:Name="WMin" Content="__" Width="25" Height="25" BorderBrush="Transparent" Background="Transparent" Foreground="#FFD1D6DD" Click="WMin_Click" FontSize="10" Margin="0,-2,0,0"/>
                 <Button x:Name="WMax" Content="▢" Width="25" Height="25" BorderBrush="Transparent" Background="Transparent" Foreground="#FFD1D6DD" Click="WMax_Click" Margin="0,0,2,5"/>
             <Button x:Name="WClose" Content="✕" Width="25" Height="25" BorderBrush="Transparent" Background="Transparent" Foreground="#FFD1D6DD" Click="WClose_Click" Margin="0,0,0,2"/>
 
@@ -127,10 +127,10 @@
                             <MenuItem Header="Save As..."/>
                             <Separator />
 
-                            <!--DISABLED RELEASE: shot-->
-                            <!--<MenuItem Header="Save Shot"/>
+                          
+                            <MenuItem Header="Save Shot"/>
                             <MenuItem Header="Save All Shots"/>
-                            <Separator />-->
+                            <Separator />
                             
                             <MenuItem Header="Import">
                                 <MenuItem Header="File..." />
@@ -139,8 +139,8 @@
                                 <MenuItem Header="Prompt Preset..." />
                                 <MenuItem Header="Prompt..." />
                                 <Separator />
-                                <!--DISABLED RELEASE: code-->
-                                <!--<MenuItem Header="Script..." />-->
+                               
+                                <MenuItem Header="Script..." />
                             </MenuItem>
 
                             <MenuItem Header="Export">
@@ -150,11 +150,11 @@
                                 <MenuItem Header="Export Prompt..." />
                                 <Separator/>
                                 <MenuItem Header="Export Layer..." />
-                                <!--DISABLED RELEASE: code-->
-                                <!--<MenuItem Header="Export Script..." />-->
+                              
+                                <MenuItem Header="Export Script..." />
                             </MenuItem>
 
-                            <!--DISABLED RELEASE: workspaces-->
+                            
                             <!--MANUAL PRO-->
                             <MenuItem Background="{StaticResource log_warning}" Visibility="{Binding User, Converter={StaticResource adminToVisibilityConverter}}" Header="Workspaces" Foreground="{StaticResource fg_sub}"
                                       DataContext="{x:Static Core:AppModel.userManager}">
@@ -201,27 +201,26 @@
                             <MenuItem Header="Add">
                                 <MenuItem Header="Solid Color Layer"/>
                                 <MenuItem Header="Text"/>
-                                <!--DISABLED RELEASE: effects-->
                                 <MenuItem Header="Adjustment Layer"/>
                             </MenuItem>
                             <Separator />
 
                             <MenuItem Header="Render Image" InputGestureText="F11"/>
-                            
-                            <!--DISABLED RELEASE: animation-->
-                            <!--<MenuItem Header="Render Animation..." />
+
+
+                            <MenuItem Header="Render Animation..." InputGestureText="Ctrl+M"/>
 
                             <Separator/>
                             <MenuItem Header="Clear Shot Preview" />
                             <MenuItem Header="Clear Preview for all Shots" />
-                            <Separator/>-->
+                            <Separator/>
                             
                             <MenuItem Header="Render Layer Area" />
                             <Separator/>
                             
-                            <!--DISABLED RELEASE: animation-->
-                            <!--<MenuItem Header="Insert Keyframe" InputGestureText="Y" />
-                            <MenuItem Header="Delete Keyframe" />-->
+                          
+                            <MenuItem Header="Insert Keyframe" InputGestureText="Y" />
+                            <MenuItem Header="Delete Keyframe" />
                            
                             
                         </MenuItem>
@@ -326,9 +325,8 @@
                                                     </ContentPresenter.Resources>
                                                     <ContentPresenter.ContentTemplate>
                                                         <DataTemplate>
-                                                            <!--DISABLED RELEASE: workspaces - cambiar NameText a Binding Name-->
                                                             <obj:NamerText DataContext="{Binding RelativeSource={RelativeSource AncestorType={x:Type TabItem}}, Path=DataContext}"
-                                                                           NameText=""/>
+                                                                           NameText="{Binding Name}"/>
                                                         </DataTemplate>
                                                     </ContentPresenter.ContentTemplate>
                                                 </ContentPresenter>
@@ -470,10 +468,19 @@
                 <Grid Background="{DynamicResource bg3}" Margin="0">
                     <StackPanel Margin="0 0 0 0" VerticalAlignment="Center" Orientation="Horizontal" HorizontalAlignment="Right">
 
-                      
-                        <TextBlock x:Name="logFooter" Cursor="Hand" d:Text="Log Footer" Visibility="Collapsed" Margin="20 0" Height="Auto"  TextWrapping="NoWrap" VerticalAlignment="Center" Foreground="#FFD1D6DD" Opacity="0.4" HorizontalAlignment="Right"
-                                   MouseLeftButtonUp="logFooter_MouseLeftButtonUp" ToolTip="Click to see extra info in Output..."/>
 
+                        <!--LOG FOOTER-->
+                        <StackPanel x:Name="logFooter" VerticalAlignment="Center" Visibility="Collapsed" Margin="20 0" Orientation="Horizontal">
+                        <TextBlock x:Name="logFooterText" Cursor="Hand" d:Text="Log Footer" Height="Auto" TextWrapping="NoWrap"
+                                   VerticalAlignment="Center" Foreground="#FFD1D6DD" Opacity="1" HorizontalAlignment="Right"
+                                   Visibility="Visible"
+                                   MouseLeftButtonUp="logFooter_MouseLeftButtonUp" ToolTip="Click to see extra info in Output..."/>
+                            <Button Style="{StaticResource SubButton}" Cursor="Hand" Click="Click_OpenOutput" Margin="10 0 0 0">
+                                <TextBlock Text="See Logs" TextDecorations="Underline" Foreground="{StaticResource fg_high}"/>
+                            </Button>
+                        </StackPanel>
+                        
+                        
                         <Grid x:Name="progressGrid" Visibility="Collapsed">
                                <TextBlock x:Name="l_textblock" Text="" Cursor="Hand" VerticalAlignment="Center" Foreground="#FFD1D6DD" Margin="0,0,15,0" Opacity="0.6" HorizontalAlignment="Right"/>
                             
@@ -484,7 +491,7 @@
                             </ProgressBar>
                         </Grid>
 
-                        <Label Content="⚬" Foreground="#FFD1D6DD" Opacity="0.6" Margin="5,0,5,0" Cursor="Hand" ToolTip="Open Output" MouseLeftButtonUp="logFooter_MouseLeftButtonUp"/>
+                        <Label Content="🛈" Foreground="#FFD1D6DD" Opacity="0.6" Margin="5,0,5,0" Cursor="Hand" ToolTip="Open Output" MouseLeftButtonUp="logFooter_MouseLeftButtonUp"/>
                         <TextBlock x:Name="info_text" Text="..." VerticalAlignment="Center" Foreground="#FFD1D6DD" Margin="0,0,10,0" Opacity="0.6" HorizontalAlignment="Right"/>
 
                         <!--<CheckBox Padding="3 0.5 0 0" Margin="0 0 10 0"  DataContext="{x:Static Core:AppModel.settings}" Content="Cloud" IsChecked="{Binding IsCloud}" VerticalAlignment="Center"/>-->

@@ -50,7 +50,7 @@
                                     <!--<Path x:Name="arrow" Data="M 1,1.5 L 4.5,5 L 8,1.5" HorizontalAlignment="Center" Stroke="{StaticResource Expander.Static.Arrow.Stroke}" SnapsToDevicePixels="false" StrokeThickness="2" VerticalAlignment="Center"/>-->
                                     <!--<Path Visibility="Collapsed" Margin="0" Style="{StaticResource PathArrow}" x:Name="arrow" HorizontalAlignment="Center"  SnapsToDevicePixels="false" VerticalAlignment="Center"/>-->
 
-                                    <Rectangle Style="{StaticResource ArrowRect}" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0 5 -2 0"/>
+                                    <Rectangle Cursor="Hand" Style="{StaticResource ArrowRect}" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0 5 -2 0"/>
 
                                     <ContentPresenter Grid.Column="1" HorizontalAlignment="Left" Margin="11,-3,0,0" RecognizesAccessKey="True" SnapsToDevicePixels="True" VerticalAlignment="Center"/>
                                 </Grid>

@@ -52,11 +52,11 @@ public partial class Effect : ObservableObject, ISelectable, IAnimable
 
         { "Invert Color", () => new E_InvertColor() },
         { "Noise", () => new E_Noise() },
-        { "Alpha Mask", () => new E_AlphaMask() },
+        //{ "Alpha Mask", () => new E_AlphaMask() },
         { "Colorize", () => new E_Colorize() },
         { "Channels", () => new E_Channels() },
-        { "Hue/Saturation/Lights", () => new E_HueSaturationLights() },
-
+        //{ "Hue/Saturation/Lights", () => new E_HueSaturationLights() },
+        { "Saturation", () => new  E_Saturation() },
 
         { "Lineart", () => new E_Lineart() },
         { "Transparency Pattern", () => new E_TransparencyPattern() },
@@ -66,11 +66,11 @@ public partial class Effect : ObservableObject, ISelectable, IAnimable
         { "Dilate", () => new  E_Dilate() },
 
         { "Outer Shadow", () => new  E_OuterShadow() },
-        { "Inner Shadow", () => new  E_InnerShadow() },
+        //{ "Inner Shadow", () => new  E_InnerShadow() },
         { "Diffuse Shadow", () => new  E_DiffuseShadow() },
      
 
-        { "Chroma Key", () => new  E_ChromaKey() },
+   
 
     };
 
@@ -346,7 +346,7 @@ public partial class E_Channels : Effect
         ui(new M_SliderBox("Green", 0, 1, 50, 0.01f, true));
         ui(new M_SliderBox("Blue", 0, 1, 50, 0.01f, true));
 
-        ui(new M_SliderBox("Alpha", 0, 1, 50, 0.01f, true));
+      //  ui(new M_SliderBox("Alpha", 0, 1, 50, 0.01f, true));
     }
 
     private void Cbox_SelectedItemChanged(object value)
@@ -528,7 +528,7 @@ public partial class E_AlphaMask : Effect
 }
 
 
-public partial class E_ChromaKey : Effect
+public partial class E_Saturation : Effect
 {
     [ObservableProperty] float k1 = 1;
     [ObservableProperty] float k2 = 0;
@@ -537,14 +537,14 @@ public partial class E_ChromaKey : Effect
 
 
     [ObservableProperty] Color brushColor = Colors.Green;
-    public E_ChromaKey()
+    public E_Saturation()
     {
-        Name = "Chroma Key";
+        Name = "Saturation";
 
         ui(new M_SliderBox("K1", "K1", 0, 10, 50, 0.1, true) );
-        ui(new M_SliderBox("K2", "K2", 0, 10, 50, 0.1, true));
-        ui(new M_SliderBox("K3", "K3", 0, 10, 50, 0.1, true));
-        ui(new M_SliderBox("K4", "K4", 0, 10, 50, 0.1, true));
+        //ui(new M_SliderBox("K2", "K2", 0, 10, 50, 0.1, true));
+        //ui(new M_SliderBox("K3", "K3", 0, 10, 50, 0.1, true));
+        //ui(new M_SliderBox("K4", "K4", 0, 10, 50, 0.1, true));
 
 
 
@@ -715,14 +715,14 @@ public partial class E_DiffuseShadow : Effect
 
 
         var filter2 = SKImageFilter.CreateSpotLitSpecular(
-      location: new SKPoint3(100, 100, 300),  // Posición de la luz
+      location: new SKPoint3(PositionX, PositionY, PositionZ),  // Posición de la luz
       target: new SKPoint3(200, 200, 0),      // Punto focal de la luz
       specularExponent: 20,                   // Exponente especular
-      surfaceScale: 1.2f,
-      ks: 0.5f, 
+      surfaceScale: Scale,
+      ks: Diffusion, 
       shininess: 1,
       cutoffAngle: 45,                        // Ángulo de corte
-      lightColor: SKColors.White             // Color de la luz
+      lightColor: BrushColor.ToSKColor()             // Color de la luz
   );
 
         var filter3 = SKImageFilter.CreateBlendMode(SKBlendMode.DstATop, filter2);

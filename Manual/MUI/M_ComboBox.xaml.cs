@@ -158,7 +158,8 @@ public partial class M_ComboBox : UserControl, IManualElement
         if (d is M_ComboBox instance)
         {
             instance.OnSelectedItemChanged(e.NewValue);
-            // cbox.AsignInputText(e.NewValue); //no se puede
+            if(e.NewValue != null && !instance.ItemsPopup.IsOpen)
+              instance.AsignInputText(e.NewValue); //no se puede
         }
     }    // Declarar el evento usando el delegado EventHandler
     public event Event<object> SelectedItemChanged;
@@ -362,14 +363,14 @@ public partial class M_ComboBox : UserControl, IManualElement
             var b = a.FieldValue;
         }
     }
+
+    public bool IsAdmitNull = false;
     internal virtual void AsignInputText(object selectedItem)
     {
-    
-
-
         if (selectedItem == null)
         {
-            InputTextBox.Text = "null";
+            if(IsAdmitNull)
+              InputTextBox.Text = "null";
             return;
         }
         else if (!string.IsNullOrEmpty(DisplayMemberPath))
@@ -438,7 +439,13 @@ public partial class M_ComboBox : UserControl, IManualElement
         var itemValue = DisplayMemberPath != "" ? item.GetType().GetProperty(DisplayMemberPath)?.GetValue(item)?.ToString() : item.ToString();
         if (string.IsNullOrEmpty(itemValue))
         {
-            return false;
+            if (item is string sitem) //if items are strings
+            {
+                itemValue = sitem;
+                DisplayMemberPath = "";
+            }
+            else
+              return false;
         }
 
         var itemWords = itemValue.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).Select(word => word.Trim()).ToList();
@@ -454,6 +461,7 @@ public partial class M_ComboBox : UserControl, IManualElement
         ItemsListBox.SelectionChanged += ItemsListBox_SelectionChanged;
     }
 
+    bool keyPressed = false;
     private void InputTextBox_KeyDown(object sender, KeyEventArgs e)
     {
         if (e.Key == Key.Enter && SearchedItems != null && SearchedItems.Any())

@@ -538,6 +538,16 @@ public static partial class ManualAPI
         return cleanedMessage;
     }
 
+    public static bool Is(this string source, params string[] list)
+    {
+        if (null == source) return false;
+        return list.Contains(source, StringComparer.OrdinalIgnoreCase);
+    }
+    public static bool Is<T>(this T source, params T[] list)
+    {
+        if (null == source) return false;
+        return list.Contains(source);
+    }
 
     //--------------------------------------------------------ANIMATION-----------\\
     public static AnimationManager Animation

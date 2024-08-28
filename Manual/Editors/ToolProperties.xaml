@@ -55,7 +55,9 @@
                               AllowDrop="True"
                               Drop="preset_Drop" TextBlock.FontSize="10"/>
 
-                    <Border ToolTip="Nodes has errors" IsHitTestVisible="False" BorderThickness="1" BorderBrush="Red" Opacity="0.36" Visibility="{Binding SelectedPreset.Errors, Converter={StaticResource nullOrEmptyToVisibilityConverter}}">
+                    <Border ToolTip="Nodes has errors" IsHitTestVisible="False" BorderThickness="1" BorderBrush="Red" Opacity="0.36"
+                            DataContext="{Binding SelectedPreset}"
+                            Visibility="{Binding Requirements.HasErrors, Converter={StaticResource boolToVisibilityConverter}}">
                         
                     </Border>
                     

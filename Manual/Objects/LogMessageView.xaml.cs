@@ -1,4 +1,5 @@
-﻿using Manual.Core;
+﻿using Manual.API;
+using Manual.Core;
 using SkiaSharp;
 using SkiaSharp.Views.WPF;
 using System;
@@ -62,7 +63,7 @@ public class LogMessage
 
     public Color MessageColor { get; set; } = Colors.White;
 
-
+    public OutputType OutputType = OutputType.Message;
     public MvvmHelpers.ObservableRangeCollection<object> Files { get; set; } = [];
   //  public MvvmHelpers.ObservableRangeCollection<WriteableBitmap> Images { get; set; } = [];
 

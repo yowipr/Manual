@@ -37,6 +37,7 @@ using SkiaSharp;
 using Newtonsoft.Json.Converters;
 using CefSharp.DevTools.CSS;
 using System.Windows.Controls;
+using ICSharpCode.AvalonEdit.Document;
 
 namespace Manual.Core.Nodes.ComfyUI;
 
@@ -216,8 +217,16 @@ public class ComfyUIWorkflow : LatentNode
     {
         var buffer = new byte[8];
         RandomNumberGenerator.Create().GetBytes(buffer);
+
+        // Convertir a un número de 64 bits
         var longRandom = BitConverter.ToUInt64(buffer, 0);
-        longRandom = longRandom % (18446744073709551614 - 1) + 1;
+
+        // Limitar el número a un rango específico de 15 dígitos
+        // El rango es entre 0 (inclusive) y 999999999999999 (inclusive)
+        const ulong minValue = 0;
+        const ulong maxValue = 999999999999999; // 15 dígitos
+        longRandom = minValue + (longRandom % (maxValue - minValue + 1));
+
         return longRandom;
     }
 
@@ -575,6 +584,7 @@ public static class Comfy
         string responseBody = await response.Content.ReadAsStringAsync();
 
         var responseJson = JObject.Parse(responseBody);
+        var errorType = responseJson["error"]["type"].ToString();
         if (responseJson["error"] is JObject j_error)
         {
             if (responseJson["node_errors"] != null)
@@ -588,7 +598,23 @@ public static class Comfy
 
                     var node = preset.FindNode(Convert.ToInt32(firstNodeError?.Name));
                     preset.ExceptionNode(node);
+
+                    if (errorType == "value_not_in_list")
+                    {
+                        // Obtener el input_name del extra_info
+                        var extraInfo = nodeErrors["extra_info"] as JObject;
+                        if (extraInfo != null)
+                        {
+                            var inputName = extraInfo["input_name"]?.ToString();
+                            if (!string.IsNullOrEmpty(inputName))
+                            {
+                                // Llamar a ExceptionInput con el nodo y el input_name
+                                preset.ExceptionNode(node, inputName);
+                            }
+                        }
+                    }
                 }
+
                 else if (responseJson["node_errors"] is JArray ja)
                 {
                     if (!ja.Any())
@@ -600,10 +626,12 @@ public static class Comfy
             }
 
 
+
+
             Core.Output.Log(responseBody, "Comfy Queue Prompt");
             //finalizeSignal.SetCanceled();
 
-            if (responseJson["error"]["type"].ToString() == "prompt_outputs_failed_validation")
+            if (errorType == "prompt_outputs_failed_validation")
             {
                 Core.Output.Log("nodes has errors");
             }
@@ -802,17 +830,13 @@ public static class Comfy
                 else
                 {
                     // CREATE COMFY NODE
-                    Func<LatentNode> comfyFactory = () =>
+                    Func<LatentNode> comfyFactory = () => //-------------------------------- WHEN ADD NODE
                     {
                         // INITIALIZE NODE
                         var nodeUI = new ComfyUINode();
                         nodeUI.NameType = node.name;
                         nodeUI.Name = node.display_name;
-                      
-                        if(nodeUI.Name == "MaskBlur+")
-                        {
 
-                        }
 
                         //IS OUTPUT
                         nodeUI.IsOutput = output_node;
@@ -873,7 +897,7 @@ public static class Comfy
                                     }
                                 }
 
-                                // Añadir cualquier input que no estuviera en inputOrderRequired (si lo deseas)
+                                // Añadir cualquier input que no estuviera en inputOrderRequired
                                 foreach (JProperty property in inputsR)
                                 {
                                     if (!orderedInputs.Any(p => p.Name == property.Name))
@@ -891,7 +915,7 @@ public static class Comfy
 
                             foreach (var input in inputsR) // list combobox field
                             {
-                                //----------------FIELD TO RENDER
+                                //------------------------------------------------------FIELD TO RENDER
                                 object defaultValueUI = null;
                                 float? minUI = null;
                                 float? maxUI = null;
@@ -921,7 +945,7 @@ public static class Comfy
                                         // Aquí puedes hacer algo con cada valor de la lista
                                         objects.Add(val);
                                     }
-                                    var combobox = new M_ComboBox(objects) { DisplayMemberPath = ""};
+                                    var combobox = new M_ComboBox(objects); //selecteditem auto binded FieldValue
 
                                 //   if(listValues.Count > 0)
                                      // combobox.SelectedItem = listValues[0].ToString();
@@ -931,12 +955,14 @@ public static class Comfy
                                     object? defau = null;
                                     if (!objects.Any())
                                         Core.Output.Log("warning: this list is empty", input_name);
-                                    else if (inputDetails.Count >= 2)
+                                    else if (inputDetails.Count >= 3)
                                     {
                                         defau = inputDetails[1]["default"];
                                     }
                                     else
+                                    {
                                         defau = objects[0];
+                                    }
 
 
                                     // Si defau no es un JToken, entonces usa GetType() para determinar el tipo de .NET
@@ -1357,7 +1383,7 @@ public static class Comfy
         }
         if (preset.HasErrors())
         {
-            preset.Errors.GraphSaved = graph;
+            preset.Requirements.GraphSaved = graph;
         }
 
         //-------- connect nodes links
@@ -1525,8 +1551,80 @@ public static class Comfy
             foreach (var d in wdrivers)
                 d.Initialize(); //automatically adds to promptPreset.Drivers
 
+
+            //check for missing models
+            foreach (var node1 in promptPreset.LatentNodes)
+            {
+                if (node1 is ManualNode) continue;
+
+                foreach (var nodeop1 in node1.WidgetFields)
+                    CheckMissingModels(nodeop1);
+            }
+
         }
+
+
+
+
+        public static void CheckMissingModels(NodeOption actualWidget)
+        {
+            if (actualWidget.FieldElementDefault is M_ComboBox cbox)
+            {
+                var itemsSource = cbox.ItemsSource;
+                var firstItem = itemsSource.FirstOrDefault();
+                List<string> items;
+                if (firstItem is JValue)
+                    items = itemsSource.Cast<JValue>().Select(jv => jv.ToString()).ToList();
+                else if (firstItem is string)
+                    items = itemsSource.Cast<string>().ToList();
+                else
+                    items = itemsSource.Select(jv => jv.ToString()).ToList();
+
+
+                var selectedItem = actualWidget.FieldValue.ToString();
+                if (selectedItem != null && !items.Contains(selectedItem))
+                {   // Eliminar la extensión de los elementos y del selectedItem
+                    string selectedItemWithoutExtension = RemoveExtension(selectedItem);
+                    var itemsWithoutExtensions = items.Select(RemoveExtension).ToList();
+
+                    var similarItem = Namer.FindMostSimilarString(selectedItemWithoutExtension, itemsWithoutExtensions);
+                    if (similarItem != null)
+                    { 
+                        // Restaurar la extensión al similarItem encontrado
+                        int index = itemsWithoutExtensions.IndexOf(similarItem);
+                        similarItem = items[index];
+    
+                        actualWidget.FieldValue = similarItem;
+                        Core.Output.Log($"Model Changed:\n{selectedItem}\nto\n{similarItem}", "Workflow Importing");
+                    }
+                    else
+                    {
+                        var requirements = actualWidget.AttachedNode.AttachedPreset.Requirements;
+                        requirements.AddMissingModel(selectedItem);
+                        actualWidget.AttachedNode.AttachedPreset.ExceptionInput(actualWidget);
+                        Core.Output.Log(selectedItem, "Missing model");
+                    }
+                }
+            }
+
+        }
+
+        private string RemoveExtension(string fileName)
+        {
+            return System.IO.Path.GetFileNameWithoutExtension(fileName);
+        }
+
+
+
+
+
+
     }
+
+    //-------------------- END MANUAL CONFIG
+
+
+
 
 
     internal static Graph LoadWorkflow(PromptPreset promptPreset, bool savePrompt = false)
@@ -1646,6 +1744,93 @@ public static class Comfy
 
     }
 
+
+
+
+
+
+
+    //------------------------------------------------------------------------------------------- EXTRA GET
+    internal static async void GetSystemInfo()
+    {
+        try
+        {
+            var url = WebManager.Combine(URL, "system stats");
+            var response = await _httpClient.GetAsync(url);
+            if (response.IsSuccessStatusCode)
+            {
+                string content = await response.Content.ReadAsStringAsync();
+                Core.Output.Log(FileManager.ToReadableJson(content), "System Info");
+            }
+        }
+        catch (HttpRequestException ex)
+        {
+            return;
+        }
+        catch (Exception ex)
+        {
+            Core.Output.Log(ex.Message);
+        }
+    }
+
+
+
+    internal static async Task<JToken?> GetNodeInfo(string nodeType)
+    {
+        try
+        {
+            var url = WebManager.Combine(URL, "object_info", nodeType);
+            var response = await _httpClient.GetAsync(url);
+            if (response.IsSuccessStatusCode)
+            {
+                string content = await response.Content.ReadAsStringAsync();
+                var jsonObject = JToken.Parse(content);
+
+                return jsonObject;
+            }
+            else
+                return null;
+        }
+        catch (HttpRequestException ex)
+        {
+            // Captura específica para problemas de conexión
+            return null;
+        }
+        catch (Exception ex)
+        {
+            Core.Output.Log(ex.Message);
+            return null;
+        }
+    }
+
+
+    public static List<string> ExtractListNames(JToken jsonObject, string fullPath)
+    {
+        var node = jsonObject.SelectToken(fullPath);
+        
+        if (node != null && node.Type == JTokenType.Array)
+        {
+            var array = node[0] as JArray; //[0] content, [1] tooltip
+            if (array != null)
+            {
+                return array.Select(token => token.ToString()).ToList();
+            }
+        }
+
+        return [];
+    }
+
+    public static async Task<List<string>> GetModelList(string nodeType, string path)
+    {
+        var modelsInfo = await GetNodeInfo(nodeType);
+        if (modelsInfo != null)
+        {
+            var models = ExtractListNames(modelsInfo, $"{nodeType}.{path}");
+            return models;
+            //Core.Output.LogCascade(nodeType, models.ToArray());
+        }
+        return [];
+    }
 
 }
 
@@ -1915,6 +2100,7 @@ public partial class ComfyUINode : LatentNode
     public void LoadVariables(Node node)
     {
 
+
         // instantiate nodeoptions fields
         if (node.outputs != null)
             foreach (var output in node.outputs)
@@ -1942,7 +2128,7 @@ public partial class ComfyUINode : LatentNode
 
         if (node.widgets_values != null)
         {
-            //with value names
+            //with value names (film nodes)
             if (node.widgets_values.Count == 1 && node.widgets_values[0] is Dictionary<string, object> dwidgets)
             {
                 for (int i = 0; i < WidgetFields.Count; i++)
@@ -1952,10 +2138,11 @@ public partial class ComfyUINode : LatentNode
                     {
                         // Asigna el valor encontrado a FieldValue de WidgetFields[i].
                         WidgetFields[i].FieldValue = value;
+
                     }
                 }
             }
-            //normal
+            // whitout names (normal)
             else
             {
                 for (int i = 0; i < node.widgets_values.Count; i++)
@@ -1973,12 +2160,15 @@ public partial class ComfyUINode : LatentNode
                         // AddField("error", "NULL", "error", new M_TextBox());
                     
                         string type = FieldTypes.GetTypeLabel(widgetValue);
-                       
-                        AddField($"widget {i}", type, widgetValue, FieldTypes.ElementByType(type));
+
+                        var element = FieldTypes.ElementByType(type);
+                        var nodeop = AddField($"widget {i}", type, widgetValue, element); 
                     }
                 }
             }
         }
+
+
 
     }
 
@@ -2004,7 +2194,6 @@ public partial class ComfyUINode : LatentNode
 
             return ManualAPI.FindLayer(s);
         }
-
         return value;
     }
 
@@ -2139,7 +2328,7 @@ public class Node
     }
 
 
-    public ComfyUINode Paste(PromptPreset preset)
+    public ComfyUINode Paste(PromptPreset preset) //----------------------------------------- IMPORT EACH NODE
     {
         var node = this;
 
@@ -2169,9 +2358,8 @@ public class Node
             //      comfynode.ErrorNodeCache = node;
             preset.AddNode(comfynode, false);
 
-            preset.Errors ??= new();
-            preset.Errors.MissingNodeTypes.Add(node.type);
-            Core.Output.Warning($"missing node: {node.type}", "ComfyUINodes");
+            preset.Requirements.MissingNodeTypes.Add(node.type);
+           // Core.Output.Warning($"missing node: {node.type}", "ComfyUINodes");
 
         }
 
@@ -2812,7 +3000,7 @@ public class PrimitiveNode : ManualNode
             Widget.Name = connection.Name;
             Widget.Type = Result.Type = connection.Type;
 
-            Widget.FieldElement = connection.FieldElement;
+            Widget.FieldElementDefault = connection.FieldElementDefault;
             UINode?.Refresh();
 
         }
@@ -2822,7 +3010,7 @@ public class PrimitiveNode : ManualNode
 
             Widget.Name = "Widget";
             Widget.Type = Result.Type = null;
-            Widget.FieldElement = null;
+            Widget.FieldElementDefault = null;
         }
 
     }

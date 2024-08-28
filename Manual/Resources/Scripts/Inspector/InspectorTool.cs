@@ -128,10 +128,11 @@ public class T_Inspector : Tool
             Output.Log(prop.Test);
         };
 
-        M_Expander inspector_exp = new(stackPanelContext, "Layer");
-        inspector_exp.AddRange(
+
+        M_Expander inspector_exp_extra = new(stackPanelContext, "Extra Info");
+        inspector_exp_extra.AddRange(
         [
-            new M_Grid("Image", new M_TextBox(){ Opacity = 0}, "Image"),
+              new M_Grid("Image", new M_TextBox(){ Opacity = 0}, "Image"),
 
             new M_Label("Image Size", true),
             new M_Grid("Width", "ImageWidth"){IsEnabled = false},
@@ -144,7 +145,17 @@ public class T_Inspector : Tool
             new Separator(),
 
 
-               new M_Label("Position", true),
+             new Separator(),
+             new M_Label("Parent", true),
+             new M_ImageBox("Parent"),
+            // new M_Grid("testing", "Test"),
+        ]);
+
+        M_Expander inspector_exp = new(stackPanelContext, "Layer");
+        inspector_exp.AddRange(
+        [
+          
+            new M_Label("Position", true),
             new M_Grid("X", "PositionX"),
             new M_Grid("Y", "PositionY"),
             new Separator(),
@@ -170,38 +181,28 @@ public class T_Inspector : Tool
 
             // new M_Grid("FPS", "_Animation.FPS", 100, 1),
 
-             new Separator(),
-             new M_Label("Parent", true),
-             new M_ImageBox("Parent"),
-            // new M_Grid("testing", "Test"),
-
-
-
         ]);
 
 
 
-        //DISABLED RELEASE: effects
-        if (AppModel.DebugMode)
-        {
-            SetAdminProps(stackPanelContext);
-
-          
-            //EFFECTS
-
-            StackPanel stackPanel = new StackPanel();
-            stackPanel.HorizontalAlignment = HorizontalAlignment.Stretch;
-
-            ItemsControl items = new();
-            stackPanel.Children.Add(items);
-
-            SetBind(items, "Effects");
-            add(stackPanel, stackPanelContext);
+        if(Output.DEBUGGING_MODE)
+          SetAdminProps(stackPanelContext);
 
 
-            EffectsMenu addEffect = new();
-            add(addEffect, stackPanelContext);
-        }
+        //EFFECTS
+        StackPanel stackPanel = new StackPanel();
+        stackPanel.HorizontalAlignment = HorizontalAlignment.Stretch;
+
+        ItemsControl items = new();
+        stackPanel.Children.Add(items);
+
+        SetBind(items, "Effects");
+        add(stackPanel, stackPanelContext);
+
+
+        EffectsMenu addEffect = new();
+        add(addEffect, stackPanelContext);
+
     }
 
 

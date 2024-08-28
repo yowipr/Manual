@@ -908,6 +908,8 @@ public partial class PromptPreset : ObservableObject, INamable, IId, IMultiDriva
         CurrentExecutingNode = node;
     }
 
+
+
     public NodeBase? CurrentExceptionNode { get; set; }
     public void ExceptionNode(NodeBase? node)
     {
@@ -918,6 +920,10 @@ public partial class PromptPreset : ObservableObject, INamable, IId, IMultiDriva
         if (CurrentExceptionNode != null) //finalize node execution
         {
             CurrentExceptionNode.IsException = false;
+
+            foreach (var field in CurrentExceptionNode.Fields)
+                field.IsError = false;
+            
         }
         if (node != null)
         {
@@ -926,6 +932,25 @@ public partial class PromptPreset : ObservableObject, INamable, IId, IMultiDriva
 
         CurrentExceptionNode = node;
     }
+
+    internal void ExceptionNode(NodeBase node, string inputName)
+    {
+        var field = node.Fields.FirstOrDefault(f => f.Type == inputName);
+        if(field != null)
+        {
+            ExceptionNode(node);
+            field.IsError = true;
+        }
+    }
+    internal void ExceptionInput(NodeOption field)
+    {
+        if (field != null)
+        {
+            ExceptionNode(field.AttachedNode);
+            field.IsError = true;
+        }
+    }
+
 
 
     public void ProgressCurrentNode(float progress)
@@ -1073,7 +1098,6 @@ public partial class PromptPreset : ObservableObject, INamable, IId, IMultiDriva
 
         AppModel.Invoke(() =>
         {
-            this.Errors = null;
             Graph graph;
           //  if (HasErrors())
          //       graph = Errors.GraphSaved;
@@ -1173,16 +1197,16 @@ public partial class PromptPreset : ObservableObject, INamable, IId, IMultiDriva
 
 
 
-    [ObservableProperty] [property: JsonIgnore] PresetErrors? errors;
+    [ObservableProperty] [property: JsonIgnore] PresetRequirements requirements = new();
 
-    public bool HasErrors() => Errors != null && Errors.HasErrors();
-    public void ClearErrors() => Errors = null;
-    
+    public bool HasErrors() => Requirements.HasErrors;
+    public void ClearErrors() => Requirements.ClearErrors();
+
 
 }
 
 
-public partial class Prompt : ObservableObject, INamable, ICloneableBehaviour
+public partial class Prompt : ObservableObject, INamable, ICloneableBehaviour, IDisposable
 {
 
     public override string ToString()
@@ -1234,18 +1258,77 @@ public partial class Prompt : ObservableObject, INamable, ICloneableBehaviour
 
     [ObservableProperty] string model;
 
+
     [ObservableProperty] string lora0;
     [ObservableProperty] float lora0Strength;
 
     [ObservableProperty] string lora1;
     [ObservableProperty] float lora1Strength;
 
-    //[JsonIgnore] public Func<PromptPreset> Model = InstantiateModel;
+
+    [JsonIgnore] public ObservableCollection<string> GetAllModels => GenerationManager.Instance.Models;
+    [JsonIgnore] public ObservableCollection<string> GetAllLoras => GenerationManager.Instance.Loras;
+    [JsonIgnore] public ObservableCollection<string> GetAllSamplers => GenerationManager.Instance.Samplers;
+    [JsonIgnore] public ObservableCollection<string> GetAllSchedulers => GenerationManager.Instance.Schedulers;
 
     public Prompt()
     {
         
     }
+
+    public void Init()
+    {
+        GenerationManager.OnNodesRegistered += CheckModels;
+  
+        GenerationManager.Instance.Models.CollectionChanged += Models_CollectionChanged;
+        GenerationManager.Instance.Loras.CollectionChanged += Loras_CollectionChanged;
+
+        GenerationManager.Instance.Samplers.CollectionChanged += Samplers_CollectionChanged;
+        GenerationManager.Instance.Schedulers.CollectionChanged += Schedulers_CollectionChanged;
+
+        if(GenerationManager.isNodesRegistered)
+            CheckModels();
+    }
+
+    private void CheckModels()
+    {
+        if (GetAllModels.Any())
+        {
+            OnPropertyChanged(nameof(GetAllModels));
+            OnPropertyChanged(nameof(GetAllLoras));
+            OnPropertyChanged(nameof(GetAllSamplers));
+            OnPropertyChanged(nameof(GetAllSchedulers));
+
+            if (!GetAllModels.Contains(Model))
+                Model = GetAllModels.First();
+
+            if (!GetAllLoras.Contains(Lora0))
+                Lora0 = GetAllLoras.First();
+
+            if (!GetAllLoras.Contains(Lora1))
+                Lora1 = GetAllLoras.First();
+        }
+    }
+
+    public void Dispose()
+    {
+        GenerationManager.OnNodesRegistered -= CheckModels;
+
+        GenerationManager.Instance.Models.CollectionChanged -= Models_CollectionChanged;
+        GenerationManager.Instance.Loras.CollectionChanged -= Loras_CollectionChanged;
+
+        GenerationManager.Instance.Samplers.CollectionChanged -= Samplers_CollectionChanged;
+        GenerationManager.Instance.Schedulers.CollectionChanged -= Schedulers_CollectionChanged;
+    }
+
+    private void Loras_CollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e) =>  OnPropertyChanged(nameof(GetAllModels));
+    private void Models_CollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e) => OnPropertyChanged(nameof(GetAllLoras));
+
+    private void Samplers_CollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e) => OnPropertyChanged(nameof(GetAllSamplers));
+    private void Schedulers_CollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e) => OnPropertyChanged(nameof(GetAllSchedulers));
+
+
+
     private bool _isUpdating;
 
 
@@ -1547,7 +1630,7 @@ public partial class Prompt : ObservableObject, INamable, ICloneableBehaviour
 
 
 
-                if (positive.FindNode(n => n.NameType == "CLIPTextEncode" || n is PrimitiveNode) is NodeBase n1)
+                if (positive != null && positive.FindNode(n => n.NameType == "CLIPTextEncode" || n is PrimitiveNode) is NodeBase n1)
                 {
                     if (string.IsNullOrEmpty(this.RealPositivePrompt))
                         this.RealPositivePrompt = (string)n1.field("text")?.FieldValue;
@@ -1558,7 +1641,7 @@ public partial class Prompt : ObservableObject, INamable, ICloneableBehaviour
                 }
 
                 //if (negative.ConnectedNode().First() is NodeBase n2 && n2.NameType == "CLIPTextEncode")
-                if (negative.FindNode(n => n.NameType == "CLIPTextEncode" || n is PrimitiveNode) is NodeBase n2)
+                if (negative != null && negative.FindNode(n => n.NameType == "CLIPTextEncode" || n is PrimitiveNode) is NodeBase n2)
                 {
                     if (string.IsNullOrEmpty(this.RealNegativePrompt))
                         this.RealNegativePrompt = (string)n2.field("text")?.FieldValue;
@@ -1828,19 +1911,47 @@ public partial class Prompt : ObservableObject, INamable, ICloneableBehaviour
 
 
 
-public class PresetErrors
+public partial class PresetRequirements : ObservableObject
 {
-    public List<string> MissingNodeTypes { get; set; } = [];
-    public Graph GraphSaved { get; set; }
+    [ObservableProperty] [property: JsonIgnore] bool hasErrors = false;
 
-    public PresetErrors()
+    [JsonIgnore] public List<string> MissingNodeTypes { get; set; } = [];
+    [JsonIgnore] public List<string> MissingModels { get; set; } = [];
+    [JsonIgnore] public Graph GraphSaved { get; set; }
+   
+    public PresetRequirements()
     {
             
     }
 
-    public bool HasErrors() => MissingNodeTypes.Any();
+    public void ClearErrors()
+    {
+        MissingNodeTypes.Clear();
+        MissingModels.Clear();
+        HasErrors = false;
+    }
+
+
+    public void AddMissingNode(string nodeType)
+    {
+        HasErrors = true;
+        MissingNodeTypes.Add(nodeType);
+    }
+
+    public void AddMissingModel(string modelName)
+    {
+        HasErrors = true;
+        MissingModels.Add(modelName);
+    }
+
+
+    public override string ToString()
+    {
+        return $"HasErrors: {HasErrors} Nodes:{MissingNodeTypes.Count} Models:{MissingModels.Count}";
+    }
 
 }
+
 
 
 

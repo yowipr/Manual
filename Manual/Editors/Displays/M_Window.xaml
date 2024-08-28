@@ -47,7 +47,7 @@
     </WindowChrome.WindowChrome>
 
 
-    <themes:Squircle Background="{StaticResource bg}" CornerRadius="15" Margin="5">
+    <themes:Squircle Background="{StaticResource bg3}" CornerRadius="15" Margin="5">
 
         <themes:Squircle.Effect>
             <DropShadowEffect BlurRadius="3" ShadowDepth="3" Direction="275" Color="#242232" Opacity="0.56"/>

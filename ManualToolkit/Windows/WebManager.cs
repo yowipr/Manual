@@ -179,23 +179,23 @@ public static class WebManager
     }
 
 
-    public static string Combine(string baseUrl, string path)
+    public static string Combine(string baseUrl, params string[] paths)
     {
-        // Verificar si baseUrl ya tiene un esquema (http o https)
-        if (!baseUrl.StartsWith("http://") && !baseUrl.StartsWith("https://"))
-        {
-            baseUrl = "http://" + baseUrl; // Añade http por defecto si no tiene esquema
-        }
+        // Asegurarse de que la baseUrl termine con '/'
+        baseUrl = baseUrl.TrimEnd('/') + "/";
 
-        // Asegurar que baseUrl termine con '/'
-        if (!baseUrl.EndsWith("/"))
-        {
-            baseUrl += "/";
-        }
+        // Combinar las partes de la ruta
+        var combinedPath = Path.Combine(new string[] { baseUrl }.Concat(paths).ToArray());
 
-        Uri combinedUri = new Uri(new Uri(baseUrl), path);
-        return combinedUri.ToString();
+        // Reemplazar las barras invertidas '\' por barras normales '/'
+        combinedPath = combinedPath.Replace('\\', '/');
+
+        // Eliminar cualquier barra diagonal adicional en la raíz
+        return combinedPath.TrimEnd('/');
     }
+
+
+
 
 
     public static string GetURLQuery(string url, string variable)

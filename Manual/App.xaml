@@ -16,7 +16,7 @@
         <ResourceDictionary>
 
             <ResourceDictionary.MergedDictionaries>
-                <!--DISABLED RELEASE: themes-->
+                
                 <!--color palette-->
                 <ResourceDictionary Source="pack://application:,,,/ManualToolkit;component/Themes/ColorThemes/HumbleTheme.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/ManualToolkit;component/Themes/IconsStyle.xaml" />

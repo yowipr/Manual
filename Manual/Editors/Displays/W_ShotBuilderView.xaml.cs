@@ -47,9 +47,9 @@ public partial class W_ShotBuilderView : W_WindowContent
     private void Create_Click(object sender, RoutedEventArgs e)
     {
         //DISABLED RELEASE: shot
-        // AppModel.project.ShotBuilder.CreateSelected();
-        Shot.defaultTemplate = AppModel.project.ShotBuilder.RealSelectedTemplate;
-        AppModel.File_New();
+         AppModel.project.ShotBuilder.CreateSelected();
+        //Shot.defaultTemplate = AppModel.project.ShotBuilder.RealSelectedTemplate;
+        //AppModel.File_New();
         Close_Click(sender, e);
     }
 

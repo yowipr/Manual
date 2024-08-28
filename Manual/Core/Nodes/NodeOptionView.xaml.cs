@@ -69,7 +69,7 @@ public partial class NodeOptionView : UserControl
         {
             if (nodeop.Direction == NodeOptionDirection.InputField || nodeop.Direction == NodeOptionDirection.Field)
             {
-                var manualElement = nodeop.FieldElement?.Invoke();
+                var manualElement = nodeop.GetFieldElement();
                 if(manualElement is null)
                 {
                     Output.Log($"something went wrong loading the PromptPreset {nodeop.Name}", "NodeOptionView");

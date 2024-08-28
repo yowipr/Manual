@@ -47,6 +47,7 @@
 
 
                 <TextBox IsReadOnly="True" Background="Transparent" Foreground="{StaticResource fg_high}" d:Text="path" Width="Auto" Text="{Binding OutputFullPath, Mode=OneWay}" PreviewMouseDown="TextBox_MouseDown"/>
+                <Button Content="Select Folder..." Width="110" Click="Button_Click"/>
 
                 <Separator/>
 
@@ -64,7 +65,7 @@
                     <m:M_NumberBox Header="Frame Rate" Value="{Binding FrameRate}"/>
                     <m:M_NumberBox Header="CFR" Value="{Binding CFR}"/>
 
-                    <CheckBox Content="Enable Audio" IsChecked="{Binding EnableAudio}" HorizontalAlignment="Center"/>
+                    <CheckBox Visibility="Collapsed" Content="Enable Audio" IsChecked="{Binding EnableAudio}" HorizontalAlignment="Center"/>
                 </StackPanel>
                
             </StackPanel>

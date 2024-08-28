@@ -622,8 +622,8 @@
                     IconSource="{StaticResource plus}"
                     Style="{StaticResource SubIconButton}" Margin="4 0" FontSize="14" ToolTip="Add Layer"/>
 
-                <!--DISABLED RELEASE: effects-->
-                <Button Visibility="Collapsed"
+                
+                <Button
        Command="{Binding AddAdjustmentLayerCommand}" 
        Style="{StaticResource SubButton}" Content="◑" Margin="4 0" FontSize="18" ToolTip="Add Adjustment Layer"/>
 
