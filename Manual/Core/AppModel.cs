@@ -124,7 +124,6 @@ public static partial class AppModel
     /// after load project, then load <see cref="LoadSettings"/>
     /// </summary>
     public static Project project { get; set; }
-    
 
     //public static ManualAPI api = new();
     public static ToolSpaces toolSpaces { get; set; } //TODO: DEPRECATED toolSpaces

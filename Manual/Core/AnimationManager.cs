@@ -46,6 +46,7 @@ using CefSharp;
 using FFmpeg.AutoGen;
 using System.Timers;
 using CefSharp.DevTools.Page;
+using Manual.Core.Graphics.Audio;
 
 
 
@@ -3085,6 +3086,40 @@ public partial class AnimationBehaviour
             base.ClearCache();
         }
     }
+
+
+
+    public class AudioBased : AnimationBehaviour //-------------------------------------------------------------- AUDIO LAYER
+    {
+
+        new AudioLayer AttachedLayer { get => (AudioLayer)base.AttachedLayer; set => base.AttachedLayer = value; }
+        public AudioBased(AudioLayer This) : base(This)
+        {
+            AttachedLayer = This;
+        }
+        public override void SetValue(int frame)
+        {
+            base.SetValue(frame);
+            SetActualFrame(frame);
+        }
+
+        void SetActualFrame(int frame)
+        {
+            if(frame == 0)
+            {
+                //AudioPlayer.instance.LoadAndPlayAudio(AttachedLayer.FilePath);
+            }
+        }
+    }
+
+
+
+
+
+
+
+
+
 
 
     public class ShotBased : AnimationBehaviour //------------------------------------------- SHOT BASED

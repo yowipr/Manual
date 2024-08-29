@@ -1,4 +1,5 @@
-﻿using Manual.Core;
+﻿using Manual.API;
+using Manual.Core;
 using ManualToolkit.Specific;
 using ManualToolkit.Windows;
 using System;
@@ -73,4 +74,9 @@ public partial class W_Login : W_WindowContent
         OpenedLogin = null;
     }
 
+    private void Button_Click_Token(object sender, RoutedEventArgs e)
+    {
+        if (UserManager.LoginTokenClipboard())
+            window.Close();
+    }
 }

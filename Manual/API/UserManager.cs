@@ -121,4 +121,24 @@ public partial class UserManager : ObservableObject
             instance.User = null;
         });
     }
+
+
+
+
+    public static bool LoginTokenClipboard()
+    {
+        var token = Clipboard.GetText();
+        string[] parts = token.Split('.');
+        if (parts.Length != 3)
+        {
+            MessageBox.Show($"{token} is not a valid Token");
+            return false;
+        }
+        else
+        {
+            UserManager.LoadSession(token);
+            return true;
+        }
+    }
+
 }

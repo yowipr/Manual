@@ -288,7 +288,7 @@ namespace Manual.Core
             var log = new LogMessage(message, title) { MessageColor = Colors.IndianRed, OutputType = OutputType.Error };
             Log(log);
         }
-        public static void LogWarning(string message, string title)
+        public static void LogWarning(string message, string title = "")
         {
             var log = new LogMessage(message, title) { MessageColor = Colors.Orange, OutputType = OutputType.Warning };
             Log(log);

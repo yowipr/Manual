@@ -652,6 +652,11 @@ public partial class CanvasArea : CanvasMatrix
                 ManualCodec.ImportMp4(files[0]);
                 return;
             }
+            else if (files[0].IsFormat("wav"))
+            {
+                ManualCodec.ImportWav(files[0]);
+                return;
+            }
             else if (files[0].IsFormat("shot"))
             {
                 project.ImportShot(files[0]);

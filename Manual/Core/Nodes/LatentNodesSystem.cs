@@ -197,19 +197,92 @@ public partial class GenerationManager : ObservableObject
     public static PromptPreset? GetTemplate(string templateName)
     {
         string directoryPath = Path.Combine(App.LocalPath, "Resources", "Templates", "PromptPresets");
-        var filePath = Path.Combine(directoryPath, $"{templateName}.json");
-        // Comprueba si el directorio existe
+
+        // Corrige la ruta utilizando Path.Combine para manejar las subcarpetas y nombres de archivos
+        var normalizedTemplateName = templateName.Replace("/", Path.DirectorySeparatorChar.ToString());
+        var filePath = Path.Combine(directoryPath, $"{normalizedTemplateName}.json");
+
+        // Comprueba si el archivo existe
         if (File.Exists(filePath))
         {
             var preset = ImportPromptPreset(filePath, false);
-            preset.Name = templateName;
+            preset.Name = Path.GetFileNameWithoutExtension(filePath);
             return preset;
         }
         else
+        {
             return null;
+        }
     }
 
+
+
     void GetPromptPresetTemplates()
+    {
+        // Define el directorio de los templates
+        string directoryPath = Path.Combine(App.LocalPath, "Resources", "Templates", "PromptPresets");
+
+        // Comprueba si el directorio existe
+        if (Directory.Exists(directoryPath))
+        {
+            // Limpia la lista de templates existente (si es necesario)
+            PromptPresetTemplates.Clear();
+
+            // Agrega templates desde el directorio raíz
+            AddTemplatesFromDirectory(directoryPath, PromptPresetTemplates, "");
+        }
+    }
+
+    void AddTemplatesFromDirectory(string currentDirectory, List<MenuItemNode> parentList, string currentPath)
+    {
+        // Obtén todas las subcarpetas
+        string[] subDirectories = Directory.GetDirectories(currentDirectory);
+
+        // Procesa cada subcarpeta
+        foreach (string subDirectory in subDirectories)
+        {
+            string folderName = Path.GetFileName(subDirectory);
+            string newPath = string.IsNullOrEmpty(currentPath) ? folderName : $"{currentPath}/{folderName}";
+
+            // Crea un nuevo nodo para la carpeta
+            var folderNode = new MenuItemNode(folderName, newPath, folderName, null)
+            {
+                SubItems = new List<MenuItemNode>()
+            };
+
+            // Llama recursivamente para agregar archivos y subcarpetas al nodo de la carpeta actual
+            AddTemplatesFromDirectory(subDirectory, folderNode.SubItems, newPath);
+
+            // Agrega la carpeta a la lista padre
+            parentList.Add(folderNode);
+        }
+
+        // Obtén todos los archivos JSON en el directorio actual
+        string[] fileEntries = Directory.GetFiles(currentDirectory, "*.json");
+
+        // Itera sobre cada archivo y los importa
+        foreach (string filePath in fileEntries)
+        {
+            var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(filePath);
+            string presetPath = string.IsNullOrEmpty(currentPath) ? fileNameWithoutExtension : $"{currentPath}/{fileNameWithoutExtension}";
+
+            // Crea un nuevo nodo para el archivo JSON
+            var fileNode = new MenuItemNode("PromptPreset", presetPath, fileNameWithoutExtension,
+                () =>
+                {
+                    var preset = PromptPreset.FromTemplate(presetPath);
+                    GenerationManager.Instance.AddPreset(preset);
+                });
+
+            // Agrega el archivo JSON a la lista padre actual
+            parentList.Add(fileNode);
+        }
+    }
+
+
+
+
+    void GetPromptPresetTemplatesOld()
     {
         // Define el directorio de los templates
         string directoryPath = Path.Combine(App.LocalPath, "Resources", "Templates", "PromptPresets");
@@ -236,6 +309,7 @@ public partial class GenerationManager : ObservableObject
             }
         } 
     }
+
 
     void GetPromptTemplates()
     {

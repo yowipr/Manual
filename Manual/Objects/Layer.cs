@@ -1708,6 +1708,27 @@ public class VideoLayer : LayerBase // ._.XD
 
 }
 
+
+public partial class AudioLayer : LayerBase
+{
+    public string? FilePath { get; set; }
+    public AudioLayer()
+    {
+            
+    }
+    public AudioLayer(string filePath)
+    {
+        FilePath = filePath;
+        _Animation = new AnimationBehaviour.AudioBased(this);
+        Name = Path.GetFileNameWithoutExtension(filePath);
+    }
+
+
+}
+
+
+
+
 public partial class ShotLayer : LayerBase
 {
     public string? FilePath { get; set; }

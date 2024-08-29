@@ -44,12 +44,12 @@
                 <Border CornerRadius="11 11 0 0" Background="#FF28242F" VerticalAlignment="Top" Height="30" IsHitTestVisible="False" Opacity="0.4"/>
 
                 <!--selection-->
-                <Border CornerRadius="11" BorderBrush="{DynamicResource fg}" Opacity="0.7"
+                <Border CornerRadius="16" BorderBrush="{DynamicResource fg}" Opacity="0.7"
                 BorderThickness="3" IsHitTestVisible="False"
                 Visibility="{Binding IsSelected, Converter={StaticResource boolToVisibilityConverter}}"/>
 
                 <!--is working-->
-                <Border CornerRadius="11" BorderBrush="{DynamicResource fg_sub}"
+                <Border CornerRadius="16" BorderBrush="{DynamicResource fg_sub}"
    BorderThickness="3" IsHitTestVisible="False" d:Visibility="Collapsed"
    Visibility="{Binding IsWorking, Converter={StaticResource boolToVisibilityConverter}}">
                     <Border.Effect>
@@ -61,7 +61,7 @@
                 </Border>
 
                 <!--is exception-->
-                <Border CornerRadius="11" BorderBrush="{DynamicResource log_error}"
+                <Border CornerRadius="16" BorderBrush="{DynamicResource log_error}"
 BorderThickness="3" IsHitTestVisible="False" d:Visibility="Collapsed"
 Visibility="{Binding IsException, Converter={StaticResource boolToVisibilityConverter}}">
                     <Border.Effect>
@@ -154,7 +154,7 @@ Visibility="{Binding IsException, Converter={StaticResource boolToVisibilityConv
                 </ProgressBar>
 
                 <!--is error-->
-                <Border CornerRadius="12" BorderBrush="{DynamicResource log_error}" Opacity="0.3" Background="{DynamicResource log_error}"
+                <Border CornerRadius="16" BorderBrush="{DynamicResource log_error}" Opacity="0.3" Background="{DynamicResource log_error}"
 BorderThickness="3" IsHitTestVisible="False" Tag="IgnoreHit" d:Visibility="Collapsed"
 Visibility="{Binding IsError, Converter={StaticResource boolToVisibilityConverter}}">
                     <Border.Effect>

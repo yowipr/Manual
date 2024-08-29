@@ -143,7 +143,7 @@ public partial class LatentNodesView : UserControl
     {
         if (sender is MenuItem menuItem && menuItem.DataContext is MenuItemNode menuItemNode)
         {
-            menuItemNode.DoAction();
+            menuItemNode.DoAction?.Invoke();
         }
     }
 

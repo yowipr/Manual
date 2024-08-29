@@ -268,7 +268,7 @@ public enum OutputBlendMode
 public class NodeOutput : ManualNodeOutput
 {
 
-    NodeOption Result, LayerTarget, BlendMode, Mask;
+    internal NodeOption Result, LayerTarget, BlendMode, Mask;
     public NodeOutput()
     {
         Name = "Output";
@@ -362,8 +362,11 @@ public class NodeOutput : ManualNodeOutput
 
         var firstFrame = genimg.LocalFrame;
 
-        var blendMode = AppModel.ParseEnum<OutputBlendMode>((string)BlendMode.FieldValue);
-
+        OutputBlendMode blendMode;
+        if (BlendMode.FieldValue is string s)
+            blendMode = AppModel.ParseEnum<OutputBlendMode>((string)BlendMode.FieldValue);
+        else
+            blendMode = (OutputBlendMode)BlendMode.FieldValue;
 
         //GENERATION SINGLE
         if (genimg.Results.Length == 1 && !ManualAPI.Animation.AutoKeyframe && genimg.TargetLayer._Animation.GetTimedVariable("Image") == null) //first time

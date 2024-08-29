@@ -28,7 +28,17 @@
             </Button>
 
         </Grid>
-
+        
+        <Button Opacity="0.6" Margin="30 0 0 50" x:Name="btnToken" Visibility="Visible" Cursor="Hand" Click="Button_Click_Token" 
+                Background="Transparent" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Bottom">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock></TextBlock>
+                <TextBlock Margin="0 0" TextDecorations="Underline">Paste token 📋</TextBlock>
+            </StackPanel>
+            <Button.RenderTransform>
+                <ScaleTransform ScaleX="0.8" ScaleY="0.8"/>
+            </Button.RenderTransform>
+        </Button>
 
         <Button x:Name="closeBtn" Style="{StaticResource SubButton}" VerticalAlignment="Bottom" Margin="0 0 0 30" Cursor="Hand" Click="Close_Click"
                 d:Visibility="Visible" Visibility="Collapsed">

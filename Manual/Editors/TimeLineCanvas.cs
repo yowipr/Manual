@@ -120,6 +120,8 @@ public partial class ED_TimelineView : Editor, ICanvasMatrix
     [JsonIgnore] public Mini_InterpolateDynami Mini_InterpoDynami = new();
 
     [JsonIgnore] public Mini_InterpolateLinear Mini_InterpoLinear = new();
+
+    [JsonIgnore] public Mini_InterpolateLuma Mini_InterpoLuma = new();
 }
 
 

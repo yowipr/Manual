@@ -711,17 +711,9 @@ public partial class W_Launcher : W_WindowContent
 
     private void Button_Click_Token(object sender, RoutedEventArgs e)
     {
-        var token = Clipboard.GetText();
-        string[] parts = token.Split('.');
-        if (parts.Length != 3)
-        {
-            MessageBox.Show($"{token} is not a valid Token");
-        }
-        else
-        {
-            UserManager.LoadSession(token);
-            Setup_ComfyStart();
-        }
+        if (UserManager.LoginTokenClipboard())
+             Setup_ComfyStart();
+             
     }
 }
 

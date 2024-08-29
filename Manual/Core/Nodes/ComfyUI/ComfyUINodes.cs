@@ -1571,6 +1571,11 @@ public static class Comfy
             if (actualWidget.FieldElementDefault is M_ComboBox cbox)
             {
                 var itemsSource = cbox.ItemsSource;
+                if(itemsSource == null)
+                {
+                    Core.Output.LogWarning($"Missing list: {actualWidget.Name}", "Warning");
+                    return;
+                }
                 var firstItem = itemsSource.FirstOrDefault();
                 List<string> items;
                 if (firstItem is JValue)
@@ -1609,7 +1614,7 @@ public static class Comfy
 
         }
 
-        private string RemoveExtension(string fileName)
+        private static string RemoveExtension(string fileName)
         {
             return System.IO.Path.GetFileNameWithoutExtension(fileName);
         }

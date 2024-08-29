@@ -1,0 +1,55 @@
+{
+  "last_node_id": 1,
+  "last_link_id": 1,
+  "nodes": [
+    {
+      "id": 1,
+      "title": "Flux",
+      "type": "M_Output",
+      "pos": [
+        389.0,
+        94.0
+      ],
+      "size": {
+        "0": 200.0,
+        "1": 145.0
+      },
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "Result",
+          "type": "IMAGE",
+          "link": null
+        },
+        {
+          "name": "Mask",
+          "type": "LAYER",
+          "link": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "M_Output"
+      },
+      "widgets_values": [
+        "Selected",
+        "Replace"
+      ]
+    }
+  ],
+  "links": [],
+  "groups": [],
+  "config": {},
+  "extra": {
+    "manual_config": {
+      "preset_name": "default text to image",
+      "canvas_position": "1,0,0,1,2,-25.49999999999997",
+      "prompt": null,
+      "drivers": [],
+      "promptNameId": "anime",
+      "Pinned": false
+    }
+  },
+  "version": 0.4
+}

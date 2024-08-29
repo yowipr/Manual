@@ -199,6 +199,9 @@
     <Compile Update="Resources\Scripts\Pan\Inspector.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Compile>
+    <Compile Update="Resources\Scripts\ProAPI.cs">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Compile>
     <Compile Update="Resources\Scripts\Selector\SelectorTool.cs">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Compile>
@@ -219,6 +222,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <None Update="OpenAL32.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -502,6 +508,21 @@
     <None Update="Resources\Templates\PromptPresets\fix face.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="Resources\Templates\PromptPresets\FLUX\canny.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\Templates\PromptPresets\FLUX\generative draw.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\Templates\PromptPresets\FLUX\image to image.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\Templates\PromptPresets\FLUX\inpainting.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\Templates\PromptPresets\FLUX\text to image.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Resources\Templates\PromptPresets\generative draw sketch.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -519,6 +540,9 @@
     </None>
     <None Update="Resources\Templates\PromptPresets\linear interpolation.json">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\Templates\PromptPresets\ProAPI\default text to image.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Resources\Templates\PromptPresets\realtime inpainting.json">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>

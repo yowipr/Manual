@@ -117,7 +117,7 @@ public static partial class PluginsManager
         {
             //TODO: compilar automaticamente podría causar errores
             //  CompilePlugin(pluginData);
-            Output.Log($"missing dll {pluginData.DllPath}");
+           // Output.Log($"missing dll {pluginData.DllPath}");
             return;
         }
 
@@ -133,6 +133,7 @@ public static partial class PluginsManager
         new Plugins.MovementTool().Initialize();
         new Plugins.InspectorTool().Initialize();
         new Plugins.ShotTool().Initialize();
+        new Plugins.ProAPIGeneral().Initialize();
     }
 
     public static void LoadPlugins()
@@ -154,9 +155,15 @@ public static partial class PluginsManager
 
         if (AppModel.settings.Plugins.Count == 0) // at start
         {
+            // Busca tanto archivos .dll como .cs en el directorio
             string[] dllFiles = Directory.GetFiles(scriptsPath, "*.dll", SearchOption.AllDirectories);
+            string[] csFiles = Directory.GetFiles(scriptsPath, "*.cs", SearchOption.AllDirectories);
 
-            foreach (string filePath in dllFiles)
+            // Combina ambos arrays de archivos
+            string[] allFiles = dllFiles.Concat(csFiles).ToArray();
+
+            // Itera sobre cada archivo y los agrega como plugins
+            foreach (string filePath in allFiles)
             {
                 AddPlugin(filePath);
             }

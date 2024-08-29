@@ -64,6 +64,10 @@ public static partial class ManualCodec     //----------------------------------
     {
         AddLayerBase(new VideoLayer(filePath)); 
     }
+    public static void ImportWav(string filePath)
+    {
+        AddLayerBase(new AudioLayer(filePath));
+    }
 
     public static PixelFormat ToMediaPixelFormat(this ImagePixelFormat imagePixelFormat)
     {

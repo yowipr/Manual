@@ -1685,7 +1685,7 @@ public partial class TimelineView : UserControl
 
 
 
-    private void RightClickMenu_GenInterpolation(object sender, RoutedEventArgs e)
+    private void RightClickMenu_GenInterpolation(object sender, RoutedEventArgs e) //--------------------------------------- INTERPOLATION
     {
         var header = AppModel.GetHeader(sender);
 
@@ -1707,7 +1707,16 @@ public partial class TimelineView : UserControl
                 Output.Log("Select at least 2 Keyframes");
 
         }
+        else if (header == "Luma Interpolation...")
+        {
+            if (SelectedKeyframes.Count == 2)
+                timelineContext.Mini_InterpoLuma.Open(SelectedKeyframes);
+            else if (SelectedKeyframes.Count > 2)
+                Output.Log("Select no more than 2 Keyframes");
+            else if (SelectedKeyframes.Count < 2)
+                Output.Log("Select at least 2 Keyframes");
 
+        }
     }
 
     void OpenDynamiInterpolation()
@@ -2155,6 +2164,27 @@ public class Mini_InterpolateLinear : Mini_InterpolateDynami
         InterpPreset.ChangeField("FrameB", "Keyframe", MainKeyframes.Last().Frame);
 
         InterpPreset.ChangeField("RIFE VFI (recommend rife47 and rife49)", "multiplier", (Frames + MainKeyframes.Count) / MainKeyframes.Count);
+
+    }
+
+}
+
+public class Mini_InterpolateLuma : Mini_InterpolateDynami
+{
+    public Mini_InterpolateLuma()
+    {
+        PresetTemplateName = "ProAPI/luma interpolation";
+        IsPromptEnabled = false;
+    }
+
+    public override void ChangePresetBeforeGenerate()
+    {
+      //  InterpPreset.ChangeField("FrameA", "Keyframe", MainKeyframes.First().Frame);
+
+     //   InterpPreset.ChangeField("FrameB", "Keyframe", MainKeyframes.Last().Frame);
+
+     //   InterpPreset.ChangeField("RIFE VFI (recommend rife47 and rife49)", "multiplier", (Frames + MainKeyframes.Count) / MainKeyframes.Count);
+
 
     }
 

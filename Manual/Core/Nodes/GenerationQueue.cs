@@ -557,7 +557,7 @@ public partial class GeneratedImage : ObservableObject
         var bbox = Preset.GetBoundingBox();
         BoundingBox = bbox;
 
-        if(onode is ManualNodeOutput nout)
+        if(onode is ManualNodeOutput nout && onode is not IOutputNode)
         {
             nout.ON_START(this);
         }

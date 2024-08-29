@@ -63,6 +63,7 @@ using ManualToolkit.Specific;
 //
 using Manual.Core.Graphics;
 using OpenTK.Mathematics;
+using Manual.Core.Graphics.Audio;
 
 
 #endregion
@@ -81,7 +82,8 @@ public partial class MainWindow : Window
     {
         if (header == "add square")
         {
-            Rend3D.Start();  
+            var layer = api.layer("done") as AudioLayer;
+            new AudioPlayer().LoadAndPlayAudio(layer.FilePath);
         }
         
         Shot.UpdateCurrentRender();
@@ -1187,8 +1189,10 @@ public partial class MainWindow
     }
     public void SetProgress(float progress, string message)
     {
-        SetProgress(progress);
-        SetMessage(message);
+  
+           SetProgress(progress);
+           SetMessage(message);
+   
     }
     /// <summary>
     /// stop progress and also nofity
@@ -1200,9 +1204,12 @@ public partial class MainWindow
     }
     public void StopProgress()
     {
-        progressGrid.Visibility = Visibility.Collapsed;
-        SetMessage("");
+  
+          progressGrid.Visibility = Visibility.Collapsed;
+          SetMessage("");
+      
         TaskBar.Stop();
+
     }
     public void Notification()
     {

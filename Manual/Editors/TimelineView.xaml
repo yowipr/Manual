@@ -381,7 +381,8 @@
                                     </MenuItem.Icon>
                                     <MenuItem Header="Dynami Interpolation..." Click="RightClickMenu_GenInterpolation"/>
                                     <MenuItem Header="Linear Interpolation..." Click="RightClickMenu_GenInterpolation"/>
-                                    
+                                    <MenuItem Header="Luma Interpolation..." Click="RightClickMenu_GenInterpolation"/>
+
                                     <!--<MenuItem Header="AnimateDiff..." Click="RightClickMenu_Interpolation"/>-->
                                 </MenuItem>
 
