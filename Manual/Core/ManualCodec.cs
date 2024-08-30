@@ -43,6 +43,7 @@ using static Manual.Editors.TimelineView;
 using System.Collections.Concurrent;
 using System.Runtime.InteropServices;
 using Manual.Core.Nodes;
+using ManualToolkit.Windows;
 
 namespace Manual.Core;
 
@@ -126,7 +127,7 @@ public static partial class ManualCodec     //----------------------------------
 
 
 
-    public static SKBitmap? GetVideoFrame(string filePath, int frame, Shot shot) //WORKING PERRAS
+    public static SKBitmap? GetVideoFrame(string filePath, int frame, Shot shot)
     {
         if (shot == null) return null;
 
@@ -134,8 +135,13 @@ public static partial class ManualCodec     //----------------------------------
 
         var videoStream = mediaFile.Video;
         var frameTime = shot.Animation.GetTimeAt(frame);
-      
-        if (!videoStream.TryGetFrame(frameTime, out ImageData videoFrame))
+
+        if (frameTime >= videoStream.Info.Duration)
+            frameTime = videoStream.Info.Duration;
+
+
+        ImageData videoFrame;
+        if (!videoStream.TryGetFrame(frameTime, out videoFrame))
             return null;
 
         return videoFrame.ToSKBitmap();
@@ -263,7 +269,27 @@ public static partial class ManualCodec     //----------------------------------
         return frames;
     }
 
+    internal static async Task ImportVideoUrl(string videoUrl)
+    {
 
+        var fileDir = Path.Combine(App.LocalPath, "Output");
+        var fileName = WebManager.GetFileName(videoUrl);
+        var uniqueFileName = WebManager.GetUniqueFileName(fileDir, fileName);
+
+        if(uniqueFileName == null)
+            throw new Exception("wrong video url");
+
+        var s = await WebManager.Download(videoUrl, fileDir, fileName);
+        if (s)
+        {
+            AppModel.Invoke(() =>
+            {
+                var layer = new VideoLayer(fileName);
+                AddLayerBase(layer);
+
+            });
+        }
+    }
 
 
 }

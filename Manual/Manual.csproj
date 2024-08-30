@@ -232,6 +232,9 @@
     <None Update="Resources\icon.ico">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="Resources\Output\output here.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Resources\preferences.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

@@ -18,6 +18,8 @@ using System.Runtime.CompilerServices;
 using SkiaSharp;
 using System.Net.Http.Headers;
 using System.Net.Http;
+using Output = Manual.Core.Output;
+using System.Diagnostics;
 
 namespace Plugins;
 
@@ -127,7 +129,7 @@ internal class LumaAPINode : ProAPINode
 
     public override async Task OnPreview()
     {
-        throw new NotImplementedException();
+        
     }
 
     public override object OnSendingPrompt()
@@ -144,6 +146,14 @@ internal class LumaAPINode : ProAPINode
         return null;
     }
 
+    string GetUrl()
+    {
+        var web =  "http://192.168.1.10:3000"; //"https://manualai.art/";
+        var subPath = "api/generate/luma";
+        var url = WebManager.Combine(web, subPath);
+        return url;
+    }
+
     public async void SendRequestToDreamMachine(string prompt, string callbackUrl, string model, SKBitmap startImage, SKBitmap endImage)
     {
         using (var client = new HttpClient())
@@ -151,11 +161,9 @@ internal class LumaAPINode : ProAPINode
             // Establece la URL de la API
             //    var url = "http://{{LUMA_API_HOST}}/api/v1/generation/add";
             var token = UserManager.GetToken();
-            var web = "http://192.168.1.10:3000";
-            var subPath = "api/generate/luma";
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
-            var url = WebManager.Combine(web, subPath);
+            var url = GetUrl();
 
             // Crea el contenido de la solicitud como MultipartFormDataContent
             using (var formData = new MultipartFormDataContent())
@@ -170,13 +178,23 @@ internal class LumaAPINode : ProAPINode
                 byte[] endImageBytes = endImage.ToByte();
 
                 // Agregar las imágenes como archivos
-                var imageContentStart = new ByteArrayContent(startImageBytes);
-                imageContentStart.Headers.ContentType = MediaTypeHeaderValue.Parse("image/png");
-                formData.Add(imageContentStart, "arg_image", "start.png");
+                //var imageContentStart = new ByteArrayContent(startImageBytes);
+                //imageContentStart.Headers.ContentType = MediaTypeHeaderValue.Parse("image/png");
+                //formData.Add(imageContentStart, "arg_image", "start.png");
 
-                var imageContentEnd = new ByteArrayContent(endImageBytes);
-                imageContentEnd.Headers.ContentType = MediaTypeHeaderValue.Parse("image/png");
-                formData.Add(imageContentEnd, "arg_image_end", "end.png");
+                //var imageContentEnd = new ByteArrayContent(endImageBytes);
+                //imageContentEnd.Headers.ContentType = MediaTypeHeaderValue.Parse("image/png");
+                //formData.Add(imageContentEnd, "arg_image_end", "end.png");
+
+
+                formData.Add(new StringContent("https://raw.githubusercontent.com/ToonCrafter/ToonCrafter/main/assets/72109_125.mp4_00-00.png"),
+                    "arg_image_url");
+
+
+                formData.Add(new StringContent("https://raw.githubusercontent.com/ToonCrafter/ToonCrafter/main/assets/72109_125.mp4_00-01.png"),
+                    "arg_image_end_url");
+
+                formData.Add(new StringContent("16:9"), "arg_aspect_ratio");
 
                 // Envía la solicitud POST
                 var response = await client.PostAsync(url, formData);
@@ -187,6 +205,9 @@ internal class LumaAPINode : ProAPINode
                     var responseData = await response.Content.ReadAsStringAsync();
                     // Procesa la respuesta según sea necesario
                     Manual.Core.Output.Log($"Success: {responseData}");
+
+                    taskId = responseData.GetJsonValue<string>("taskId");
+                    WaitToFinalize();
                 }
                 else
                 {
@@ -195,6 +216,79 @@ internal class LumaAPINode : ProAPINode
             }
         }
     }
+
+    string taskId;
+    async void WaitToFinalize()
+    {
+        var url = GetUrl();
+        var url2 = WebManager.Combine(url, $"status?taskId={taskId}");
+
+        string? videoUrl = null; // Inicializa videoUrl como null para indicar que no se ha obtenido todavía
+
+        int i = 0;
+        while (videoUrl == null)
+        {
+            Output.Log($"waiting...{i}");
+            i++;
+
+            var response = await WebManager.GET(url2);
+            if(response == null)
+            {
+                videoUrl = "error";
+                Output.Log("error generating video");
+                break;
+            }
+
+            if (response.TryGetValue("status", out JToken s))
+            {
+                var status = s.Value<int>();
+
+                if (status == 1) // waiting
+                {
+                    // Espera un tiempo antes de volver a intentar
+                   
+                }
+                else if (status == 2) // finalized
+                {
+                    if (response.TryGetValue("video", out JToken v))
+                    {
+                        videoUrl = v.Value<string>(); // Asigna el videoUrl obtenido
+
+                        // Aquí puedes manejar el caso donde se obtiene el video URL
+                        Debug.WriteLine($"Video URL obtained: {videoUrl}");
+                    }
+                }
+                else if (status == 3) // failed
+                {
+                    videoUrl = "error";
+                    Output.Log("failed generating video");
+                    break;
+                }
+            }
+            else
+            {
+                // Manejo de errores si no se obtiene el estado
+                
+                Debug.WriteLine("Failed to get status from server. Retrying...");
+            }
+
+            await Task.Delay(5_000); // Espera 1 segundo antes de la siguiente solicitud
+        }
+
+        // Aquí puedes manejar el código después de que se obtiene el video URL
+        Debug.WriteLine("Process finalized and video URL obtained.");
+
+
+
+        if (videoUrl == "error")
+            return;
+        
+
+
+        await ManualCodec.ImportVideoUrl(videoUrl);
+
+    }
+
 
 
 

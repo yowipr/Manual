@@ -2970,26 +2970,31 @@ public partial class AnimationBehaviour
             if(frame < FrameStart)
             {
                 var b = GetFrameBuffer(FrameStart);
-                if (b != null)
-                    AttachedLayer.Image = b;
+                if (b == null || frame >= FrameEnd || b.Height == 0) return;
+
+                AttachedLayer.Image = b;
 
                 return;
             }
             else if (frame >= FrameEnd)
             {
                 var b = GetFrameBuffer(FrameEnd - 1);
-                if (b != null)
-                    AttachedLayer.Image = b;
+                if (b == null || frame >= FrameEnd || b.Height == 0) return;
+
+                AttachedLayer.Image = b;
 
                 return;
             }
 
             if (!Settings.instance.EnablePreviewCacheFrames)
             {
-                var b = ManualCodec.GetVideoFrame(AttachedLayer.FilePath, frame, AttachedLayer.ShotParent);
-                if(b != null)
-                    AttachedLayer.Image = b;
 
+                var b = ManualCodec.GetVideoFrame(AttachedLayer.FilePath, frame, AttachedLayer.ShotParent);
+
+                if (b == null || frame >= FrameEnd || b.Height == 0) return;
+
+                AttachedLayer.Image = b;
+               
                 return;
             }
 
@@ -3012,8 +3017,9 @@ public partial class AnimationBehaviour
 
 
             var bitmap = GetFrameBuffer(realFrame);
-            if(bitmap != null)
-                AttachedLayer.Image = bitmap;
+            if (bitmap == null || frame >= FrameEnd || bitmap.Height == 0) return;
+
+            AttachedLayer.Image = bitmap;
 
         }
         int bufferNext = 24;

@@ -584,6 +584,61 @@ public static class WebManager
     }
 
 
+    public static string GetFileNameWithoutExtension(string videoUrl)
+    {
+        try
+        {
+            // Crear una instancia de Uri para analizar la URL
+            Uri uri = new Uri(videoUrl);
+
+            // Obtener la última parte del path de la URL, que suele ser el nombre del archivo
+            string fileName = Path.GetFileName(uri.LocalPath);
+
+            // Devolver el nombre del archivo sin la extensión
+            return Path.GetFileNameWithoutExtension(fileName);
+        }
+        catch (UriFormatException)
+        {
+            // Si la URL no es válida, manejar la excepción y devolver null
+            return null;
+        }
+    }
+    public static string GetFileName(string videoUrl)
+    {
+        try
+        {
+            // Crear una instancia de Uri para analizar la URL
+            Uri uri = new Uri(videoUrl);
+
+            // Obtener la última parte del path de la URL, que suele ser el nombre del archivo
+            string fileName = Path.GetFileName(uri.LocalPath);
+
+            // Devolver el nombre del archivo sin la extensión
+            return Path.GetFileName(fileName);
+        }
+        catch (UriFormatException)
+        {
+            // Si la URL no es válida, manejar la excepción y devolver null
+            return null;
+        }
+    }
+
+
+    public static string GetUniqueFileName(string directory, string fileName)
+    {
+        string filePath = Path.Combine(directory, fileName);
+        int count = 1;
+
+        // Si el archivo ya existe, genera un nombre único
+        while (File.Exists(filePath))
+        {
+            string tempFileName = $"{Path.GetFileNameWithoutExtension(fileName)}({count++}){Path.GetExtension(fileName)}";
+            filePath = Path.Combine(directory, tempFileName);
+        }
+
+        return Path.GetFileName(filePath); // Devuelve solo el nombre del archivo, no el path completo
+    }
+
 
 }
 
