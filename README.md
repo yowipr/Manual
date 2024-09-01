@@ -10,7 +10,8 @@ Manual is an advanced ComfyUI Frontend. I developed it from scratch to be compat
 
 ## ⚙️ Installation
 
-1. **Download** [**Manual_Portable.zip or Manual_Setup.zip**](https://github.com/yowipr/Manual/releases/download/1.0.0-beta/Manual_Portable.zip)  
+1. **Download** [**Manual-1.1.0-portable.zip or Manual_Setup.zip**](https://github.com/yowipr/Manual/releases/download/v1.1.0-beta/Manual-1.1.0-portable.zipp) 
+ **or** [**Manual-1.1.0-setup.zip**](https://github.com/yowipr/Manual/releases/download/v1.1.0-beta/Manual-1.1.0-setup.zip) 
    or from **Civitai**: [https://civitai.com/models/644188/manual](https://civitai.com/models/644188/manual)
 2. **Clone** the [**ComfyUI-Manual custom node**](https://github.com/yowipr/ComfyUI-Manual) (`git clone`) into the **ComfyUI\custom_nodes** folder of your ComfyUI.
 3. **Copy and paste the ComfyUI folder path into Manual** by navigating to **Edit -> Preferences**.
