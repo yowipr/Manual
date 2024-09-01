@@ -63,6 +63,11 @@
                                             Orientation="Vertical"
                                             Style="{x:Null}" />
 
+                                        <MUI:M_ComboBox Header="Template Model"
+                                                        ItemsSource="{Binding TemplatesModel}"
+                                                        SelectedItem="{Binding TemplateModel}"
+                                                        DisplayMemberPath="" Margin="5 0 5 5"/>
+
                                         <MUI:M_NumberBox
                                             Margin="4,0,0,0"
                                             Header="Realtime Delay (Seconds)"

@@ -163,8 +163,9 @@ public partial class GenerationManager : ObservableObject
         }
 
 
-        string name = "default text to image";
-        string path = Path.Combine(App.LocalPath, $"Resources/Templates/PromptPresets/{name}.json");
+        string name = "text to image";
+        var model = Settings.instance.TemplateModel;
+        string path = Path.Combine(App.LocalPath, $"Resources/Templates/PromptPresets/{model}/{name}.json");
         if (Path.Exists(path))
         {
             //PromptPresetTemplates.FirstOrDefault(m => m.Name == name)?.DoAction();
@@ -173,7 +174,7 @@ public partial class GenerationManager : ObservableObject
         }
         else
         {
-            PromptPresetTemplates[0].DoAction();
+            PromptPresetTemplates[0].DoAction?.Invoke();
         }
 
 
@@ -194,15 +195,20 @@ public partial class GenerationManager : ObservableObject
 
 
 
-    public static PromptPreset? GetTemplate(string templateName)
+    public static PromptPreset? GetTemplate(string templateName, bool useSettingModelFolder = true)
     {
+ 
         string directoryPath = Path.Combine(App.LocalPath, "Resources", "Templates", "PromptPresets");
 
         // Corrige la ruta utilizando Path.Combine para manejar las subcarpetas y nombres de archivos
         var normalizedTemplateName = templateName.Replace("/", Path.DirectorySeparatorChar.ToString());
-        var filePath = Path.Combine(directoryPath, $"{normalizedTemplateName}.json");
+        string model = Settings.instance.TemplateModel;
+        var filePath = Path.Combine(directoryPath, model, $"{normalizedTemplateName}.json");
 
-        // Comprueba si el archivo existe
+        if (!File.Exists(filePath) || useSettingModelFolder == false)
+            filePath = Path.Combine(directoryPath, $"{normalizedTemplateName}.json");
+        
+            // Comprueba si el archivo existe
         if (File.Exists(filePath))
         {
             var preset = ImportPromptPreset(filePath, false);
@@ -230,6 +236,18 @@ public partial class GenerationManager : ObservableObject
 
             // Agrega templates desde el directorio raíz
             AddTemplatesFromDirectory(directoryPath, PromptPresetTemplates, "");
+
+
+            //MODELS
+            Settings.instance.TemplatesModel.Clear();
+            var folderPaths = Directory.GetDirectories(directoryPath);
+
+            // Extraer solo los nombres de las carpetas y agregarlos a la ObservableCollection
+            foreach (var folderPath in folderPaths)
+            {
+                var folderName = Path.GetFileName(folderPath);
+                Settings.instance.TemplatesModel.Add(folderName);
+            }
         }
     }
 

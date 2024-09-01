@@ -748,7 +748,7 @@ public partial class MainWindow : Window
 
 
         // EXPORT
-        else if (header == "Export Prompt Preset...")
+        else if (header == "Export Workflow...")
         {
             AppModel.SavePromptPreset();
         }

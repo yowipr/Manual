@@ -144,7 +144,7 @@
                             </MenuItem>
 
                             <MenuItem Header="Export">
-                                <MenuItem Header="Export Prompt Preset..." />
+                                <MenuItem Header="Export Workflow..." />
                                 <MenuItem Header="Export Workflow API..." />
                                 <Separator />
                                 <MenuItem Header="Export Prompt..." />

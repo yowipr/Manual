@@ -42,7 +42,7 @@ internal abstract class ProAPINode : NodeOutput, IOutputNode
 
             AppModel.Invoke(()=>AppModel.mainW.SetProgress(1, "Generating..."));
 
-            var web = "http://192.168.1.10:3000";
+            var web = "https://manualai.art/";
             var subPath = "api/generate";
 
             var url = URL(WebManager.Combine(web, subPath));

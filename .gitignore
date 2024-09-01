@@ -12,6 +12,7 @@ MANUAL2222.rar
 publisher.bat
 Manual.rar
 .vscode
+*.zip
 *.rar
 Setup/Output/*
 

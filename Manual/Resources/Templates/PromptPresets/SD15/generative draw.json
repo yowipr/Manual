@@ -1,0 +1,1237 @@
+{
+  "last_node_id": 1,
+  "last_link_id": 1,
+  "nodes": [
+    {
+      "id": 12,
+      "type": "ImageCompositeMasked",
+      "pos": [
+        1621.0,
+        -16.0
+      ],
+      "size": {
+        "0": 315.0,
+        "1": 226.0
+      },
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "destination",
+          "type": "IMAGE",
+          "link": 34
+        },
+        {
+          "name": "source",
+          "type": "IMAGE",
+          "link": 3
+        },
+        {
+          "name": "mask",
+          "type": "MASK",
+          "link": 5
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            15
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ImageCompositeMasked"
+      },
+      "widgets_values": [
+        0,
+        0,
+        false
+      ]
+    },
+    {
+      "id": 15,
+      "title": "Dilate Mask",
+      "type": "ImpactDilateMask",
+      "pos": [
+        847.0,
+        -52.0
+      ],
+      "size": {
+        "0": 315.0,
+        "1": 121.0
+      },
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "mask",
+          "type": "MASK",
+          "link": 14
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": [
+            4
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ImpactDilateMask"
+      },
+      "widgets_values": [
+        50
+      ]
+    },
+    {
+      "id": 9,
+      "type": "KSampler",
+      "pos": [
+        1285.0,
+        172.0
+      ],
+      "size": {
+        "0": 315.0,
+        "1": 474.0
+      },
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 1
+        },
+        {
+          "name": "positive",
+          "type": "CONDITIONING",
+          "link": 17
+        },
+        {
+          "name": "negative",
+          "type": "CONDITIONING",
+          "link": 19
+        },
+        {
+          "name": "latent_image",
+          "type": "LATENT",
+          "link": 8
+        }
+      ],
+      "outputs": [
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "links": [
+            2
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "KSampler"
+      },
+      "widgets_values": [
+        9690792996230052290,
+        "randomize",
+        22.0,
+        8.0,
+        "euler_ancestral",
+        "normal",
+        0.8
+      ]
+    },
+    {
+      "id": 16,
+      "title": "node",
+      "type": "MaskBlur+",
+      "pos": [
+        1244.0,
+        -67.0
+      ],
+      "size": {
+        "0": 315.0,
+        "1": 159.0
+      },
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "mask",
+          "type": "MASK",
+          "link": 4
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": [
+            5
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "MaskBlur+"
+      },
+      "widgets_values": [
+        115,
+        "gpu"
+      ]
+    },
+    {
+      "id": 11,
+      "title": "VAE Decode",
+      "type": "VAEDecode",
+      "pos": [
+        1623.0,
+        233.16711
+      ],
+      "size": {
+        "0": 210.0,
+        "1": 127.0
+      },
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "samples",
+          "type": "LATENT",
+          "link": 2
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": 21
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            3
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VAEDecode"
+      }
+    },
+    {
+      "bgcolor": "#FF443366",
+      "id": 14,
+      "title": "Output",
+      "type": "M_Output",
+      "pos": [
+        1959.7089,
+        135.96709
+      ],
+      "size": {
+        "0": 200.0,
+        "1": 341.0
+      },
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "Result",
+          "type": "IMAGE",
+          "link": 15
+        },
+        {
+          "name": "Mask",
+          "type": "LAYER",
+          "link": 16
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "M_Output"
+      },
+      "widgets_values": [
+        "Selected",
+        "Front"
+      ]
+    },
+    {
+      "bgcolor": "#FF443366",
+      "id": 21,
+      "title": "Layer",
+      "type": "M_Layer",
+      "pos": [
+        1705.8818,
+        384.34558
+      ],
+      "size": {
+        "0": 200.0,
+        "1": 417.39337
+      },
+      "flags": {
+        "collapsed": true
+      },
+      "order": 6,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "Layer",
+          "type": "LAYER",
+          "links": [
+            16
+          ],
+          "slot_index": 0
+        },
+        {
+          "name": "Alpha",
+          "type": "MASK",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "M_Layer"
+      },
+      "widgets_values": [
+        "GenDraw",
+        true,
+        true,
+        false,
+        false,
+        0
+      ]
+    },
+    {
+      "id": 17,
+      "title": "Set Latent Noise Mask",
+      "type": "SetLatentNoiseMask",
+      "pos": [
+        1011.402,
+        391.31213
+      ],
+      "size": {
+        "0": 210.0,
+        "1": 127.0
+      },
+      "flags": {},
+      "order": 7,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "samples",
+          "type": "LATENT",
+          "link": 6
+        },
+        {
+          "name": "mask",
+          "type": "MASK",
+          "link": 7
+        }
+      ],
+      "outputs": [
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "links": [
+            8
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "SetLatentNoiseMask"
+      }
+    },
+    {
+      "bgcolor": "#FF553355",
+      "id": 24,
+      "type": "ImageCompositeMasked",
+      "pos": [
+        43.585026,
+        610.8493
+      ],
+      "size": {
+        "0": 200.0,
+        "1": 226.0
+      },
+      "flags": {},
+      "order": 8,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "destination",
+          "type": "IMAGE",
+          "link": 31
+        },
+        {
+          "name": "source",
+          "type": "IMAGE",
+          "link": 30
+        },
+        {
+          "name": "mask",
+          "type": "MASK",
+          "link": 32
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            33,
+            34
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ImageCompositeMasked"
+      },
+      "widgets_values": [
+        0,
+        0,
+        false
+      ]
+    },
+    {
+      "bgcolor": "#FF335533",
+      "id": 13,
+      "type": "InvertMask",
+      "pos": [
+        81.670944,
+        871.72314
+      ],
+      "size": {
+        "0": 200.0,
+        "1": 97.0
+      },
+      "flags": {},
+      "order": 9,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "mask",
+          "type": "MASK",
+          "link": 11
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": [
+            12,
+            32
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "InvertMask"
+      }
+    },
+    {
+      "bgcolor": "#FF335533",
+      "id": 19,
+      "title": "Dilate Mask",
+      "type": "ImpactDilateMask",
+      "pos": [
+        83.69249,
+        992.16943
+      ],
+      "size": {
+        "0": 200.0,
+        "1": 121.0
+      },
+      "flags": {},
+      "order": 10,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "mask",
+          "type": "MASK",
+          "link": 12
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": [
+            13,
+            14
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ImpactDilateMask"
+      },
+      "widgets_values": [
+        30.0
+      ]
+    },
+    {
+      "bgcolor": "#FF443366",
+      "id": 8,
+      "title": "Layer",
+      "type": "M_Layer",
+      "pos": [
+        -256.03314,
+        813.4068
+      ],
+      "size": {
+        "0": 200.0,
+        "1": 417.39337
+      },
+      "flags": {},
+      "order": 11,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "Layer",
+          "type": "LAYER",
+          "links": [
+            30
+          ],
+          "slot_index": 0
+        },
+        {
+          "name": "Alpha",
+          "type": "MASK",
+          "links": [
+            11
+          ],
+          "slot_index": 1
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "M_Layer"
+      },
+      "widgets_values": [
+        "GenDraw",
+        true,
+        true,
+        false,
+        false,
+        0
+      ]
+    },
+    {
+      "bgcolor": "#FF443366",
+      "id": 1,
+      "title": "Layer",
+      "type": "M_Layer",
+      "pos": [
+        -547.9351,
+        728.76447
+      ],
+      "size": {
+        "0": 200.0,
+        "1": 417.39337
+      },
+      "flags": {},
+      "order": 12,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "Layer",
+          "type": "LAYER",
+          "links": [
+            31
+          ],
+          "slot_index": 0
+        },
+        {
+          "name": "Alpha",
+          "type": "MASK",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "M_Layer"
+      },
+      "widgets_values": [
+        "Selected",
+        true,
+        true,
+        false,
+        false,
+        0
+      ]
+    },
+    {
+      "id": 2,
+      "title": "Load Checkpoint",
+      "type": "CheckpointLoaderSimple",
+      "pos": [
+        -201.35056,
+        244.97536
+      ],
+      "size": {
+        "0": 315.0,
+        "1": 151.0
+      },
+      "flags": {},
+      "order": 13,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            10
+          ],
+          "slot_index": 0
+        },
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "links": [
+            9,
+            18
+          ],
+          "slot_index": 1
+        },
+        {
+          "name": "VAE",
+          "type": "VAE",
+          "links": [
+            20,
+            21
+          ],
+          "slot_index": 2
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CheckpointLoaderSimple"
+      },
+      "widgets_values": [
+        "aamAnyloraAnimeMixAnime_v1.safetensors"
+      ]
+    },
+    {
+      "id": 6,
+      "title": "Gaussian Blur Mask",
+      "type": "ImpactGaussianBlurMask",
+      "pos": [
+        561.7415,
+        596.63257
+      ],
+      "size": {
+        "0": 315.0,
+        "1": 145.0
+      },
+      "flags": {},
+      "order": 14,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "mask",
+          "type": "MASK",
+          "link": 13
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": [
+            7
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ImpactGaussianBlurMask"
+      },
+      "widgets_values": [
+        50,
+        50
+      ]
+    },
+    {
+      "id": 10,
+      "title": "Differential Diffusion",
+      "type": "DifferentialDiffusion",
+      "pos": [
+        303.458,
+        -53.144524
+      ],
+      "size": {
+        "0": 210.0,
+        "1": 97.0
+      },
+      "flags": {},
+      "order": 15,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 10
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            1
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "DifferentialDiffusion"
+      }
+    },
+    {
+      "bgcolor": "#FF7E544C",
+      "id": 4,
+      "title": "CLIP Text Encode (Prompt)",
+      "type": "CLIPTextEncode",
+      "pos": [
+        274.65582,
+        99.8085
+      ],
+      "size": {
+        "0": 661.59534,
+        "1": 221.0
+      },
+      "flags": {},
+      "order": 16,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 9
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "links": [
+            17
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CLIPTextEncode"
+      },
+      "widgets_values": [
+        "girl, blue hair, blunt bangs, shy, sleepy, colorful, bibrant colors, dynamic pose, gray sharp eyes, pose, dynamic pose, posing, chainsaw_man, cinematic, sharp eyes, score_9, score_8_up, score_7_up, source_anime, rating_safe, intricate details, anime screencap, anime coloring, official style, looking at something, depth of field, jewelry, simple background, solo, upper body, solo, rule of thirds"
+      ]
+    },
+    {
+      "bgcolor": "#FF7E544C",
+      "id": 22,
+      "title": "CLIP Text Encode (Prompt)",
+      "type": "CLIPTextEncode",
+      "pos": [
+        278.54193,
+        331.87628
+      ],
+      "size": {
+        "0": 661.59534,
+        "1": 221.0
+      },
+      "flags": {},
+      "order": 17,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 18
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "links": [
+            19
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CLIPTextEncode"
+      },
+      "widgets_values": [
+        ", score_4_up, score_5_up, score_6_up, lowres, messy drawing, amateur drawing, ugly face, bad face, bad teeth, (interlocked fingers, badly drawn hands and fingers, anatomically incorrect hands, bad anatomy), watermark, greyscale, monochrome, blurry, source_cartoon, source_furry, source_pony, sketch, painting, loli"
+      ]
+    },
+    {
+      "id": 18,
+      "title": "VAE Encode",
+      "type": "VAEEncode",
+      "pos": [
+        553.20593,
+        788.6581
+      ],
+      "size": {
+        "0": 210.0,
+        "1": 127.0
+      },
+      "flags": {},
+      "order": 18,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "pixels",
+          "type": "IMAGE",
+          "link": 33
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": 20
+        }
+      ],
+      "outputs": [
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "links": [
+            6
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VAEEncode"
+      }
+    }
+  ],
+  "links": [
+    [
+      1,
+      10,
+      0,
+      9,
+      0,
+      "MODEL"
+    ],
+    [
+      2,
+      9,
+      0,
+      11,
+      0,
+      "LATENT"
+    ],
+    [
+      3,
+      11,
+      0,
+      12,
+      1,
+      "IMAGE"
+    ],
+    [
+      4,
+      15,
+      0,
+      16,
+      0,
+      "MASK"
+    ],
+    [
+      5,
+      16,
+      0,
+      12,
+      2,
+      "MASK"
+    ],
+    [
+      6,
+      18,
+      0,
+      17,
+      0,
+      "LATENT"
+    ],
+    [
+      7,
+      6,
+      0,
+      17,
+      1,
+      "MASK"
+    ],
+    [
+      8,
+      17,
+      0,
+      9,
+      3,
+      "LATENT"
+    ],
+    [
+      11,
+      8,
+      1,
+      13,
+      0,
+      "MASK"
+    ],
+    [
+      12,
+      13,
+      0,
+      19,
+      0,
+      "MASK"
+    ],
+    [
+      13,
+      19,
+      0,
+      6,
+      0,
+      "MASK"
+    ],
+    [
+      14,
+      19,
+      0,
+      15,
+      0,
+      "MASK"
+    ],
+    [
+      15,
+      12,
+      0,
+      14,
+      0,
+      "IMAGE"
+    ],
+    [
+      16,
+      21,
+      0,
+      14,
+      1,
+      "LAYER"
+    ],
+    [
+      30,
+      8,
+      0,
+      24,
+      1,
+      "LAYER"
+    ],
+    [
+      31,
+      1,
+      0,
+      24,
+      0,
+      "LAYER"
+    ],
+    [
+      32,
+      13,
+      0,
+      24,
+      2,
+      "MASK"
+    ],
+    [
+      33,
+      24,
+      0,
+      18,
+      0,
+      "IMAGE"
+    ],
+    [
+      34,
+      24,
+      0,
+      12,
+      0,
+      "IMAGE"
+    ],
+    [
+      17,
+      4,
+      0,
+      9,
+      1,
+      "CONDITIONING"
+    ],
+    [
+      10,
+      2,
+      0,
+      10,
+      0,
+      "MODEL"
+    ],
+    [
+      9,
+      2,
+      1,
+      4,
+      0,
+      "CLIP"
+    ],
+    [
+      18,
+      2,
+      1,
+      22,
+      0,
+      "CLIP"
+    ],
+    [
+      19,
+      22,
+      0,
+      9,
+      2,
+      "CONDITIONING"
+    ],
+    [
+      20,
+      2,
+      2,
+      18,
+      1,
+      "VAE"
+    ],
+    [
+      21,
+      2,
+      2,
+      11,
+      1,
+      "VAE"
+    ]
+  ],
+  "groups": [],
+  "config": {},
+  "extra": {
+    "manual_config": {
+      "preset_name": "generative draw",
+      "canvas_position": "0.3914162003080502,0,0,0.3914162003080502,158.17303206989362,18.708255442780718",
+      "prompt": null,
+      "drivers": [
+        {
+          "enabled": true,
+          "expressionCode": "Model",
+          "sources": [
+            {
+              "type": "Manual.Core.Nodes.Prompt, Manual",
+              "Source": "anime",
+              "Name": "source"
+            }
+          ],
+          "target": {
+            "type": "Manual.Core.Nodes.NodeOption, Manual",
+            "Source": "generative draw;2;ckpt_name",
+            "Name": "source"
+          },
+          "targetPropertyName": "FieldValue",
+          "twoWay": true,
+          "sourcePropertyName": "Model"
+        },
+        {
+          "enabled": true,
+          "expressionCode": "Seed",
+          "sources": [
+            {
+              "type": "Manual.Core.Nodes.Prompt, Manual",
+              "Source": "anime",
+              "Name": "source"
+            }
+          ],
+          "target": {
+            "type": "Manual.Core.Nodes.NodeOption, Manual",
+            "Source": "generative draw;9;seed",
+            "Name": "source"
+          },
+          "targetPropertyName": "FieldValue",
+          "twoWay": true,
+          "sourcePropertyName": "Seed"
+        },
+        {
+          "enabled": true,
+          "expressionCode": "Steps",
+          "sources": [
+            {
+              "type": "Manual.Core.Nodes.Prompt, Manual",
+              "Source": "anime",
+              "Name": "source"
+            }
+          ],
+          "target": {
+            "type": "Manual.Core.Nodes.NodeOption, Manual",
+            "Source": "generative draw;9;steps",
+            "Name": "source"
+          },
+          "targetPropertyName": "FieldValue",
+          "twoWay": true,
+          "sourcePropertyName": "Steps"
+        },
+        {
+          "enabled": true,
+          "expressionCode": "CFG",
+          "sources": [
+            {
+              "type": "Manual.Core.Nodes.Prompt, Manual",
+              "Source": "anime",
+              "Name": "source"
+            }
+          ],
+          "target": {
+            "type": "Manual.Core.Nodes.NodeOption, Manual",
+            "Source": "generative draw;9;cfg",
+            "Name": "source"
+          },
+          "targetPropertyName": "FieldValue",
+          "twoWay": true,
+          "sourcePropertyName": "CFG"
+        },
+        {
+          "enabled": true,
+          "expressionCode": "Sampler",
+          "sources": [
+            {
+              "type": "Manual.Core.Nodes.Prompt, Manual",
+              "Source": "anime",
+              "Name": "source"
+            }
+          ],
+          "target": {
+            "type": "Manual.Core.Nodes.NodeOption, Manual",
+            "Source": "generative draw;9;sampler_name",
+            "Name": "source"
+          },
+          "targetPropertyName": "FieldValue",
+          "twoWay": true,
+          "sourcePropertyName": "Sampler"
+        },
+        {
+          "enabled": true,
+          "expressionCode": "Scheduler",
+          "sources": [
+            {
+              "type": "Manual.Core.Nodes.Prompt, Manual",
+              "Source": "anime",
+              "Name": "source"
+            }
+          ],
+          "target": {
+            "type": "Manual.Core.Nodes.NodeOption, Manual",
+            "Source": "generative draw;9;scheduler",
+            "Name": "source"
+          },
+          "targetPropertyName": "FieldValue",
+          "twoWay": true,
+          "sourcePropertyName": "Scheduler"
+        },
+        {
+          "enabled": true,
+          "expressionCode": "Strength",
+          "sources": [
+            {
+              "type": "Manual.Core.Nodes.Prompt, Manual",
+              "Source": "anime",
+              "Name": "source"
+            }
+          ],
+          "target": {
+            "type": "Manual.Core.Nodes.NodeOption, Manual",
+            "Source": "generative draw;9;denoise",
+            "Name": "source"
+          },
+          "targetPropertyName": "FieldValue",
+          "twoWay": true,
+          "sourcePropertyName": "Strength"
+        },
+        {
+          "enabled": true,
+          "expressionCode": "ControlSeed",
+          "sources": [
+            {
+              "type": "Manual.Core.Nodes.Prompt, Manual",
+              "Source": "anime",
+              "Name": "source"
+            }
+          ],
+          "target": {
+            "type": "Manual.Core.Nodes.NodeOptionLinked, Manual",
+            "Source": "generative draw;9;control_after_generate",
+            "Name": "source"
+          },
+          "targetPropertyName": "FieldValue",
+          "twoWay": true,
+          "sourcePropertyName": "ControlSeed"
+        },
+        {
+          "enabled": true,
+          "expressionCode": "RealPositivePrompt",
+          "sources": [
+            {
+              "type": "Manual.Core.Nodes.Prompt, Manual",
+              "Source": "anime",
+              "Name": "source"
+            }
+          ],
+          "target": {
+            "type": "Manual.Core.Nodes.NodeOption, Manual",
+            "Source": "generative draw;4;text",
+            "Name": "source"
+          },
+          "targetPropertyName": "FieldValue",
+          "twoWay": true,
+          "sourcePropertyName": "RealPositivePrompt"
+        },
+        {
+          "enabled": true,
+          "expressionCode": "RealNegativePrompt",
+          "sources": [
+            {
+              "type": "Manual.Core.Nodes.Prompt, Manual",
+              "Source": "anime",
+              "Name": "source"
+            }
+          ],
+          "target": {
+            "type": "Manual.Core.Nodes.NodeOption, Manual",
+            "Source": "generative draw;22;text",
+            "Name": "source"
+          },
+          "targetPropertyName": "FieldValue",
+          "twoWay": true,
+          "sourcePropertyName": "RealNegativePrompt"
+        }
+      ],
+      "promptNameId": "anime",
+      "Pinned": false
+    }
+  },
+  "version": 0.4
+}

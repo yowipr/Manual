@@ -386,6 +386,10 @@ public partial class Settings
     [ObservableProperty] bool isNotifyGen = true;
 
 
+    [ObservableProperty] string templateModel = "SD15";
+    [JsonIgnore] public ObservableCollection<string> TemplatesModel { get; set; } = [];
+
+
 
     //-------------- CANVAS VIEW 3D PREFERENCES
     [ObservableProperty] Quality quality = Quality.Full;

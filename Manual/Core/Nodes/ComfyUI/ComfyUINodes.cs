@@ -584,9 +584,10 @@ public static class Comfy
         string responseBody = await response.Content.ReadAsStringAsync();
 
         var responseJson = JObject.Parse(responseBody);
-        var errorType = responseJson["error"]["type"].ToString();
+      
         if (responseJson["error"] is JObject j_error)
         {
+            var errorType = responseJson["error"]["type"].ToString();
             if (responseJson["node_errors"] != null)
             {  // Obtener el primer nodo de error
                 var nodeErrors = responseJson["node_errors"] as JObject;

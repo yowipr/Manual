@@ -371,6 +371,7 @@ public class NodeOutput : ManualNodeOutput
         //GENERATION SINGLE
         if (genimg.Results.Length == 1 && !ManualAPI.Animation.AutoKeyframe && genimg.TargetLayer._Animation.GetTimedVariable("Image") == null) //first time
         {
+
             // targetLayer.SetImage(results[0]);
            //  var img = Renderizainador.InpaintLayer(genimg.TargetLayer, genimg.BoundingBox, genimg.Results[0]);
             var img = RendGPU.Inpaint(genimg.TargetLayer, genimg.BoundingBox, genimg.Results[0], blendMode);

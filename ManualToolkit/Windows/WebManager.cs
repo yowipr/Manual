@@ -22,6 +22,7 @@ using System.Web;
 using System.Net.Mime;
 using System.Data.SqlTypes;
 using LibGit2Sharp.Handlers;
+using System.Net;
 
 namespace ManualToolkit.Windows;
 
@@ -65,8 +66,24 @@ public static class WebManager
         return jsonObject.Value<T>(variable);
     }
 
-    public static async Task<JObject>POST(string url, object data, string? authToken = null)
+
+
+    public class JObjectError : JObject
     {
+        HttpStatusCode StatusCode { get; set; }
+        public string Message { get; set; }
+        public JObjectError(string message, HttpStatusCode statusCode)
+        {
+            Message = message;
+            StatusCode = statusCode;
+        }
+        public override string ToString()
+        {
+            return $"{Message},\n code: {(int)StatusCode}";
+        }
+    }
+        public static async Task<JObject>POST(string url, object data, string? authToken = null)
+        {
         using (var client = new HttpClient())
         {
             client.Timeout = Timeout.InfiniteTimeSpan;
@@ -84,11 +101,18 @@ public static class WebManager
                 var response = await client.PostAsync(url, content);
 
                 // Asegúrate de que la respuesta es exitosa
-                response.EnsureSuccessStatusCode();
-
-                // Leer y deserializar la respuesta
-                var r = await response.Content.ReadAsStringAsync();
-                return JObject.Parse(r);
+                //response.EnsureSuccessStatusCode();
+                if (response.IsSuccessStatusCode)
+                {
+                    // Leer y deserializar la respuesta
+                    var r = await response.Content.ReadAsStringAsync();
+                    return JObject.Parse(r);
+                }
+                else
+                {
+                    var r = await response.Content.ReadAsStringAsync();
+                    return new JObjectError(r, response.StatusCode);
+                }
             }
             catch (Exception ex)
             {

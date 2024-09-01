@@ -345,6 +345,9 @@ public partial class AnimationManager : ObservableObject
     }
     public void NotifyActionStartChanging(IAnimable target, string propertyName, int frame)
     {
+        if (!Settings.instance.EnablePreviewCacheFrames) return;
+
+
         var anim = target._Animation;
         if (anim == null)
         {
@@ -384,11 +387,15 @@ public partial class AnimationManager : ObservableObject
         }
 
 
-        var framesToRemove = Enumerable.Range(start, end - start + 1);
-        RemoveFrameBuffers(framesToRemove);
 
 
-        CurrentFrameModified();
+        if (start >= 0 && end >= start)
+        {
+            var framesToRemove = Enumerable.Range(start, end - start + 1);
+            RemoveFrameBuffers(framesToRemove);
+            CurrentFrameModified();
+
+        }
     }
     (int start, int end) SetTouples(AnimationBehaviour anim, string propertyName, string timed1, string timed2)
     {

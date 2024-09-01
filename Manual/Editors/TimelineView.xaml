@@ -288,7 +288,17 @@
                         </ItemsControl>
 
                     </StackPanel>
- 
+
+                    
+                    <!--VIEW MODE-->
+                    <Grid DataContext="{Binding DataContext, RelativeSource={RelativeSource AncestorType=UserControl}}">
+                        <TabControl VerticalAlignment="Bottom" Background="Transparent" BorderBrush="Transparent" 
+                                     ItemsSource="{Binding Source={Core:EnumBindingSource {x:Type local:TimelineMode}}}"
+                                    SelectedItem="{Binding TimelineMode}">
+                        </TabControl>
+                    </Grid>
+
+
                     <Grid Visibility="Collapsed" Grid.Row="1" DataContext="{Binding DataContext, RelativeSource={RelativeSource AncestorType=UserControl}}">
                         <StackPanel Style="{x:Null}">
                             <Label Content="Pan" HorizontalAlignment="Center"/>
@@ -303,6 +313,8 @@
 
                             <MUI:M_NumberBox Header="S Factor" Value="{Binding ScaleFactor, RelativeSource={RelativeSource AncestorType=UserControl}}" Margin="2" Jump="0.1"/>
                         </StackPanel>
+
+                       
                     </Grid>
             
                 </Grid>
@@ -381,7 +393,7 @@
                                     </MenuItem.Icon>
                                     <MenuItem Header="Dynami Interpolation..." Click="RightClickMenu_GenInterpolation"/>
                                     <MenuItem Header="Linear Interpolation..." Click="RightClickMenu_GenInterpolation"/>
-                                    <MenuItem Header="Luma Interpolation..." Click="RightClickMenu_GenInterpolation"/>
+                                    <!--<MenuItem Header="Luma Interpolation..." Click="RightClickMenu_GenInterpolation"/>-->
 
                                     <!--<MenuItem Header="AnimateDiff..." Click="RightClickMenu_Interpolation"/>-->
                                 </MenuItem>

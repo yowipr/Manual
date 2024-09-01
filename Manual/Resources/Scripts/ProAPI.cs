@@ -20,6 +20,7 @@ using System.Net.Http.Headers;
 using System.Net.Http;
 using Output = Manual.Core.Output;
 using System.Diagnostics;
+using System.Resources;
 
 namespace Plugins;
 
@@ -134,22 +135,64 @@ internal class LumaAPINode : ProAPINode
 
     public override object OnSendingPrompt()
     {
-        var img_start = api.layer("Layer 1").Image;
-        var img_end = api.layer("Layer 2").Image;
+        //   var img_start = api.layer("Layer 1").Image;
+        //   var img_end = api.layer("Layer 2").Image;
 
-        SendRequestToDreamMachine("anime girl with blue hair, looking at the sky, wind, anime screencap",
-            "que pongo acá",
-            "luma_vip_video",
-            img_start,
-            img_end);
-            
+        //SendRequestToDreamMachine("anime girl with blue hair, looking at the sky, wind, anime screencap",
+        //    "que pongo acá",
+        //    "luma_vip_video",
+        //    img_start,
+        //    img_end);
+
+
+        SendRequest();
+
+
+
         return null;
     }
 
+    public async void SendRequest()
+    {
+
+        var token = UserManager.GetToken();
+        var prompt = ManualAPI.SelectedPreset.Prompt.PositivePrompt;
+        var image = "https://raw.githubusercontent.com/ToonCrafter/ToonCrafter/main/assets/72109_125.mp4_00-00.png";
+        var url = GetUrl();
+
+
+        var payload = new
+        {
+            prompt,
+            image,
+        };
+
+
+
+        var response = await WebManager.POST(url, payload, token);
+        if (response is WebManager.JObjectError jerror)
+        {
+            Output.Log(jerror);
+            return;
+        }
+        else
+        {
+            if (response.TryGetValue("taskId", out JToken value))
+            {
+                taskId = value.Value<string>();
+                WaitToFinalize();
+            }
+
+        }
+
+
+    }
+
+
     string GetUrl()
     {
-        var web =  "http://192.168.1.10:3000"; //"https://manualai.art/";
-        var subPath = "api/generate/luma";
+        var web = "https://manualai.art/";
+        var subPath = "api/generate/runway";
         var url = WebManager.Combine(web, subPath);
         return url;
     }

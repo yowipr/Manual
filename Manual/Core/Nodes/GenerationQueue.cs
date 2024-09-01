@@ -151,7 +151,28 @@ public partial class GenerationManager
         foreach (var keyframe in selectedKeyframes)
         {
             ManualAPI.Animation.CurrentFrame = keyframe.Frame;
-            Generate();
+            var genimg = new GeneratedImage(ManualAPI.SelectedLayer, ManualAPI.SelectedPreset);
+            genimg.BakeKeyframes.Add(keyframe);
+
+
+            genimg.OnGenerated += OnGenerated;
+            void OnGenerated()
+            {
+
+                if (ManualAPI.Animation.CurrentFrame == keyframe.Frame)
+                {
+                    var index = selectedKeyframes.IndexOf(keyframe);
+                    var newFrame = selectedKeyframes.ElementAtOrDefault(index + 1);
+                    if (newFrame != null)
+                        ManualAPI.Animation.CurrentFrame = newFrame.Frame;
+                }
+
+                genimg.OnGenerated -= OnGenerated;
+            }
+
+
+
+            Generate(genimg);
         }
         ManualAPI.Animation.CurrentFrame = oldFrame;
     }
@@ -464,6 +485,9 @@ public partial class GenerationManager
 //--------------------------------------------------------------------------------------------------------------------------------- GENERATED IMAGES
 public partial class GeneratedImage : ObservableObject
 {
+    public event Event OnGenerated;
+
+
     //UI
     internal bool ui_isLoaded = false;
 
@@ -579,6 +603,7 @@ public partial class GeneratedImage : ObservableObject
             if (Preset.Prompt.Thumbnail == null)
                 Preset.Prompt.SetThumbnail(this.Results.First());
         }
+        OnGenerated?.Invoke();
     }
     public void Finish(SKBitmap result)
     {
@@ -1141,8 +1166,8 @@ public partial class PromptPreset : ObservableObject, INamable, IId, IMultiDriva
             if (automaticDrivers)
             {
                 preset.Prompt = ManualAPI.SelectedPreset?.Prompt;
-                if(preset.Prompt != null)
-                    preset.AutomaticDrivers();
+               // if(preset.Prompt != null)
+                //    preset.AutomaticDrivers();
 
             }
 
