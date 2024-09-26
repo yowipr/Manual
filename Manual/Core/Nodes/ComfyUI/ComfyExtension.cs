@@ -1,4 +1,5 @@
 ﻿using MS.WindowsAPICodePack.Internal;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -68,6 +69,37 @@ public static class ComfyExtension
         }
     }
 
+
+
+    public static void ApiChangeNode_OutputToPreview(JObject graph, int outputId)
+    {
+        // Verifica si existe el nodo "1" y si contiene los campos esperados
+        var node = graph[outputId.ToString()];
+        if (node != null)
+        {
+            // Cambia el contenido de "inputs" -> "result" por "images"
+            var inputs = node["inputs"];
+            if (inputs != null && inputs["result"] != null)
+            {
+                // Modifica la propiedad "result" por "images"
+                inputs["images"] = inputs["result"];
+
+                // Usa la clave del valor que quieres eliminar
+                (inputs as JObject)?.Remove("result"); // Elimina "result"
+            }
+
+
+            // Cambia el valor de "class_type"
+            node["class_type"] = "PreviewImage";
+
+            // Cambia el título en "_meta" -> "title"
+            var meta = node["_meta"];
+            if (meta != null && meta["title"] != null)
+            {
+                meta["title"] = "Preview Image";
+            }
+        }
+    }
 
 
 

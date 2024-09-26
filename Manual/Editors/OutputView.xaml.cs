@@ -705,6 +705,11 @@ namespace Manual.Core
                 var similar = Namer.FindMostSimilarString(input, ManualAPI.SelectedPreset.Prompt.GetAllModels);
                 Output.Log(similar);
             }
+            else if (message == "change checkpoint")
+            {
+                ManualAPI.SelectedPreset.Prompt.Model = "manual.safetensors";
+            }
+
 
             instance.UploadedFiles.Clear();
         }

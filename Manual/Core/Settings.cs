@@ -391,6 +391,12 @@ public partial class Settings
 
 
 
+    //---- CLOUD
+    [ObservableProperty] bool useCloud = false;
+
+
+
+
     //-------------- CANVAS VIEW 3D PREFERENCES
     [ObservableProperty] Quality quality = Quality.Full;
     partial void OnQualityChanged(Quality value) => Rend3D.UpdateQuality(value);

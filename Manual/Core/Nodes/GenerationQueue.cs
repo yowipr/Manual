@@ -179,7 +179,7 @@ public partial class GenerationManager
 
 
 
-    public static void Generate()
+    public static void Generate() // -------------------------------------------------------- GENERATE MAIN
     {
         Generate(ManualAPI.SelectedPreset);
     }
@@ -570,10 +570,10 @@ public partial class GeneratedImage : ObservableObject
     //--------------------------------- PRINCIPAL
     public async Task GenerateImage()
     {
-        if (Settings.instance.IsCloud)
-        {
-            await Settings.instance.SetCloudURL();
-        }
+        //if (Settings.instance.IsCloud)
+        //{
+        //    await Settings.instance.SetCloudURL();
+        //}
         LocalFrame = TargetLayer._Animation.CurrentFrame;
         var onode = Preset.GetOutputNode();
         OutNode = onode;
@@ -889,7 +889,10 @@ public partial class PromptPreset : ObservableObject, INamable, IId, IMultiDriva
         }
         else if (onode is ComfyUINode)
         {
-            await Comfy.Generate(preset);
+            if (Settings.instance.UseCloud)
+                await Comfy.GenerateServerless(preset);
+            else
+                await Comfy.Generate(preset);
         }
         else
         {

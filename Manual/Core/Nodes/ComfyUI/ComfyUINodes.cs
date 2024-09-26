@@ -38,6 +38,9 @@ using Newtonsoft.Json.Converters;
 using CefSharp.DevTools.CSS;
 using System.Windows.Controls;
 using ICSharpCode.AvalonEdit.Document;
+using ManualToolkit.Specific;
+using System.Buffers.Text;
+using Manual.Core.Nodes.ProAPI;
 
 namespace Manual.Core.Nodes.ComfyUI;
 
@@ -262,7 +265,7 @@ public static class Comfy
 
     static string PromptId { get; set; }
     //-------------------------------------------------------------------------------------------------------------------- GENERATE
-    internal static async Task Generate(PromptPreset preset)
+    internal static async Task Generate(PromptPreset preset) //websocket
     {
         ImagesResult = new();
         AppModel.mainW.SetProgress(0);
@@ -282,6 +285,104 @@ public static class Comfy
      
         await WaitToFinalizeGeneration();
     }
+
+
+    internal static async Task GenerateServerless(PromptPreset preset)
+    {
+        var genimg = GenerationManager.Instance.CurrentGeneratingImage;
+
+        ImagesResult = new();
+        AppModel.mainW.SetProgress(0.50f);
+        AppModel.mainW.SetMessage("Generating...");
+
+        var weburl = ProAPINode.ApiURL;
+        var url = WebManager.Combine(weburl, "api/generate/image");
+        var token = UserManager.GetToken(); // Obtiene el token de autorización
+
+        //GET PROMPT
+        var outputNode = preset.GetOutputNode();
+        var prompt = ComfyUIWorkflow.GetPrompt(preset);
+        ComfyExtension.ApiChangeNode_OutputToPreview(prompt, (int)outputNode.IdNode);
+
+
+        var mOutput = outputNode as NodeOutput;
+        if(mOutput != null)
+        {
+            //--- ON START
+            mOutput.ON_START(genimg);
+        }
+
+        var data = prompt;
+        var content = new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json");
+
+        // Crear una solicitud
+        var request = new HttpRequestMessage(HttpMethod.Post, url)
+        {
+            Content = content
+        };
+
+        // Agregar el encabezado Authorization con el token
+        request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+        // Procesar la solicitud (dependiendo de tu lógica)
+        var client = new HttpClient();
+        var response = await client.SendAsync(request);
+
+        if (response.IsSuccessStatusCode)
+        {
+            // Manejar la respuesta exitosa
+            var json = await response.Content.ReadAsStringAsync();
+            JObject result = JObject.Parse(json);
+            // Obtener el array "image" que contiene las imágenes en base64
+            JArray imagesArray = (JArray)result["image"];
+
+            string base64Image = imagesArray[0].ToString();
+
+            //convert to skbitmap
+            byte[] image = Convert.FromBase64String(base64Image);
+            genimg.OriginalImage = image;
+            var imageR = image.ToSKBitmap();
+            outputNode.EnablePreview = true;
+            outputNode.PreviewImage = imageR;
+
+            //add image
+            ImagesResult.Add(imageR);
+
+
+            
+            if (mOutput != null)
+            {
+              
+                //set result in genimg
+                genimg.Results = ImagesResult.ToArray();
+                genimg.PreviewImage = genimg.Results[0];
+
+                ManualAPI.Animation.RemoveFrameBuffer();
+                genimg.PreviewImage = imageR;
+
+                //----ON_OUTPUT
+                mOutput.ON_OUTPUT(genimg);
+            }
+            else
+            {
+                genimg.TargetLayer.PreviewValue.StartPreview(imageR);
+            }
+            
+        }
+        else
+        {
+            var json = await response.Content.ReadAsStringAsync();
+            // Manejar errores de la solicitud
+            Core.Output.LogError($"Error in generation: {response.StatusCode}, {json}");
+        }
+
+
+        AppModel.mainW.StopProgress();
+    }
+
+
+
+
 
     internal static async void Interrupt()
     {

@@ -496,6 +496,19 @@
 
                         <!--<CheckBox Padding="3 0.5 0 0" Margin="0 0 10 0"  DataContext="{x:Static Core:AppModel.settings}" Content="Cloud" IsChecked="{Binding IsCloud}" VerticalAlignment="Center"/>-->
 
+                        <Border BorderThickness="1" BorderBrush="Transparent" Margin="5 0" VerticalAlignment="Center">
+                            <StackPanel DataContext="{x:Static Core:Settings.instance}">
+                                <CheckBox Style="{StaticResource CheckBoxLight}" ToolTip="Enable/Disable Manual Cloud mode"
+                                          Height="20" Width="90" Cursor="Hand"
+                                          IsChecked="{Binding UseCloud}"
+                                          Checked="UseCloud_Checked"
+                                          Unchecked="UseCloud_Unchecked">
+                                    ☁️ Use Cloud
+                                </CheckBox>
+                            </StackPanel>
+                        </Border>
+                        
+                        
                         <!--SERVER STATUS-->
                         <Button Click="info_elipse_Click" Style="{StaticResource SubButton}" Cursor="Hand">
                             <Button.Resources>

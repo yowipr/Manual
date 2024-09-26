@@ -20,7 +20,6 @@ namespace ManualToolkit.Specific;
 
 public static class Constants
 {
-    // https://api.runpod.ai/v2/7e1pwyobst2s9i/runsync    https://dbd556db5900deaffe.gradio.live/     https://manualai.art/api/verify-client  http://192.168.1.11:3000/api/verify-client
 
     public const string WebURL = "https://manualai.art";
     public const string AuthToken = "mI7g49bgI9rm6osNsIEFsUFbkwIPGTXHoJsol2kaGXQztvXSb6";

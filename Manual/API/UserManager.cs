@@ -23,7 +23,7 @@ public partial class UserManager : ObservableObject
     [ObservableProperty] UserPlan plan = UserPlan.free;
 
 
-    public static bool IsPro => AppModel.userManager.Plan == UserPlan.free;
+    public static bool IsPro => AppModel.userManager.Plan != UserPlan.free;
     public static bool IsAdmin => User.isAdmin;
 
     internal static string? GetToken()
@@ -72,8 +72,12 @@ public partial class UserManager : ObservableObject
             
         }
 
-     //  if(Output.DEBUG_BUILD())
-    //       InstantiateProThings();
+
+        OnPropertyChanged(nameof(IsPro));
+        OnPropertyChanged(nameof(IsAdmin));
+
+        //  if(Output.DEBUG_BUILD())
+        //       InstantiateProThings();
     }
 
  //--------------------------------------------------------------------- START PRO 

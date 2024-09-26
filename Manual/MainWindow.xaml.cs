@@ -1165,6 +1165,17 @@ private void mainwindow_SourceInitialized(object sender, EventArgs e)
     {
         AppModel.project.editorsSpace.NewEditorWindow(Core.Editors.Output);
     }
+
+    private void UseCloud_Checked(object sender, RoutedEventArgs e)
+    {
+        Output.Log("Connected to Manual Cloud.");
+        ChangeServerStatus(ServerStatus.Connected);
+    }
+
+    private void UseCloud_Unchecked(object sender, RoutedEventArgs e)
+    {
+        Output.Log("Disconnected from Manual Cloud.");
+    }
 }
 
 

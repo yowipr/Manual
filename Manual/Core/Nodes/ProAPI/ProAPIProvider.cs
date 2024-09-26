@@ -15,6 +15,8 @@ namespace Manual.Core.Nodes.ProAPI;
 
 internal abstract class ProAPINode : NodeOutput, IOutputNode
 {
+    public const string ApiURL = Constants.WebURL; //"http://192.168.1.11:3000/"
+
     public ProAPINode()
     {
         IsOutput = true;
@@ -27,6 +29,7 @@ internal abstract class ProAPINode : NodeOutput, IOutputNode
 
 
     internal bool HandleGenerate = true;
+
     public async Task Generate()
     {
         try
@@ -42,7 +45,7 @@ internal abstract class ProAPINode : NodeOutput, IOutputNode
 
             AppModel.Invoke(()=>AppModel.mainW.SetProgress(1, "Generating..."));
 
-            var web = "https://manualai.art/";
+            var web = ApiURL;
             var subPath = "api/generate";
 
             var url = URL(WebManager.Combine(web, subPath));
