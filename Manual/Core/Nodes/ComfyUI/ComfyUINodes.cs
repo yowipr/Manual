@@ -287,6 +287,9 @@ public static class Comfy
     }
 
 
+
+
+    private static CancellationTokenSource cancellationTokenSource;
     internal static async Task GenerateServerless(PromptPreset preset)
     {
         var genimg = GenerationManager.Instance.CurrentGeneratingImage;
@@ -325,8 +328,13 @@ public static class Comfy
         request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
         // Procesar la solicitud (dependiendo de tu lógica)
-        var client = new HttpClient();
-        var response = await client.SendAsync(request);
+        //  var client = new HttpClient();
+
+
+
+        cancellationTokenSource = new CancellationTokenSource();
+
+        var response = await _httpClient.SendAsync(request, cancellationTokenSource.Token);
 
         if (response.IsSuccessStatusCode)
         {
@@ -373,15 +381,43 @@ public static class Comfy
         {
             var json = await response.Content.ReadAsStringAsync();
             // Manejar errores de la solicitud
+            var jsonResponse = JsonConvert.DeserializeObject<Dictionary<string, object>>(json);
+
+            if (jsonResponse != null && jsonResponse.ContainsKey("error"))
+            {
+                var errorMsg = jsonResponse["error"].ToString();
+                if (errorMsg == "You have no remaining generation hours. Upgrade your plan!")
+                {
+                    System.Media.SystemSounds.Beep.Play();
+                    var mbox = M_MessageBox.Show($"You have no remaining generation hours. Upgrade your plan! Current plan: {User.Current.Products["manual"].Plan.ToString()}.",
+                        "Manual Cloud",
+                        System.Windows.MessageBoxButton.OK,
+                        okPressed: () =>
+                        {
+                            WebManager.OPEN(WebManager.Combine(Constants.WebURL, "pricing"));
+                        },
+                        "Upgrade"
+                        );
+                   
+                }
+                else if (errorMsg == "You are on the free plan")
+                {
+                    GenerationManager.ShowMessageRequireCloud();
+                }
+
+                throw new Exception(errorMsg);
+            }
+
+
             Core.Output.LogError($"Error in generation: {response.StatusCode}, {json}");
+            throw new Exception($"Error in generation: {response.StatusCode}");
         }
 
 
         AppModel.mainW.StopProgress();
     }
 
-
-
+    
 
 
     internal static async void Interrupt()
@@ -389,7 +425,14 @@ public static class Comfy
         // Realizar la solicitud
         try
         {
-            var response = await _httpClient.PostAsync(WebManager.Combine(URL, "interrupt"), null);
+            if (Settings.instance.IsCloud)
+            {
+                cancellationTokenSource?.Cancel();
+            }
+            else
+            {
+                var response = await _httpClient.PostAsync(WebManager.Combine(URL, "interrupt"), null);
+            }
 
             GenerationManager.Instance.isInterrupt = true;
             GenerationManager.Instance.interrupting = false;
@@ -838,7 +881,10 @@ public static class Comfy
     {
         try
         {
-            var response = await _httpClient.GetAsync(WebManager.Combine(URL, "object_info") );
+            string url = URL;
+            if (Settings.instance.UseCloud) url = Constants.WebURL;
+
+            var response = await _httpClient.GetAsync(WebManager.Combine(url, "object_info", UserManager.GetToken()) );
             var responseBody = await response.Content.ReadAsStringAsync();
             if (response.Content.Headers.ContentType.MediaType == "application/json")
                 return responseBody;
@@ -1927,14 +1973,35 @@ public static class Comfy
         return [];
     }
 
-    public static async Task<List<string>> GetModelList(string nodeType, string path)
+    public static List<string> ExtractListNames(LatentNode node, string fieldName)
     {
-        var modelsInfo = await GetNodeInfo(nodeType);
-        if (modelsInfo != null)
+        if (node != null)
         {
-            var models = ExtractListNames(modelsInfo, $"{nodeType}.{path}");
-            return models;
-            //Core.Output.LogCascade(nodeType, models.ToArray());
+            var field = node.field(fieldName);
+            var element = field.FieldElementDefault as M_ComboBox;
+            // Si element no es nulo, convertir ItemsSource a List<string>
+            if (element != null && element.ItemsSource != null)
+            {
+                return element.ItemsSource.Select(item => item.ToString()).ToList();
+            }
+
+        }
+        return [];
+    }
+
+    public static List<string> GetModelList(string NodeType, string fieldName)
+    {
+        var node = GenerationManager.RegisteredNodes.FirstOrDefault(n => n.NameType == NodeType).Factory();
+        if(node != null)
+        {
+            var field = node.field(fieldName);
+            var element = field.FieldElementDefault as M_ComboBox;
+            // Si element no es nulo, convertir ItemsSource a List<string>
+            if (element != null && element.ItemsSource != null)
+            {
+                return element.ItemsSource.Select(item => item.ToString()).ToList();
+            }
+
         }
         return [];
     }
@@ -2175,6 +2242,7 @@ public partial class ComfyUINode : LatentNode
     //    }
     //}
 
+
     public void LoadGeneral(Node node)
     {
         Name = node.title ?? Name ?? node.type; //node.type;//Name;
@@ -2184,8 +2252,8 @@ public partial class ComfyUINode : LatentNode
 
         float offsetPos = 1f;
         //  int heightnodeop = 0; //20;
-        PositionGlobalX = node.pos[0] * offsetPos;
-        PositionGlobalY = node.pos[1] * offsetPos;// - (node.outputs.Count * heightnodeop);
+        PositionGlobalX = node.ActualPos[0] * offsetPos;
+        PositionGlobalY = node.ActualPos[1] * offsetPos;// - (node.outputs.Count * heightnodeop);
 
         SizeX = node.ActualSize[0];
         SizeY = node.ActualSize[1];
@@ -2484,7 +2552,7 @@ public class Node
             title = node.Name != node.NameType ? node.Name : null,
             type = node.NameType,
 
-            pos = [node.PositionGlobalX,
+            ActualPos = [node.PositionGlobalX,
                 node.PositionGlobalY],
             ActualSize = [node.SizeX, node.SizeY],
             order = node.AttachedPreset.LatentNodes.IndexOf(node), //promptPreset.LatentNodes.IndexOf(node),
@@ -2610,7 +2678,50 @@ public class Node
     [JsonProperty("title", NullValueHandling = NullValueHandling.Ignore)]
     public string? title { get; set; } = null;
     public string type { get; set; }
-    public List<float> pos { get; set; }
+
+
+
+    [JsonProperty("pos")]
+    public JToken JsonPos
+    {
+        get
+        {
+            if (ActualPos.Any())
+            {
+                var jObject = new JObject
+                {
+                    ["0"] = ActualPos[0],
+                    ["1"] = ActualPos[1]
+                };
+                return jObject;
+            }
+            else
+            {
+                return new JObject { ["0"] = 0, ["1"] = 0 };
+            }
+        }
+        set
+        {
+            ActualPos.Clear();
+            if (value is JObject)
+            {
+                var dict = value.ToObject<Dictionary<string, float>>();
+                ActualPos.Add(dict["0"]);
+                ActualPos.Add(dict["1"]);
+            }
+            else if (value is JArray)
+            {
+                var list = value.ToObject<List<float>>();
+                ActualPos.AddRange(list);
+            }
+        }
+    }
+
+    [JsonIgnore]
+    public List<float> ActualPos { get; set; } = new();
+
+
+
 
     [JsonProperty("size")]
     public JToken JsonSize

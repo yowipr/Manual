@@ -191,15 +191,24 @@ public partial class M_MessageBox : M_Window
         M_MessageBox mbox = new(message, title, buttons);
         ShowD(mbox);
     }
-    public static void Show(string message, string title, MessageBoxButton buttons, Action okPressed)
+    public static M_MessageBox Show(string message, string title, MessageBoxButton buttons, Action okPressed)
     {
         M_MessageBox mbox = new(message, title, buttons, okPressed);
         ShowD(mbox);
+        return mbox;
     }
-    public static void Show(string message, string title, MessageBoxButton buttons, Action okPressed, Action cancelPressed)
+    public static M_MessageBox Show(string message, string title, MessageBoxButton buttons, Action okPressed, string okPressedMsg)
+    {
+        M_MessageBox mbox = new(message, title, buttons, okPressed);
+        mbox.SetBtnNames(okPressedMsg, "");
+        ShowD(mbox);
+        return mbox;
+    }
+    public static M_MessageBox Show(string message, string title, MessageBoxButton buttons, Action okPressed, Action cancelPressed)
     {
         M_MessageBox mbox = new(message, title, buttons, okPressed, cancelPressed);
         ShowD(mbox);
+        return mbox;
     }
     public static M_MessageBox Show(string message, string title, MessageBoxButton buttons, Action okPressed, Action noPressed, Action cancelPressed)
     {

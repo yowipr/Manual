@@ -1,10 +1,14 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CefSharp.DevTools.CSS;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Manual.API;
 using Manual.Core.Graphics;
+using Manual.Core.Nodes;
+using Manual.Editors.Displays;
 using Manual.Objects;
 using ManualToolkit.Generic;
 using ManualToolkit.Specific;
+using ManualToolkit.Windows;
 using Microsoft.Win32;
 using Newtonsoft.Json;
 using System;
@@ -391,8 +395,55 @@ public partial class Settings
 
 
 
+
+
     //---- CLOUD
     [ObservableProperty] bool useCloud = false;
+    partial void OnUseCloudChanged(bool value)
+    {
+        if (UserManager.isLoggedFirst)
+            useCloudChanged(value);
+        else
+            UserManager.OnLoggedInvoke(()=>useCloudChanged(value));
+    }
+    public static void ShowMessageRequireLogin()
+    {
+        System.Media.SystemSounds.Beep.Play();
+        var mbox = M_MessageBox.Show($"Your need to login and have a PRO account for using Manual Cloud",
+            "Manual Cloud",
+            System.Windows.MessageBoxButton.OK,
+            okPressed: () =>
+            {
+                AppModel.OpenLogin();
+            },
+            "Login"
+            );
+    }
+
+
+    void useCloudChanged(bool value)
+    {
+        if (value)
+        {
+            if (User.Current != null)
+            {
+                Output.Log("Connected to Manual Cloud.");
+                AppModel.mainW?.ChangeServerStatus(MainWindow.ServerStatus.Connected);
+
+                // GenerationManager.OnRegisteredInvoke(GenerationManager.RefreshPromptPreset);
+            }
+            else
+            {
+                ShowMessageRequireLogin();
+            }
+        }
+        else
+        {
+            Output.Log("Disconnected from Manual Cloud.");
+            AppModel.mainW?.ChangeServerStatus(MainWindow.ServerStatus.Disconnected);
+        }
+    }
+
 
 
 

@@ -16,13 +16,13 @@
         
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="100"/>
+            <ColumnDefinition Width="80"/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
         <Image Width="50" HorizontalAlignment="Center" VerticalAlignment="Top" Source="{StaticResource manuallogo2}" RenderOptions.BitmapScalingMode="HighQuality"/>
 
             <StackPanel Grid.Column="1" >
-                <TextBlock x:Name="titleText" Text="Title" Margin="5" FontSize="16"/>
+                <TextBlock x:Name="titleText" Text="Title" Margin="5 0 0 0" FontSize="16"/>
                 <TextBox Width="Auto" Height="Auto" Background="Transparent" x:Name="messageText" IsReadOnly="True" VerticalContentAlignment="Top" VerticalAlignment="Top" TextAlignment="Left" Text="Hola" HorizontalAlignment="Left" TextWrapping="Wrap"/>
             </StackPanel>
         </Grid>

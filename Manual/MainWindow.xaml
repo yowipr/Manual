@@ -500,9 +500,7 @@
                             <StackPanel DataContext="{x:Static Core:Settings.instance}">
                                 <CheckBox Style="{StaticResource CheckBoxLight}" ToolTip="Enable/Disable Manual Cloud mode"
                                           Height="20" Width="90" Cursor="Hand"
-                                          IsChecked="{Binding UseCloud}"
-                                          Checked="UseCloud_Checked"
-                                          Unchecked="UseCloud_Unchecked">
+                                          IsChecked="{Binding UseCloud}">
                                     ☁️ Use Cloud
                                 </CheckBox>
                             </StackPanel>

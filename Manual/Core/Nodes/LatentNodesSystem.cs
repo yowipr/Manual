@@ -556,31 +556,60 @@ public partial class GenerationManager : ObservableObject
     public MvvmHelpers.ObservableRangeCollection<string> Schedulers { get; private set; } = [];
 
 
+    //public static async Task RegisterModels()
+    //{
+    //    await SetModel(Instance.Models, "CheckpointLoaderSimple", "input.required.ckpt_name");        
+    //    await SetModel(Instance.Loras, "LoraLoader", "input.required.lora_name");
+
+    //    var ksampler = await Comfy.GetNodeInfo("KSampler");
+    //    if (ksampler != null)
+    //    {
+    //        SetModel(Instance.Samplers, ksampler, "KSampler.input.required.sampler_name");
+    //        SetModel(Instance.Schedulers, ksampler, "KSampler.input.required.scheduler");
+    //    }
+
+    //}
+    //static async Task SetModel(MvvmHelpers.ObservableRangeCollection<string> models, string nodeType, string path)
+    //{
+    //    var modelsList = await Comfy.GetModelList(nodeType, path);
+    //    AppModel.Invoke(() =>
+    //    {
+    //        models.ReplaceRange(modelsList);
+    //    });
+    //}
+
     public static async Task RegisterModels()
     {
-        await SetModel(Instance.Models, "CheckpointLoaderSimple", "input.required.ckpt_name");        
-        await SetModel(Instance.Loras, "LoraLoader", "input.required.lora_name");
+        SetModel(Instance.Models, "CheckpointLoaderSimple", "ckpt_name");
+        SetModel(Instance.Loras, "LoraLoader", "lora_name");
 
-        var ksampler = await Comfy.GetNodeInfo("KSampler");
+        var ksampler = GetRegisteredNode("KSampler");
         if (ksampler != null)
         {
-            SetModel(Instance.Samplers, ksampler, "KSampler.input.required.sampler_name");
-            SetModel(Instance.Schedulers, ksampler, "KSampler.input.required.scheduler");
+            SetModel(Instance.Samplers, ksampler, "sampler_name");
+            SetModel(Instance.Schedulers, ksampler, "scheduler");
         }
 
     }
 
-    static async Task SetModel(MvvmHelpers.ObservableRangeCollection<string> models, string nodeType, string path)
+
+    private static LatentNode GetRegisteredNode(string nodeType)
     {
-        var modelsList = await Comfy.GetModelList(nodeType, path);
+        return RegisteredNodes.FirstOrDefault(n => n.NameType == nodeType).Factory();
+    }
+
+    static void SetModel(MvvmHelpers.ObservableRangeCollection<string> models, string nodeType, string field)
+    {
+        var modelsList = Comfy.GetModelList(nodeType, field);
             AppModel.Invoke(() =>
             {
                 models.ReplaceRange(modelsList);
             });
     }
-    static void SetModel(MvvmHelpers.ObservableRangeCollection<string> models, JToken nodeType, string fullPath)
+
+    static void SetModel(MvvmHelpers.ObservableRangeCollection<string> models, LatentNode node, string field)
     {
-        var modelsList = Comfy.ExtractListNames(nodeType, fullPath);
+        var modelsList = Comfy.ExtractListNames(node, field);
         models.ReplaceRange(modelsList);
     }
     

@@ -2,10 +2,12 @@
 using CommunityToolkit.Mvvm.Input;
 using Manual.API;
 using Manual.Core.Nodes.ComfyUI;
+using Manual.Editors.Displays;
 using Manual.MUI;
 using Manual.Objects;
 using Manual.Objects.UI;
 using ManualToolkit.Generic;
+using ManualToolkit.Specific;
 using ManualToolkit.Windows;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
@@ -477,6 +479,23 @@ public partial class GenerationManager
 
         Comfy.ImportNodesFromImage(imageBytes, url);
     }
+
+
+
+    public static void ShowMessageRequireCloud()
+    {
+        System.Media.SystemSounds.Beep.Play();
+        var mbox = M_MessageBox.Show($"Your current plan is free. To give you access to Manual Cloud we need money, and money doesn't grow on trees!",
+            "Manual Cloud",
+            System.Windows.MessageBoxButton.OK,
+            okPressed: () =>
+            {
+                WebManager.OPEN(WebManager.Combine(Constants.WebURL, "pricing"));
+            },
+            "Upgrade to PRO"
+            );
+    }
+
 
 }
 

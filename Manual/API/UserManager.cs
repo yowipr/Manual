@@ -16,6 +16,16 @@ namespace Manual.API;
 
 public partial class UserManager : ObservableObject
 {
+    public static bool isLoggedFirst;
+    static event Event OnLogged;
+    public static void OnLoggedInvoke(Action action)
+    {
+        OnLogged += () => { 
+            action(); 
+        };
+    }
+
+
     public static UserManager instance => AppModel.userManager;
 
     [ObservableProperty] User? user = null;
@@ -65,16 +75,19 @@ public partial class UserManager : ObservableObject
 
             if (User.isPro)
                 InstantiateProThings();
-
         }
         else
         {
             
         }
 
+        isLoggedFirst = true;
+        OnLogged?.Invoke();
 
         OnPropertyChanged(nameof(IsPro));
         OnPropertyChanged(nameof(IsAdmin));
+
+        
 
         //  if(Output.DEBUG_BUILD())
         //       InstantiateProThings();
