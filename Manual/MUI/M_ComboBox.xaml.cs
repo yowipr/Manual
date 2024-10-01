@@ -1,4 +1,5 @@
-﻿using Manual.API;
+﻿using CefSharp.DevTools.CSS;
+using Manual.API;
 using Manual.Core;
 using Manual.Core.Nodes;
 using Manual.Core.Nodes.ComfyUI;
@@ -158,6 +159,7 @@ public partial class M_ComboBox : UserControl, IManualElement
         // Aquí puedes agregar lógica para responder al cambio de valor
         if (d is M_ComboBox instance)
         {
+
             instance.OnSelectedItemChanged(e.NewValue);
             if(e.NewValue != null && !instance.ItemsPopup.IsOpen)
               instance.AsignInputText(e.NewValue); //no se puede
@@ -175,16 +177,20 @@ public partial class M_ComboBox : UserControl, IManualElement
         get { return GetValue(SelectedItemProperty); }
         set
         {
+          //  Core.Output.Log($"itemsListBox selected: {ItemsListBox.SelectedItem} selectedItem: {value}");
+
             if (ItemsSourceExtra != null && ItemsSourceExtra.Contains(value))
             {
                 if (IsExtraItemsSelectable)
                 {
+                    ChangeListBoxSelectedItemOnly(value);
                     SetValue(SelectedItemProperty, value);
                     AsignInputText(value);
                 }
             }
             else
             {
+                ChangeListBoxSelectedItemOnly(value);
                 SetValue(SelectedItemProperty, value);
                 AsignInputText(value);
             }
@@ -202,6 +208,13 @@ public partial class M_ComboBox : UserControl, IManualElement
         }
     }
 
+    void ChangeListBoxSelectedItemOnly(object value)
+    {
+        ItemsPopup.IsOpen = false;
+        ItemsListBox.SelectionChanged -= ItemsListBox_SelectionChanged;
+        ItemsListBox.SelectedItem = value;
+        ItemsListBox.SelectionChanged += ItemsListBox_SelectionChanged;
+    }
 
     //------------------------------------------------------------------------------------------------------- CTOR
     public M_ComboBox()
@@ -357,7 +370,7 @@ public partial class M_ComboBox : UserControl, IManualElement
         InputTextBox.IsEnabled = true;
 
         SetSelectedItem(selectedItem); //ItemsListBox.SelectedItem;
-
+     //   ItemsPopup.IsOpen = false;
         var a = DataContext as NodeOption;
         if (a != null)
         {
@@ -388,6 +401,7 @@ public partial class M_ComboBox : UserControl, IManualElement
             }
         }
 
+
         InputTextBox.Text = selectedItem.ToString();
         InputTextBox.Select(InputTextBox.Text.Length, 0);
     }
@@ -399,11 +413,12 @@ public partial class M_ComboBox : UserControl, IManualElement
 
     IEnumerable<object> SearchedItems;
     private void InputTextBox_TextChanged(object sender, TextChangedEventArgs e)
-    {
+    {    
         if (!ItemsPopup.IsOpen)
             return;
 
         TextBox textBox = sender as TextBox;
+
 
         IEnumerable<object> itemsSource;
         if (ItemsSourceExtra != null)
@@ -465,8 +480,10 @@ public partial class M_ComboBox : UserControl, IManualElement
     bool keyPressed = false;
     private void InputTextBox_KeyDown(object sender, KeyEventArgs e)
     {
+
         if (e.Key == Key.Enter && SearchedItems != null && SearchedItems.Any())
         {
+
             SetSelectedItem(ItemsListBox.SelectedItem); //SearchedItems.First();
             UpdateTextBoxDisplayValue(SelectedItem);
         }
@@ -492,7 +509,9 @@ public partial class M_ComboBox : UserControl, IManualElement
     }
     private void ItemsListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        UpdateTextBoxDisplayValue(ItemsListBox.SelectedItem);
+
+        if (ItemsPopup.IsOpen)
+          UpdateTextBoxDisplayValue(ItemsListBox.SelectedItem);
     }
 
 
@@ -532,6 +551,8 @@ public partial class M_ComboBox : UserControl, IManualElement
     public bool SelectedItemAsName = false;
     void SetSelectedItem(object selected)
     {
+        ItemsPopup.IsOpen = false;
+        ItemsListBox.SelectedItem = selected;
        if (SelectedItemAsName && selected is INamable selectedN)
             SelectedItem = selectedN.Name;
         else
@@ -543,7 +564,35 @@ public partial class M_ComboBox : UserControl, IManualElement
         InputTextBox_PreviewMouseDown(sender, e);
     }
 
+    private void ItemsListBox_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+    {
+        // Detener el manejo predeterminado del evento
+        e.Handled = true;
 
+        // Obtener el ítem bajo el ratón
+        var listBox = sender as ListBox;
+        if (listBox == null) return;
+
+        // Buscar el elemento bajo el ratón
+        var point = e.GetPosition(listBox);
+        var hitTestResult = VisualTreeHelper.HitTest(listBox, point);
+
+        if (hitTestResult != null)
+        {
+            // Obtener el contenedor del ítem (ListBoxItem) en la posición del clic
+            var itemContainer = listBox.ContainerFromElement(hitTestResult.VisualHit) as ListBoxItem;
+
+            if (itemContainer != null)
+            {
+                // Asignar el ítem como seleccionado manualmente
+                var selectedItem = itemContainer.Content;
+                SetSelectedItem(selectedItem);
+
+                // Opcionalmente, cerrar el Popup
+                ItemsPopup.IsOpen = false;
+            }
+        }
+    }
 
 }
 

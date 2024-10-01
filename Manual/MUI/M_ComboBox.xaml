@@ -68,7 +68,8 @@
                             BorderBrush="{x:Null}"
                            
                             SelectedItem="{Binding SelectedItem, Mode=TwoWay, RelativeSource={RelativeSource AncestorType={x:Type local:M_ComboBox}}}"
-                            SelectionChanged="ItemsListBox_SelectionChanged" >
+                            SelectionChanged="ItemsListBox_SelectionChanged" 
+                            PreviewMouseDown="ItemsListBox_PreviewMouseDown">
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
                                     <TextBlock Text="{Binding Converter={StaticResource DisplayPathConverter}, ConverterParameter={x:Reference Name=mComboBoxUserControl}}"/>

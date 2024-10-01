@@ -1361,6 +1361,7 @@ public partial class Prompt : ObservableObject, INamable, ICloneableBehaviour, I
 
     internal void AddProperty(PromptProperty property)
     {
+        property.isInitialized = false; //for name changing
         PropertiesView.Add(property);
     }
     internal void RemoveProperty(PromptProperty property)
@@ -1919,9 +1920,9 @@ public partial class Prompt : ObservableObject, INamable, ICloneableBehaviour, I
                     var prompt = nodeop.AttachedNode.AttachedPreset.Prompt;
                     Driver? driver = null;
                     if(nodeop.Name == "strength_model")
-                       driver = nodeop.AttachedNode.field("strength_clip").Driver;
+                       driver = nodeop.AttachedNode.field("strength_clip")?.Driver;
                     else if(nodeop.Name == "strength_clip")
-                        driver = nodeop.AttachedNode.field("strength_model").Driver;
+                        driver = nodeop.AttachedNode.field("strength_model")?.Driver;
 
                     if (driver == null)
                         driver = nodeop.AttachedNode.field("lora_name").Driver;
@@ -2086,6 +2087,9 @@ public partial class PresetRequirements : ObservableObject
 
 public partial class PromptProperty : ObservableObject, INamable
 {
+    [JsonIgnore] public bool isInitialized = true;
+
+
     public static Dictionary<string, Func<object>> RegisteredPromptProperties = new Dictionary<string, Func<object>>
     {
         { "Text", () => new PromptProperty(ElementType.TextBox) },
@@ -2225,6 +2229,7 @@ public partial class PromptProperty : ObservableObject, INamable
 
 public partial class ElementProperty : ObservableObject, IDisposable
 {
+
     [ObservableProperty][property: JsonIgnore] IManualElement uIElement;
 
     [ObservableProperty] ElementType type;

@@ -26,13 +26,26 @@ public partial class PromptPropertyView : UserControl
         InitializeComponent();
 
         namerText.OnNameChanging = NameChanging;
+
+        Loaded += PromptPropertyView_Loaded;
+    }
+
+    private void PromptPropertyView_Loaded(object sender, RoutedEventArgs e)
+    {
+        var ep = DataContext as PromptProperty;
+        if( ep != null && !ep.isInitialized)
+        {
+            namerText.EditName();
+            ep.isInitialized = true;
+        }
     }
 
     string NameChanging(string newName)
-    {
+    {    
         var property = DataContext as PromptProperty;
         var prompt = property.Prompt;
 
+        newName = newName.Replace(" ", "_");
         if (property.Name != newName)
         {
             var nam = Core.Namer.SetName(newName, prompt.Properties.Values);
