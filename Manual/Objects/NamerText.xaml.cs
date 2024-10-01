@@ -95,6 +95,8 @@ new FrameworkPropertyMetadata(string.Empty, FrameworkPropertyMetadataOptions.Bin
     }
 
     bool isEditing = false;
+
+    public Func<string, string> OnNameChanging;
     void SaveName()
     {
         //  var namable = (INamable)DataContext;
@@ -116,6 +118,9 @@ new FrameworkPropertyMetadata(string.Empty, FrameworkPropertyMetadataOptions.Bin
                 // Si el tipo de la propiedad es Nullable, obtiene el tipo subyacente.
                 Type nonNullableType = Nullable.GetUnderlyingType(propertyType) ?? propertyType;
                 object convertedValue = Convert.ChangeType(txtBox.Text, nonNullableType);
+
+                if(convertedValue is string v)
+                  convertedValue = OnNameChanging?.Invoke(v);
 
                 // Asigna el valor convertido a la propiedad
                 propertyInfo.SetValue(DataContext, convertedValue, null);
@@ -141,19 +146,23 @@ new FrameworkPropertyMetadata(string.Empty, FrameworkPropertyMetadataOptions.Bin
         if (e.ClickCount != ClickCount) //default: 2
             return;
 
+        EditName();
+        e.Handled = true;
+    }
+
+    public void EditName()
+    {
         isEditing = true;
         txtBox.Visibility = Visibility.Visible;
         txtBlock.Visibility = Visibility.Collapsed;
 
         txtBox.Text = txtBlock.Text;
-      
-        e.Handled = true;
+
+        //e.Handled = true;
 
         txtBox.Focus();
         txtBox.SelectAll();
-
     }
-
 
 
 

@@ -28,6 +28,19 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 namespace Manual.MUI;
+
+
+public enum ElementType
+{
+    TextBox,
+    NumberBox,
+    SliderBox,
+    ComboBox,
+    ComboBox_Model
+
+
+}
+
 public class ValueChangedEventArgs : EventArgs
 {
     public double OldValue { get; }

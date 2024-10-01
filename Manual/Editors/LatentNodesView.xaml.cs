@@ -160,9 +160,9 @@ public partial class LatentNodesView : UserControl
         }
 
         //testing
-        else if (header == "Test")
+        else if (header == "Search")
         {
-
+            OpenSearchMenuBox();
         }
 
         else if (header == "Automatic Drivers")
@@ -208,6 +208,11 @@ public partial class LatentNodesView : UserControl
         string header = (string)s.Header;
 
         var nodes = ManualAPI.SelectedPreset.SelectedNodes;
+        if (header == "Search...")
+        {
+            OpenSearchMenuBox();
+        }
+
         if (header == "Wrap Nodes")
         {
             WrapperNode.AddWrapper(ManualAPI.SelectedPreset, nodes);

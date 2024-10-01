@@ -430,11 +430,15 @@ public partial class Settings
                 Output.Log("Connected to Manual Cloud.");
                 AppModel.mainW?.ChangeServerStatus(MainWindow.ServerStatus.Connected);
 
-                // GenerationManager.OnRegisteredInvoke(GenerationManager.RefreshPromptPreset);
+                if (GenerationManager.isNodesRegistered)
+                    GenerationManager.RefreshPromptPreset();
+                else
+                    GenerationManager.OnRegisteredInvoke(GenerationManager.RefreshPromptPreset);
             }
             else
             {
                 ShowMessageRequireLogin();
+                UseCloud = false;
             }
         }
         else
@@ -443,8 +447,6 @@ public partial class Settings
             AppModel.mainW?.ChangeServerStatus(MainWindow.ServerStatus.Disconnected);
         }
     }
-
-
 
 
 

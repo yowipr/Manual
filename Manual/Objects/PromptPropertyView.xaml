@@ -1,0 +1,51 @@
+﻿<UserControl x:Class="Manual.Objects.PromptPropertyView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Manual.Objects"
+             mc:Ignorable="d" 
+             xmlns:nodes="clr-namespace:Manual.Core.Nodes"
+             d:DesignHeight="80" d:DesignWidth="200"
+             d:DataContext="{d:DesignInstance Type=nodes:PromptProperty}">
+    <Grid Margin="0 4" Background="Transparent">
+        
+        <!--<Expander>-->
+            <Grid>
+              
+                <ContentControl Content="{Binding Element.UIElement}" Margin="0 0 25 0" VerticalAlignment="Center"/>
+                <local:NamerText x:Name="namerText" NameText="{Binding Name}" Width="Auto" Margin="14 0 0 0" VerticalAlignment="Center" Opacity="0.56" IsHitTestVisible="False"/>
+           </Grid>
+        <!--</Expander>-->
+        <Button x:Name="dotsButton" Width="15" Height="15" Content="⋮" Click="Dots_Click" HorizontalAlignment="Right">
+            
+            <Button.Style>
+                <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+                    <Setter Property="Visibility" Value="Collapsed"/>
+                    
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding IsMouseOver, RelativeSource={RelativeSource AncestorType=UserControl}}" Value="True">
+                            <Setter Property="Visibility" Value="Visible"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Button.Style>
+            
+            <Button.ContextMenu>
+                <ContextMenu x:Name="contextMenu">
+                    <ContextMenu.ItemContainerStyle>
+                        <Style TargetType="MenuItem">
+                            <EventSetter Event="Click" Handler="MenuItem_Click"/>
+                        </Style>
+                    </ContextMenu.ItemContainerStyle>
+                    <MenuItem Header="Rename"/>
+                    <!--<MenuItem Header="Edit Element"/>-->
+                    <MenuItem Header="Move Up"/>
+                    <MenuItem Header="Move Down"/>
+                    <MenuItem Header="Remove"/>
+                </ContextMenu>
+            </Button.ContextMenu>
+        </Button>
+    </Grid>
+</UserControl>
+ 

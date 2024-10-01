@@ -27,12 +27,27 @@ namespace Manual.MUI
         {
             InitializeComponent();
         }
+        public EffectsMenu(string buttonText, Dictionary<string, Func<object>> items, Action<object> onClick)
+        {
+            InitializeComponent();
+            SetBtnText(buttonText);
+            SetItems(items);
+            SetClickAction(onClick);
+        }
 
+        bool isCustomAction;
+        Action<object> OnClick;
         private void MenuItem_Click(object sender, RoutedEventArgs e)
         {
             MenuItem menuItem = sender as MenuItem;
-
-            if (menuItem.DataContext is KeyValuePair<string, Func<Effect>> selectedEffect)
+            if (isCustomAction)
+            {
+                if (menuItem.DataContext is KeyValuePair<string, Func<object>> selectedEffect)
+                {
+                    OnClick?.Invoke(selectedEffect.Value.Invoke());
+                }
+            }
+            else if (menuItem.DataContext is KeyValuePair<string, Func<Effect>> selectedEffect)
             {
                 // Aquí puedes obtener la clave y la función del efecto seleccionado
               //  string effectKey = selectedEffect.Key;
@@ -55,6 +70,23 @@ namespace Manual.MUI
                 contextMenu.IsOpen = true;
             }
         }
+
+
+        internal void SetBtnText(string text)
+        {
+            addBtn.Content = text;
+        }
+        internal void SetItems(Dictionary<string, Func<object>> items)
+        {
+            contextMenu.ItemsSource = items;
+        }
+
+        internal void SetClickAction(Action<object> onClick)
+        {
+            isCustomAction = true;
+            OnClick = onClick;
+        }
+
 
     }
 }

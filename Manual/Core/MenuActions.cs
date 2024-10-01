@@ -510,8 +510,8 @@ public partial class AppModel
     {
         saveDialog(
             filter: "Prompt files (*.prompt)|*.prompt",
-            title: "",
-            filename: "",
+            title: "Export Prompt",
+            filename: "Prompt",
 
             onSaved: (s) => Prompt.ExportPrompt(GenerationManager.Instance.SelectedPrompt, s.FileName),
             onCancel: null,

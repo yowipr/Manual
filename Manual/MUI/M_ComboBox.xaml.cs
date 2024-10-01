@@ -1,6 +1,7 @@
 ﻿using Manual.API;
 using Manual.Core;
 using Manual.Core.Nodes;
+using Manual.Core.Nodes.ComfyUI;
 using Manual.Objects;
 using ManualToolkit.Generic;
 using System;
@@ -685,6 +686,65 @@ public class M_ComboBoxEnum : M_ComboBox
         DisplayMemberPath = "";
 
         SetBinding(ComboBox.SelectedItemProperty, new Binding(selectedItem));
+    }
+
+}
+
+
+
+public class M_ComboBox_Model : M_ComboBox
+{
+    public string NodeType { get; set; }
+
+
+    private string _fieldName;
+    public string FieldName
+    {
+        get => _fieldName;
+        set
+        {
+            if (_fieldName != value)
+            {
+                _fieldName = value;
+                Refresh();
+            }
+        }
+
+    }
+
+    public M_ComboBox_Model()
+    {
+        Header = "";
+        GenerationManager.OnNodesRegistered += GenerationManager_OnNodesRegistered;
+        Unloaded += M_ComboBox_Model_Unloaded;
+        Refresh();
+    }
+
+    private void M_ComboBox_Model_Unloaded(object sender, RoutedEventArgs e)
+    {
+        Dispose();
+    }
+
+    private void GenerationManager_OnNodesRegistered()
+    {
+        Refresh();
+    }
+
+    public void Refresh()
+    {
+        if (!GenerationManager.isNodesRegistered) return;
+
+        if (!string.IsNullOrEmpty(NodeType))
+        {
+            ItemsSource = Comfy.GetModelList(NodeType, FieldName);
+            if (SelectedItem is null)
+                SelectedItem = ItemsSource.FirstOrDefault();
+        }
+    }
+
+    public void Dispose()
+    {
+        GenerationManager.OnNodesRegistered -= GenerationManager_OnNodesRegistered;
     }
 
 }

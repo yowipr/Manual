@@ -78,7 +78,7 @@
                 
                 <TextBox Text="{Binding SelectedPreset.Name}" ToolTip="change preset name"/>
 
-                <themes:IconButton IconSource="{StaticResource plus}" Command="{Binding AddPresetCommand}" Margin="6 0 4 0" FontSize="16" ToolTip="Add New Preset"/>
+                <themes:IconButton IconSource="{StaticResource plus}" Command="{Binding PresetCommand}" Margin="6 0 4 0" FontSize="16" ToolTip="Add New Preset"/>
                 <Button Foreground="{StaticResource fg_full}" Content="📋" Command="{Binding DuplicatePresetCommand}" Margin="6 3 4 0" FontSize="16" ToolTip="Duplicate Preset"/>
                 <themes:IconButton IconSource="{StaticResource trash}" Command="{Binding DeletePresetCommand}" Margin="4 0" ToolTip="Delete Preset"/>
 
@@ -129,9 +129,9 @@
                         </MenuItem.Resources>
                     </MenuItem>
 
-                    <!--<MenuItem Header="Testing" >
+                    <MenuItem Header="Search" >
                         <MenuItem Header="test" Click="MenuItem_Click" />
-                    </MenuItem>-->
+                    </MenuItem>
                    
                 </Menu>
             
@@ -192,6 +192,8 @@
                         <obj:CanvasAreaControl.ContextMenu>
                             <ContextMenu>
                                 <!--<MenuItem Header="Wrap Nodes" Click="RightClickMenu"/>-->
+                                <MenuItem Header="Search..." Click="RightClickMenu"/>
+                                <Separator/>
                                 <MenuItem Header="Paste" Click="RightClickMenu"/>
                                 <MenuItem Header="Connect By Pass" Click="RightClickMenu"/>
 

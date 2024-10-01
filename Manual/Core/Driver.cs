@@ -33,6 +33,8 @@ public interface IDrivable : IDisposable
 
 public partial class Driver : ObservableObject, IDisposable
 {
+    [ObservableProperty] bool isError = false;
+
     [ObservableProperty] bool enabled = true;
     [ObservableProperty] string expressionCode = "";
 
@@ -45,6 +47,7 @@ public partial class Driver : ObservableObject, IDisposable
     public string sourcePropertyName { get; set; }
 
 
+    
   
     public Driver(IDrivable target, string targetPropertyName, object source, string expression, bool twoWay = false)
     {
@@ -238,10 +241,26 @@ public partial class Driver : ObservableObject, IDisposable
 
     private void UpdateTarget()
     {
-         var value = compiledExpression();
-         SetPropertyValue(target, targetPropertyName, value);
+        try
+        {
+            // Ejecutar la expresión compilada y obtener el valor
+            var value = compiledExpression();
 
+            // Intentar establecer el valor en el target
+            SetPropertyValue(target, targetPropertyName, value);
+        }
+        catch (KeyNotFoundException ex)
+        {
+            // Manejar el error y registrar un mensaje informativo
+            Output.LogError($"'{targetPropertyName}' {ExpressionCode} was not found in the Properties for the target object. Ensure the property exists and is properly set.");
+        }
+        catch (Exception ex)
+        {
+            // Capturar cualquier otra excepción inesperada y registrar el error
+            Output.LogError($"An unexpected error occurred while updating the target.\n Details:\n {ex.Message}");
+        }
     }
+
 
 
 
@@ -252,15 +271,25 @@ public partial class Driver : ObservableObject, IDisposable
             Initialize();
             return;
         }
-    
-        compiledExpression = CompileExpression(ExpressionCode);
+        try
+        {
+            compiledExpression = CompileExpression(ExpressionCode);
+        }
+        catch (Exception ex)
+        {
+            IsError = true;
+            Output.LogError(ex.Message, "CompileExpression");
+            return;
+        }
 
         if(Enabled)
            UpdateTarget();
     }
 
-    private Func<object> CompileExpression(string expression)
+    private Func<object> CompileExpressionOld(string expression)
     {
+        IsError = false;
+
         if (sources.Count == 1 && Regex.IsMatch(expression.Trim(), @"^\w+$"))
             expression = $"{sources[0].Name}.{expression}";
 
@@ -274,28 +303,188 @@ public partial class Driver : ObservableObject, IDisposable
         var lambdaExpression = interpreter.ParseAsDelegate<Func<object>>(expression);
         return lambdaExpression;//.Compile();
     }
+    private Func<object> CompileExpression(string expression)
+    {
+        IsError = false;
+
+        // Si solo hay un source y la expresión es un nombre simple (ej. "Lora3")
+        if (sources.Count == 1 && Regex.IsMatch(expression.Trim(), @"^\w+$"))
+        {
+            var sourceObject = sources[0].Source;
+            var sourceName = sources[0].Name;
+
+            // Usar reflexión para verificar si el source tiene directamente la propiedad
+            var property = sourceObject.GetType().GetProperty(expression);
+            if (property != null)
+            {
+                // Si tiene la propiedad, ajustar la expresión para accederla directamente
+                expression = $"{sourceName}.{expression}";
+            }
+            else
+            {
+                // Verificar si el source tiene un Dictionary<string, PromptProperty> llamado "Properties"
+                var propertiesField = sourceObject.GetType().GetProperty("Properties");
+                if (propertiesField != null)
+                {
+                    var dic = propertiesField.GetValue(sourceObject) as Dictionary<string, PromptProperty>;
+                    if (dic != null && !dic.ContainsKey(expression))
+                    {
+                        var msg = $"property '{expression}' does not exist in '{sourceName}'";
+                        throw new Exception(msg);
+                    }
+
+                    // Asumimos que "Properties" es un Dictionary<string, PromptProperty>
+                    expression = $"{sourceName}.Properties[\"{expression}\"].Value";
+                }
+                else
+                {
+                    // Si no tiene ni la propiedad ni el diccionario, es un error
+                    var msg = $"property '{expression}' does not exist in '{sourceName}'";
+                    throw new Exception(msg);
+                }
+            }
+        }
+
+        // Crear un intérprete y asignar variables.
+        var interpreter = new Interpreter();
+        foreach (var source in sources)
+        {
+            interpreter.SetVariable(source.Name, source.Source);
+        }
+
+        try
+        {
+            // Evaluar la expresión
+            var lambdaExpression = interpreter.ParseAsDelegate<Func<object>>(expression);
+            return lambdaExpression;
+        }
+        catch (Exception ex)
+        {
+            throw new Exception($"Error compiling expression: {ex.Message}");
+        }
+    }
+
+
 
     private void SetPropertyValue(object obj, string propertyName, object value)
     {
-        var property = obj.GetType().GetProperty(propertyName);
-        if (property != null && property.CanWrite)
+        // Verificar si la propiedad es null o vacía (en este caso, manejar con expresión)
+        if (string.IsNullOrEmpty(propertyName))
         {
-            if (value == null) return;
+            AssignValueUsingExpression(value);
+        }
+        else
+        {
+            // Usar reflexión para obtener la propiedad en el objeto
+            var property = obj.GetType().GetProperty(propertyName);
 
-            else if (value != null && property.PropertyType == value.GetType())
-                property.SetValue(obj, value);
+            if (property != null && property.CanWrite)
+            {
+                // Si la propiedad se encuentra y es writable
+                if (value == null) return;
+
+                // Si el tipo coincide, asignar directamente
+                else if (value != null && property.PropertyType == value.GetType())
+                {
+                    property.SetValue(obj, value);
+                }
+                else
+                {
+                    // Convertir el valor al tipo de la propiedad y asignarlo
+                    var convertedValue = Convert.ChangeType(value, property.PropertyType);
+                    property.SetValue(obj, convertedValue);
+                }
+            }
             else
             {
-                var convertedValue = Convert.ChangeType(value, property.PropertyType);
-                property.SetValue(obj, convertedValue);
+                // Si no se encuentra la propiedad directamente, buscar en el Dictionary "Properties"
+                var propertiesField = obj.GetType().GetProperty("Properties");
+
+                if (propertiesField != null)
+                {
+                    // Asumimos que "Properties" es un Dictionary<string, PromptProperty>
+                    var propertiesDictionary = propertiesField.GetValue(obj) as Dictionary<string, PromptProperty>;
+                    if (propertiesDictionary != null && propertiesDictionary.ContainsKey(propertyName))
+                    {
+                        // Si existe la propiedad en el diccionario, asignar el valor a PromptProperty.Value
+                        propertiesDictionary[propertyName].Value = value;
+                    }
+                    else
+                    {
+                        // Si no se encuentra la propiedad en el objeto ni en el diccionario, es un error
+                        Output.LogError($"Property '{propertyName}' does not exist.");
+                    }
+                }
+                else
+                {
+                    // Si no tiene el diccionario "Properties", lanzar un error
+                    Output.LogError($"missing 'Properties' Dictionary to find'{propertyName}'.");
+                }
             }
         }
     }
+
     private object GetPropertyValue(object obj, string propertyName)
     {
         var property = obj.GetType().GetProperty(propertyName);
         return property?.GetValue(obj);
     }
+
+    private void AssignValueUsingExpression(object value)
+    {
+        // Si el valor es un string, necesitamos agregar comillas alrededor para que sea una cadena válida en la expresión.
+        string formattedValue;
+        if(value is JValue jv)
+        {
+            value = jv.Value;
+        }
+
+        if (value is string stringValue)
+        {
+            formattedValue = $"\"{stringValue}\"";  // Agregar comillas alrededor del valor string.
+        }
+        else if (value is float floatValue)
+        {
+            formattedValue = $"{floatValue}f";
+        }
+        else if (value is null)
+        {
+            formattedValue = "null";
+        }
+        else
+        {
+            formattedValue = value.ToString();  // Convertir el valor a su representación en cadena si no es un string.
+        }
+
+        // Construir la expresión completa con el valor formateado.
+        string expression = $"{ExpressionCode} = {formattedValue}";
+
+        // Crear un intérprete y asignar variables.
+        var interpreter = new Interpreter();
+        foreach (var source in sources)
+        {
+            interpreter.SetVariable(source.Name, source.Source);
+        }
+
+        // Evaluar la expresión de asignación.
+        try
+        {
+            IsError = false;
+            interpreter.Eval(expression);
+        }
+        catch (KeyNotFoundException)
+        {
+            IsError = true;
+            Output.LogError($"Driver Cannot find {sources.First().Name} for {ExpressionCode}, consider edit the Driver");
+        }
+        catch (Exception ex)
+        {
+            IsError = true;
+            // Manejar errores si es necesario (por ejemplo, logging o throwing excepciones específicas).
+            Output.LogError($"Error at eval the expression {ExpressionCode} in {sources.First().Name}: {ex.Message}");
+        }
+    }
+
 
 
 

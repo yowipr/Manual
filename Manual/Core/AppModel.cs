@@ -760,7 +760,7 @@ public static class Namer
 {
     public static string SetName(INamable newItem, IEnumerable<INamable> collection)
     {
-        return SetName(newItem.Name, collection);
+        return SetName(newItem.Name, collection, newItem);
     }
 
     /// <summary>
@@ -769,7 +769,7 @@ public static class Namer
     /// <param name="nameBase"></param>
     /// <param name="collection"></param>
     /// <returns></returns>
-    public static string SetName(string nameBase, IEnumerable<INamable> collection)
+    public static string SetName(string nameBase, IEnumerable<INamable> collection, INamable newItem = null)
     {
         // Regex para detectar si el nombre ya tiene un número al final, y cómo está separado (espacio o guion bajo)
         var regex = new Regex(@"(?<name>.+?)([\s_])(?<number>\d+)$");
@@ -791,13 +791,13 @@ public static class Namer
             {
                 number++;
                 newName = $"{match.Groups["name"].Value}{separator}{number}";
-            } while (collection.Any(item => item.Name == newName));
+            } while (collection.Any(item => item.Name == newName && item != newItem));
         }
         else
         {
             // Si no hay número al final, se verifica la unicidad del nombre base y se añade un número si es necesario
             separator = " "; // Por defecto, usar espacio si no hay número
-            if (collection.Any(item => item.Name == newName))
+            if (collection.Any(item => item.Name == newName && item != newItem))
             {
                 int number = 1;
                 while (collection.Any(item => item.Name == $"{newName}{separator}{number}"))
@@ -809,11 +809,6 @@ public static class Namer
         }
 
         return newName;
-    }
-
-    public static void SetName(string nameBase, IEnumerable<INamable> collection, INamable item) 
-    {
-        item.Name = SetName(nameBase, collection);
     }
 
     internal static int RandomId<T>(IEnumerable<T> list, Func<T, int, bool> predicate, int startFrom = 0)

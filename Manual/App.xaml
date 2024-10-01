@@ -126,7 +126,10 @@
             <DataTemplate DataType="{x:Type Obj:Effect}">
                 <Obj:EffectView/>
             </DataTemplate>
-
+            
+            <DataTemplate DataType="{x:Type Nodes:PromptProperty}">
+                <Obj:PromptPropertyView/>
+            </DataTemplate>
 
 
             <DataTemplate DataType="{x:Type Obj:PromptTag}">

@@ -882,15 +882,61 @@ public static class Comfy
         try
         {
             string url = URL;
-            if (Settings.instance.UseCloud) url = Constants.WebURL;
+          
+            HttpResponseMessage response;
+            if (Settings.instance.UseCloud)
+            {
+                var timeout = DateTime.UtcNow.AddSeconds(60); // Esperar hasta 30 segundos
+                while (!UserManager.isLoggedFirst)
+                {
+                    if (DateTime.UtcNow > timeout)
+                        break; // Tiempo de espera excedido, retornar cadena vacía
 
-            var response = await _httpClient.GetAsync(WebManager.Combine(url, "object_info", UserManager.GetToken()) );
-            var responseBody = await response.Content.ReadAsStringAsync();
-            if (response.Content.Headers.ContentType.MediaType == "application/json")
-                return responseBody;
+                    await Task.Delay(200);
+                }
+                if (User.Current == null)
+                {
+                    return "";
+                }
+
+
+
+                url = WebManager.Combine(ProAPINode.ApiURL, "api/generate/image");
+                var finalUrl = WebManager.Combine(url, "object-info");
+
+                // Crear una solicitud HttpRequestMessage para agregar el encabezado de autorización
+                var request = new HttpRequestMessage(HttpMethod.Get, finalUrl);
+ 
+              
+                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", UserManager.GetToken());
+
+                // Enviar la solicitud
+                response = await _httpClient.SendAsync(request);
+            }
             else
+            {
+                var finalUrl = WebManager.Combine(url, "object_info");
+
+                // Realizar una solicitud GET normal
+                response = await _httpClient.GetAsync(finalUrl);
+            }
+
+            if (response.IsSuccessStatusCode)
+            {
+                var responseBody = await response.Content.ReadAsStringAsync();
+                if (response.Content.Headers.ContentType?.MediaType == "application/json")
+                    return responseBody;
+                else
+                    return "";
+            }
+            else
+            {
                 return "";
+            }
+
         }
+
+
         catch (HttpRequestException ex)
         {
             return "comfy_url_not_found";
@@ -900,6 +946,7 @@ public static class Comfy
             return "";
         }
     }
+
 
     static string GetAllNodesCache()
     {

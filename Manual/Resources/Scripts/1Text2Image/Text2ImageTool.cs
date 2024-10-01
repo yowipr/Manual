@@ -183,18 +183,27 @@ public partial class T_ImageGenerator : Tool
 
        );
 
+
+        //LORAS
+        StackPanel stackPanel = new StackPanel();
+        stackPanel.HorizontalAlignment = HorizontalAlignment.Stretch;
+
+        ItemsControl items = new();
+        stackPanel.Children.Add(items);
+
+        SetBind(items, "PropertiesView");
+        add(stackPanel, sp2);
+
+
+        EffectsMenu addEffect = new("Add Property", PromptProperty.RegisteredPromptProperties, OnAddPropertyClick);
+        add(addEffect, sp2);
+
+
     }
-    void NewPrompt()
+    void OnAddPropertyClick(object value)
     {
-      
-    }
-    void DuplicatePrompt()
-    {
-      
-    }
-    void RemovePrompt()
-    {
-       
+        if(value is PromptProperty property)
+            SelectedPreset.Prompt.AddProperty(property);
     }
 
 

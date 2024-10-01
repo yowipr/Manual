@@ -11,9 +11,9 @@
   
 
     <Grid>
-        <Button Content="Add Effect" Click="Button_Click">
+        <Button x:Name="addBtn" Content="Add Effect" Click="Button_Click">
             <Button.ContextMenu>
-                <ContextMenu ItemsSource="{Binding Source={x:Static Objects:Effect.RegisteredEffects}}">
+                <ContextMenu x:Name="contextMenu" ItemsSource="{Binding Source={x:Static Objects:Effect.RegisteredEffects}}">
                     <ContextMenu.ItemContainerStyle>
                         <Style TargetType="MenuItem">
                             <Setter Property="Header" Value="{Binding Key}"/>

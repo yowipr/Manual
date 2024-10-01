@@ -44,6 +44,7 @@ using System.Security.Principal;
 using ManualToolkit.Themes;
 using ICSharpCode.AvalonEdit.Snippets;
 using CefSharp.DevTools.CSS;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Rebar;
 
 namespace Manual.API;
 
@@ -605,7 +606,10 @@ new PropertyMetadata(""));
     }
 
 
-    public M_TextBox()  { }
+    public M_TextBox() 
+    {
+
+    }
     string PropertyBinding { get; set; }
     public M_TextBox(string name, string description, string propertyBinding)
     {

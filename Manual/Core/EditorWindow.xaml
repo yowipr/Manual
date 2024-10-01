@@ -134,7 +134,7 @@
             <!--<Rectangle Visibility="Collapsed" Fill="Black" DockPanel.Dock="Top" HorizontalAlignment="Left" Width="26" Margin="5,0,0,0" Height="12" VerticalAlignment="Top"/>-->
             <ComboBox ContextMenu="{StaticResource EditorContextMenu}" x:Name="editorBox" Panel.ZIndex="1" DockPanel.Dock="Top" Style="{StaticResource ComboBoxTest2}"  HorizontalAlignment="Left" Width="27" Margin="5,0,0,0" BorderBrush="{x:Null}" Background="Black" Height="25" VerticalAlignment="Top"
                       ItemsSource="{Binding RegisteredEditors}" 
-                      SelectedItem="{Binding SelectedEditor, Mode=TwoWay}" Cursor="Hand" ToolTip="Clock to select Editor. Right click to see more options">
+                      SelectedItem="{Binding SelectedEditor, Mode=TwoWay}" Cursor="Hand" ToolTip="Click to select Editor. Right click to see more options">
 
                 
                 <ComboBox.ItemTemplate>

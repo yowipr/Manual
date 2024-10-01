@@ -17,6 +17,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -1313,6 +1314,15 @@ public partial class Prompt : ObservableObject, INamable, ICloneableBehaviour, I
     [ObservableProperty] float lora1Strength;
 
 
+
+    public ObservableCollection<PromptProperty> PropertiesView { get; private set; } = new();
+    [JsonIgnore] public Dictionary<string, PromptProperty> Properties { get; private set; } = new();
+    public void InvokePropertyChanged(string name)
+    {
+        OnPropertyChanged(name);
+    }
+
+
     [JsonIgnore] public ObservableCollection<string> GetAllModels => GenerationManager.Instance.Models;
     [JsonIgnore] public ObservableCollection<string> GetAllLoras => GenerationManager.Instance.Loras;
     [JsonIgnore] public ObservableCollection<string> GetAllSamplers => GenerationManager.Instance.Samplers;
@@ -1320,8 +1330,76 @@ public partial class Prompt : ObservableObject, INamable, ICloneableBehaviour, I
 
     public Prompt()
     {
-        
+        PropertiesView.CollectionChanged += Properties_CollectionChanged;
+     //   PropertiesView.Add(new PromptProperty() { Name = "Lora3", Value = "LLL.safetensors"});
     }
+
+    private void Properties_CollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+    {
+        if(e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Add)
+        {
+            foreach (PromptProperty item in e.NewItems)
+            {
+                item.Name = Namer.SetName(item, PropertiesView);
+                item.Prompt = this;
+                Properties.Add(item.Name, item);
+            }
+        }
+        else if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Remove)
+        {
+            // Eliminar el elemento del diccionario si fue eliminado de PropertiesView
+            foreach (PromptProperty item in e.OldItems)
+            {
+                Properties.Remove(item.Name);
+            }
+        }
+        else if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Reset)
+        {
+            Properties.Clear();
+        }
+    }
+
+    internal void AddProperty(PromptProperty property)
+    {
+        PropertiesView.Add(property);
+    }
+    internal void RemoveProperty(PromptProperty property)
+    {
+        PropertiesView.Remove(property);
+    }
+
+    internal void MovePropertyUp(PromptProperty property)
+    {
+        MoveProperty(property, -1);
+    }
+    internal void MovePropertyDown(PromptProperty property)
+    {
+        MoveProperty(property, 1);
+    }
+
+    private void MoveProperty(PromptProperty property, int direction)
+    {
+        var properties = property.Prompt.PropertiesView;
+
+        // Obtener el índice actual de la propiedad
+        int currentIndex = properties.IndexOf(property);
+
+        if (currentIndex == -1)
+            return;  // Si no está en la colección, salir
+
+        // Calcular el nuevo índice
+        int newIndex = currentIndex + direction;
+
+        // Asegurarse de que el nuevo índice esté dentro de los límites de la colección
+        if (newIndex < 0 || newIndex >= properties.Count)
+            return;  // Si está fuera de los límites, salir
+
+        // Mover la propiedad intercambiando posiciones
+        properties.Move(currentIndex, newIndex);
+    }
+
+
+
 
     public void Init()
     {
@@ -1953,6 +2031,9 @@ public partial class Prompt : ObservableObject, INamable, ICloneableBehaviour, I
         return jsonString;
     }
 
+
+
+
 }
 
 
@@ -2003,10 +2084,337 @@ public partial class PresetRequirements : ObservableObject
 
 
 
+public partial class PromptProperty : ObservableObject, INamable
+{
+    public static Dictionary<string, Func<object>> RegisteredPromptProperties = new Dictionary<string, Func<object>>
+    {
+        { "Text", () => new PromptProperty(ElementType.TextBox) },
+        { "Number", () => new PromptProperty(ElementType.NumberBox) },
+        { "Slider", () => new PromptProperty(ElementType.SliderBox) },
+        { "Slider 0 to 1", () => new PromptProperty(ElementType.SliderBox, new Dictionary<string, string>
+        {
+            { "Minimum", "0" },
+            {"Maximum", "1" },
+            {"IsLimited", "true" },
+            {"Jump", "0.01" }
+        }) },
+
+        { "Selector Lora", () => new PromptProperty(ElementType.ComboBox_Model, new Dictionary<string, string>
+      {
+        { "NodeType", "LoraLoader" },
+        { "FieldName", "lora_name" }
+      }) },
+
+           { "Selector Model", () => new PromptProperty(ElementType.ComboBox_Model, new Dictionary<string, string>
+      {
+        { "NodeType", "CheckpointLoader" },
+        { "FieldName", "ckpt_name" }
+      }) }
+
+    };
+
+    [JsonIgnore] public Prompt Prompt;
+
+    [ObservableProperty] string name = "Property";
+    [ObservableProperty] object value;
+
+
+    [ObservableProperty] ElementProperty element;
+    public PromptProperty()
+    {
+       Element = new();
+    }
+    public PromptProperty(ElementProperty element)
+    {
+        Element = element;
+    }
+    public PromptProperty(ElementType type)
+    {
+        Element = new(type);
+    }
+    public PromptProperty(ElementType type, Dictionary<string, string> overrideFields)
+    {
+        Element = new(type, overrideFields);
+    }
+
+    partial void OnNameChanged(string? oldValue, string newValue)
+    {
+        if(Prompt != null)
+        {
+            Prompt.Properties.Remove(oldValue);
+            Prompt.Properties.Add(newValue, this);
+        }
+    }
+    partial void OnValueChanged(object value)
+    {
+        Prompt?.InvokePropertyChanged("Properties");
+    }
+
+
+    partial void OnElementChanged(ElementProperty? oldValue, ElementProperty newValue)
+    {
+        if (oldValue != null)
+            oldValue.Dispose();
+
+        newValue.PromptProperty = this;
+        UpdateElementBinding();   
+    }
+
+    public void UpdateElementBinding()
+    {
+        if (Value == null)
+        {
+            //-------------------------------------------------------------------------- DEFAULT VALUES PROPERTY ELEMENT
+            if (Element.Type == ElementType.TextBox)
+                Value = "hello";
+            else if (Element.Type == ElementType.NumberBox || Element.Type == ElementType.SliderBox)
+                Value = 1.0f;
+            else if (Element.Type == ElementType.ComboBox)
+            {
+                if (Element.UIElement is M_ComboBox cbox)
+                {
+                    var newV = cbox.ItemsSource.FirstOrDefault();
+                    Value = newV != null ? newV : "hello1";
+                }
+            }
+            else if (Element.Type == ElementType.ComboBox)
+            {
+                if (Element.UIElement is M_ComboBox_Model cbox)
+                {
+                    if (GenerationManager.isNodesRegistered)
+                    {
+                        _cboxModelDefaultValue(cbox);
+                    }
+                    else
+                    {
+                        GenerationManager.OnNodesRegistered += () =>
+                        {
+                            cbox.Refresh();
+                            _cboxModelDefaultValue(cbox);
+                        };
+                    }
+                }
+            }
+        }
+
+        var binding = new System.Windows.Data.Binding(nameof(PromptProperty.Value))
+        {
+            Source = this,
+            Mode = System.Windows.Data.BindingMode.TwoWay,
+            UpdateSourceTrigger = System.Windows.Data.UpdateSourceTrigger.PropertyChanged
+        };
+        Element.UIElement.InitializeBind(binding);
+ 
+    }
+
+    void _cboxModelDefaultValue(M_ComboBox_Model cbox)
+    {
+        var newV = cbox.ItemsSource.FirstOrDefault();
+        Value = newV != null ? newV : "hello1";
+    }
+
+
+    public override string ToString()
+    {
+        return $"{Name}, {Value}";
+    }
+
+}
+
+
+
+public partial class ElementProperty : ObservableObject, IDisposable
+{
+    [ObservableProperty][property: JsonIgnore] IManualElement uIElement;
+
+    [ObservableProperty] ElementType type;
+
+    [JsonIgnore] public PromptProperty PromptProperty;
+    partial void OnTypeChanged(ElementType value)
+    {
+        SetExposedFields();
+        PromptProperty?.UpdateElementBinding();
+        ApplyEdit();
+    }
+
+    public Dictionary<string, string?> DefaultFields { get; private set; } = new();
+
+    public ElementProperty()
+    {
+        Type = ElementType.TextBox;
+        SetExposedFields();
+    }
+    public ElementProperty(ElementType elementType)
+    {
+        this.Type = elementType;
+        SetExposedFields();
+    }
+    public ElementProperty(ElementType elementType, Dictionary<string, string> overrideFields)
+    {
+        this.Type = elementType;
+        SetExposedFields();
+        OverrideFields(overrideFields);
+    }
+
+    void OverrideFields(Dictionary<string, string> overrideFields)
+    {
+        // Sobreescribir solo los valores que existan en el overrideFields
+        foreach (var field in overrideFields)
+        {
+            DefaultFields[field.Key] = field.Value;
+        }
+        ApplyEdit();
+    }
+
+    // Método para obtener los campos expuestos dependiendo del tipo de Element
+    private void SetExposedFields()
+    {
+        if (Type == ElementType.NumberBox)
+        {
+            UIElement = new M_NumberBox();
+        }
+        if (Type == ElementType.SliderBox)
+        {
+            UIElement = new M_SliderBox();
+            
+        }
+
+        else if (Type == ElementType.TextBox)
+        {
+            UIElement = new M_TextBox();
+        }
+
+
+        else if (Type == ElementType.ComboBox)
+        {
+            UIElement = new M_ComboBox();
+        }
+        else if (Type == ElementType.ComboBox_Model)
+        {
+            UIElement = new M_ComboBox_Model();
+        }
+
+
+        else
+        {
+            UIElement = new M_TextBox();
+
+        }
+    }
+
+
+
+    public void ApplyEdit()
+    {
+        // Obtener las propiedades expuestas
+        var exposedFields = DefaultFields;
+
+        // Recorrer cada entrada del diccionario
+        foreach (var field in exposedFields)
+        {
+            string propertyName = field.Key;
+            string? propertyValue = field.Value;
+
+            if (propertyValue is null) //don't overwrite
+                continue;
+
+            // Obtener la propiedad del objeto Element
+            var propertyInfo = UIElement.GetType().GetProperty(propertyName);
+
+            if (propertyInfo != null && propertyInfo.CanWrite)
+            {
+                // Si la propiedad existe y es writable, intentar convertir el valor al tipo adecuado
+                try
+                {
+                    object? convertedValue = null;
+
+                    if (propertyValue != null)
+                    {
+                        // Convertir el valor al tipo de la propiedad
+                        convertedValue = Convert.ChangeType(propertyValue, propertyInfo.PropertyType, CultureInfo.InvariantCulture);
+                    }
+
+                    // Asignar el valor a la propiedad
+                    propertyInfo.SetValue(UIElement, convertedValue);
+                }
+                catch (Exception ex)
+                {
+                    // Manejar el error de conversión o asignación si es necesario
+                    Output.Log($"Error al aplicar valor a la propiedad '{propertyName}': {ex.Message}");
+                }
+            }
+            else
+            {
+                // Si la propiedad no existe o no es writable
+                Output.Log($"La propiedad '{propertyName}' no existe o no se puede escribir en el objeto '{UIElement.GetType().Name}'.");
+            }
+        }
+    }
+
+
+    public override string ToString()
+    {
+        return $"{Type}, defaultFields: {DefaultFields.Count}";
+    }
+
+    public void Dispose()
+    {
+        
+    }
+}
 
 
 
 
 
+
+public class Model_ElementProperty : ElementProperty
+{
+    M_ComboBox comboBox;
+
+    public string nodeType;
+    public string fieldName;
+    public Model_ElementProperty()
+    {
+       Type = ElementType.ComboBox;
+       comboBox = new M_ComboBox() { Header = "" };
+       UIElement = comboBox;
+
+        GenerationManager.OnNodesRegistered += GenerationManager_OnNodesRegistered;
+        Refresh();
+    }
+    public Model_ElementProperty(string nodeType, string fieldName)
+    {
+        Type = ElementType.ComboBox;
+        this.nodeType = nodeType;
+        this.fieldName = fieldName;
+
+        comboBox = new M_ComboBox() { Header = "" };
+        UIElement = comboBox;
+        
+        GenerationManager.OnNodesRegistered += GenerationManager_OnNodesRegistered;
+        Refresh();
+    }
+
+    private void GenerationManager_OnNodesRegistered()
+    {
+        Refresh();
+    }
+
+    void Refresh()
+    {
+        if (!GenerationManager.isNodesRegistered) return;
+
+        if (!string.IsNullOrEmpty(nodeType))
+        {
+            comboBox.ItemsSource = Comfy.GetModelList(nodeType, fieldName);
+        }
+    }
+
+    //public override void Dispose()
+    //{
+    //    GenerationManager.OnNodesRegistered -= GenerationManager_OnNodesRegistered;
+    //}
+}
 
 
