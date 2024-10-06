@@ -129,10 +129,8 @@
                         </MenuItem.Resources>
                     </MenuItem>
 
-                    <MenuItem Header="Search" >
-                        <MenuItem Header="test" Click="MenuItem_Click" />
-                    </MenuItem>
-                   
+                    <MenuItem Header="🔍" Click="MenuItem_Click" />
+
                 </Menu>
             
             </StackPanel>

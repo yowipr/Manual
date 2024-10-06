@@ -412,7 +412,8 @@ public partial class Driver : ObservableObject, IDisposable
                     else
                     {
                         // Si no se encuentra la propiedad en el objeto ni en el diccionario, es un error
-                        Output.LogError($"Property '{propertyName}' does not exist.");
+                        if(propertyName != ExpressionCode)
+                            Output.LogError($"Property '{propertyName}' does not exist.");
                     }
                 }
                 else

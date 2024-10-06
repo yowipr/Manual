@@ -232,7 +232,7 @@ public partial class Transformer : UI_Object
         }
 
         // Asignar el nuevo SKBitmap a layer.Image
-        layer.Image.Dispose(); // Liberar el bitmap antiguo si es necesario
+      //  layer.Image.Dispose(); // Liberar el bitmap antiguo si es necesario
      
 
      

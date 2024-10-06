@@ -15,7 +15,7 @@ namespace Manual.Core.Nodes.ProAPI;
 
 internal abstract class ProAPINode : NodeOutput, IOutputNode
 {
-    public const string ApiURL = "http://192.168.1.11:3000/"; //Constants.WebURL
+    public const string ApiURL = Constants.WebURL;  //"http://192.168.1.3:3000/";
 
     public ProAPINode()
     {

@@ -301,13 +301,13 @@ public partial class GenerationManager
         CurrentGeneratingImage = null;
         isInterrupt = false;
 
-        if (!Instance.Realtime)
+        if (Instance.Realtime)
         {
             AppModel.mainW.FinishedProgress();
-            AppModel.mainW.SetAlert("Finished Batch!");
         }
         else
-        {
+        {     
+        //    AppModel.mainW.SetAlert("Finished Batch!");
             AppModel.mainW.StopProgress();
         }
     }
@@ -323,9 +323,16 @@ public partial class GenerationManager
 
         if (Instance.interrupting)
         {
-            //cancel all
-            Instance.EndAllGenerations();
-            return;
+            if (Settings.instance.UseCloud)
+            {
+                Comfy.Interrupt();
+            }
+            else
+            {
+                //cancel all
+                Instance.EndAllGenerations();
+                return;
+            }
         }
 
         Instance.interrupting = true;

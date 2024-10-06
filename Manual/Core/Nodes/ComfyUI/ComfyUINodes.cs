@@ -288,9 +288,9 @@ public static class Comfy
 
 
 
-
+    static int mem_progressSteps;
     private static CancellationTokenSource cancellationTokenSource;
-    internal static async Task GenerateServerless(PromptPreset preset)
+    internal static async Task GenerateServerlessOld(PromptPreset preset)
     {
         var genimg = GenerationManager.Instance.CurrentGeneratingImage;
 
@@ -341,6 +341,7 @@ public static class Comfy
             // Manejar la respuesta exitosa
             var json = await response.Content.ReadAsStringAsync();
             JObject result = JObject.Parse(json);
+            
             // Obtener el array "image" que contiene las imágenes en base64
             JArray imagesArray = (JArray)result["image"];
 
@@ -381,33 +382,40 @@ public static class Comfy
         {
             var json = await response.Content.ReadAsStringAsync();
             // Manejar errores de la solicitud
-            var jsonResponse = JsonConvert.DeserializeObject<Dictionary<string, object>>(json);
-
-            if (jsonResponse != null && jsonResponse.ContainsKey("error"))
+            try
             {
-                var errorMsg = jsonResponse["error"].ToString();
-                if (errorMsg == "You have no remaining generation hours. Upgrade your plan!")
+                var jsonResponse = JsonConvert.DeserializeObject<Dictionary<string, object>>(json);
+
+                if (jsonResponse != null && jsonResponse.ContainsKey("error"))
                 {
-                    System.Media.SystemSounds.Beep.Play();
-                    var mbox = M_MessageBox.Show($"You have no remaining generation hours. Upgrade your plan! Current plan: {User.Current.Products["manual"].Plan.ToString()}.",
-                        "Manual Cloud",
-                        System.Windows.MessageBoxButton.OK,
-                        okPressed: () =>
-                        {
-                            WebManager.OPEN(WebManager.Combine(Constants.WebURL, "pricing"));
-                        },
-                        "Upgrade"
-                        );
-                   
-                }
-                else if (errorMsg == "You are on the free plan")
-                {
-                    GenerationManager.ShowMessageRequireCloud();
+                    var errorMsg = jsonResponse["error"].ToString();
+                    if (errorMsg == "You have no remaining generation hours. Upgrade your plan!")
+                    {
+                        System.Media.SystemSounds.Beep.Play();
+                        var mbox = M_MessageBox.Show($"You have no remaining generation hours. Upgrade your plan! Current plan: {User.Current.Products["manual"].Plan.ToString()}.",
+                            "Manual Cloud",
+                            System.Windows.MessageBoxButton.OK,
+                            okPressed: () =>
+                            {
+                                WebManager.OPEN(WebManager.Combine(Constants.WebURL, "pricing"));
+                            },
+                            "Upgrade"
+                            );
+
+                    }
+                    else if (errorMsg == "You are on the free plan")
+                    {
+                        GenerationManager.ShowMessageRequireCloud();
+                    }
+
+                    throw new Exception(errorMsg);
                 }
 
-                throw new Exception(errorMsg);
             }
-
+            catch (Exception ex)
+            {
+                Core.Output.LogError(ex.Message);
+            }
 
             Core.Output.LogError($"Error in generation: {response.StatusCode}, {json}");
             throw new Exception($"Error in generation: {response.StatusCode}");
@@ -417,17 +425,241 @@ public static class Comfy
         AppModel.mainW.StopProgress();
     }
 
-    
+    internal static async Task GenerateServerless(PromptPreset preset)
+    {
+        var genimg = GenerationManager.Instance.CurrentGeneratingImage;
 
+        ImagesResult = new();
+        AppModel.mainW.SetProgress(0.10f);
+        AppModel.mainW.SetMessage("Submitting generation request...");
+
+        var weburl = ProAPINode.ApiURL;
+        var url = WebManager.Combine(weburl, "api/generate/image");
+        var token = UserManager.GetToken(); // Obtiene el token de autorización
+
+        // OBTENER PROMPT
+        var outputNode = preset.GetOutputNode();
+        var prompt = ComfyUIWorkflow.GetPrompt(preset);
+        ComfyExtension.ApiChangeNode_OutputToPreview(prompt, (int)outputNode.IdNode);
+
+        var mOutput = outputNode as NodeOutput;
+        if (mOutput != null)
+        {
+            //--- ON START
+            mOutput.ON_START(genimg);
+        }
+
+        var data = prompt;
+        var content = new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json");
+
+        // Crear una solicitud POST
+        var request = new HttpRequestMessage(HttpMethod.Post, url)
+        {
+            Content = content
+        };
+
+        // Agregar el encabezado Authorization con el token
+        request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+        cancellationTokenSource = new CancellationTokenSource();
+
+        // Enviar la solicitud inicial para obtener el taskId
+        var response = await _httpClient.SendAsync(request, cancellationTokenSource.Token);
+
+        if (response.IsSuccessStatusCode)
+        {
+            // Manejar la respuesta exitosa
+            var json = await response.Content.ReadAsStringAsync();
+            JObject result = JObject.Parse(json);
+
+            // Obtener el taskId y el status
+            currentTaskId = result["taskId"].ToString();
+            string status = result["status"].ToString();
+
+            AppModel.mainW.SetProgress(0.20f);
+            AppModel.mainW.SetMessage("Generation started...");
+
+             int imem_progressSteps = 0;
+            try
+            {
+                // Polling para verificar el estado del job
+                bool isCompleted = false;
+                while (!isCompleted)
+                {
+                    imem_progressSteps++;
+                    // Esperar un intervalo antes de la siguiente verificación
+                    await Task.Delay(2000, cancellationTokenSource.Token); // espera 2 segundos
+                                                                           // Verificar si se solicitó la cancelación
+                    cancellationTokenSource.Token.ThrowIfCancellationRequested();
+
+
+                    // Obtener el estado actual del job
+                    var statusUrl = WebManager.Combine(weburl, $"api/generate/image/status?taskId={currentTaskId}");
+                    var statusRequest = new HttpRequestMessage(HttpMethod.Get, statusUrl);
+                    statusRequest.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+                    var statusResponse = await _httpClient.SendAsync(statusRequest, cancellationTokenSource.Token);
+                    if (statusResponse.IsSuccessStatusCode)
+                    {
+                        var statusJson = await statusResponse.Content.ReadAsStringAsync();
+                        JObject statusResult = JObject.Parse(statusJson);
+
+                        status = statusResult["status"].ToString();
+
+                        if (status == "COMPLETED")
+                        {
+                            // Obtener la imagen
+                            JArray imagesArray = (JArray)statusResult["image"];
+                            string base64Image = imagesArray[0].ToString();
+
+                            // Convertir a SKBitmap
+                            byte[] image = Convert.FromBase64String(base64Image);
+                            genimg.OriginalImage = image;
+                            var imageR = image.ToSKBitmap();
+                            outputNode.EnablePreview = true;
+                            outputNode.PreviewImage = imageR;
+
+                            // Añadir imagen al resultado
+                            ImagesResult.Add(imageR);
+
+                            if (mOutput != null)
+                            {
+                                // Establecer resultado en genimg
+                                genimg.Results = ImagesResult.ToArray();
+                                genimg.PreviewImage = genimg.Results[0];
+
+                                ManualAPI.Animation.RemoveFrameBuffer();
+                                genimg.PreviewImage = imageR;
+
+                                //----ON_OUTPUT
+                                mOutput.ON_OUTPUT(genimg);
+                            }
+                            else
+                            {
+                                genimg.TargetLayer.PreviewValue.StartPreview(imageR);
+                            }
+
+                            isCompleted = true;
+                            AppModel.mainW.SetProgress(1.0f);
+                            AppModel.mainW.SetMessage("Generation completed");
+                        }
+                        else if (status == "FAILED" || status == "CANCELLED" || status == "TIMED_OUT")
+                        {
+                            // Manejar estados finales de error
+                            Core.Output.LogError($"Generation failed with status: {status}");
+                            AppModel.mainW.SetMessage($"Generation failed: {status}");
+                            isCompleted = true;
+                            throw new Exception($"Generation failed: {status}");
+                        }
+                        else
+                        {
+                            // Actualizar progreso y mensaje según el estado
+                            AppModel.mainW.SetMessage($"Generation {status.ToLower()}...");
+                            // Puedes ajustar el progreso según sea necesario
+
+                            float prog;
+                            if (mem_progressSteps == 0)
+                                prog = 0.5f;
+
+                            prog = (float)imem_progressSteps / (float)mem_progressSteps;
+                            if (prog > 0.9)
+                                prog = 0.9f;
+
+                            AppModel.mainW.SetProgress(prog);
+                        }
+                    }
+                    else
+                    {
+                        // Manejar errores en la solicitud de estado
+                        var errorJson = await statusResponse.Content.ReadAsStringAsync();
+                        Core.Output.LogError($"Error checking status: {statusResponse.StatusCode}, {errorJson}");
+                        isCompleted = true;
+                        throw new Exception($"Error checking status: {statusResponse.StatusCode}");
+                    }
+                }
+            }
+
+            catch (OperationCanceledException)
+            {
+                // Manejar la cancelación
+                Core.Output.Log("Generation was cancelled by the user.");
+                AppModel.mainW.SetMessage("Generation cancelled.");
+                // Opcionalmente, llamar al endpoint de cancelación si no se hizo ya
+                if (!string.IsNullOrEmpty(currentTaskId))
+                {
+                    await InterruptCloud();
+                }
+            }
+            finally
+            {
+                mem_progressSteps = imem_progressSteps;
+                // Limpiar el taskId
+                currentTaskId = null;
+                AppModel.mainW.StopProgress();
+            }
+        }
+        else
+        {
+            var json = await response.Content.ReadAsStringAsync();
+            // Manejar errores de la solicitud inicial
+            try
+            {
+                var jsonResponse = JsonConvert.DeserializeObject<Dictionary<string, object>>(json);
+
+                if (jsonResponse != null && jsonResponse.ContainsKey("error"))
+                {
+                    var errorMsg = jsonResponse["error"].ToString();
+                    if (errorMsg == "You have no remaining generation hours. Upgrade your plan!")
+                    {
+                        System.Media.SystemSounds.Beep.Play();
+                        var mbox = M_MessageBox.Show($"You have no remaining generation hours. Upgrade your plan! Current plan: {User.Current.Products["manual"].Plan.ToString()}.",
+                            "Manual Cloud",
+                            System.Windows.MessageBoxButton.OK,
+                            okPressed: () =>
+                            {
+                                WebManager.OPEN(WebManager.Combine(Constants.WebURL, "pricing"));
+                            },
+                            "Upgrade"
+                            );
+                    }
+                    else if (errorMsg == "You are on the free plan")
+                    {
+                        GenerationManager.ShowMessageRequireCloud();
+                    }
+
+                    throw new Exception(errorMsg);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Core.Output.LogError(ex.Message);
+            }
+
+            Core.Output.LogError($"Error in generation request: {response.StatusCode}, {json}");
+            throw new Exception($"Error in generation request: {response.StatusCode}");
+        }
+
+        
+        AppModel.mainW.StopProgress();
+    }
+
+
+
+
+
+    internal static string currentTaskId;
 
     internal static async void Interrupt()
     {
         // Realizar la solicitud
         try
         {
-            if (Settings.instance.IsCloud)
+            if (Settings.instance.UseCloud)
             {
                 cancellationTokenSource?.Cancel();
+
+                //await InterruptCloud();
             }
             else
             {
@@ -443,6 +675,47 @@ public static class Comfy
             Core.Output.Log(ex.Message, "Interrupted");
         }
     }
+
+    static async Task InterruptCloud()
+    {
+        try
+        {
+            // Cancelar el token para interrumpir cualquier operación en curso
+        //    cancellationTokenSource?.Cancel();
+
+            if (!string.IsNullOrEmpty(currentTaskId))
+            {
+                var weburl = ProAPINode.ApiURL;
+                var cancelUrl = WebManager.Combine(weburl, $"api/generate/image/cancel?taskId={currentTaskId}");
+                var token = UserManager.GetToken();
+
+                var cancelRequest = new HttpRequestMessage(HttpMethod.Get, cancelUrl);
+                cancelRequest.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+                var cancelResponse = await _httpClient.SendAsync(cancelRequest);
+
+                if (cancelResponse.IsSuccessStatusCode)
+                {
+                    Core.Output.Log("Generation cancelled successfully.");
+                }
+                else
+                {
+                    var errorJson = await cancelResponse.Content.ReadAsStringAsync();
+                    Core.Output.LogError($"Error cancelling generation: {cancelResponse.StatusCode}, {errorJson}");
+                }
+            }
+            else
+            {
+                Core.Output.LogWarning("No generation task to cancel.");
+            }
+        }
+        catch (Exception ex)
+        {
+            Core.Output.LogError($"Exception during cancellation: {ex.Message}");
+        }
+    }
+
+
     internal static void ForceInterrupt()
     {
         finalizeSignal.TrySetResult(false);

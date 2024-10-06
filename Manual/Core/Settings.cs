@@ -52,7 +52,7 @@ public partial class Settings : ObservableObject
     {
         get
         {
-            if (IsCloud && CloudURL != null)
+            if (UseCloud && CloudURL != null)
                 return CloudURL;
             else
                return currentURL;
@@ -72,7 +72,7 @@ public partial class Settings : ObservableObject
     //SERVER
 
     [ObservableProperty] AIServer aIServer = new ComfyUIServer();
-    [ObservableProperty] bool isCloud = false;
+    //[ObservableProperty] bool isCloud = false;
     public string? CloudURL = null;
     public async Task<string> SetCloudURL()
     {

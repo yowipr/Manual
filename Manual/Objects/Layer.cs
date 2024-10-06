@@ -89,6 +89,7 @@ public class Layer : LayerBase
         // Effects.CollectionChanged += EFfectsCollectionChanged;
 
         SetImage(image);
+        ImageOriginalWr = image.ToWriteableBitmap();
         //ImageOriginal = image;
         SetAnchorPointToCenter();
 
