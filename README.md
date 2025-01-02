@@ -3,6 +3,9 @@
 [![Manual Video](docs/cover.png)](https://www.youtube.com/watch?v=3NynPgEyLNA)
 
 Manual is an advanced ComfyUI Frontend. I developed it from scratch to be compatible with any AI that will be created in the future (and it's still a work in progress). I've written 100,000 lines of code for this project.
+## 🚀 Manual lite
+A simplified version of Manual for generating images online:
+https://manualai.art/studio
 
 ## 🚀 Platforms
 

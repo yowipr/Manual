@@ -1,0 +1,968 @@
+{
+  "last_node_id": 1,
+  "last_link_id": 1,
+  "nodes": [
+    {
+      "id": 10,
+      "title": "Load VAE",
+      "type": "VAELoader",
+      "pos": {
+        "0": 48.0,
+        "1": 432.0
+      },
+      "size": {
+        "0": 311.81635,
+        "1": 91.0
+      },
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "VAE",
+          "type": "VAE",
+          "links": [
+            2
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VAELoader"
+      },
+      "widgets_values": [
+        "ae.safetensors"
+      ]
+    },
+    {
+      "id": 17,
+      "type": "BasicScheduler",
+      "pos": {
+        "0": 480.0,
+        "1": 1008.0
+      },
+      "size": {
+        "0": 315.0,
+        "1": 169.0
+      },
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 11
+        }
+      ],
+      "outputs": [
+        {
+          "name": "SIGMAS",
+          "type": "SIGMAS",
+          "links": [
+            4
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "BasicScheduler"
+      },
+      "widgets_values": [
+        "ddim_uniform",
+        15.0,
+        1
+      ]
+    },
+    {
+      "id": 8,
+      "title": "VAE Decode",
+      "type": "VAEDecode",
+      "pos": {
+        "0": 864.0,
+        "1": 108.0
+      },
+      "size": {
+        "0": 210.0,
+        "1": 127.0
+      },
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "samples",
+          "type": "LATENT",
+          "link": 5
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": 2
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            19
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VAEDecode"
+      }
+    },
+    {
+      "bgcolor": "#FF333355",
+      "id": 12,
+      "title": "Load Diffusion Model",
+      "type": "UNETLoader",
+      "pos": {
+        "0": 48.0,
+        "1": 144.0
+      },
+      "size": {
+        "0": 315.0,
+        "1": 115.0
+      },
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            17
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "UNETLoader"
+      },
+      "widgets_values": [
+        "flux.safetensors",
+        "fp8_e4m3fn"
+      ]
+    },
+    {
+      "id": 11,
+      "type": "DualCLIPLoader",
+      "pos": {
+        "0": 48.0,
+        "1": 288.0
+      },
+      "size": {
+        "0": 315.0,
+        "1": 139.0
+      },
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "links": [
+            1
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "DualCLIPLoader"
+      },
+      "widgets_values": [
+        "t5xxl_fp8_e4m3fn.safetensors",
+        "clip_l.safetensors",
+        "flux"
+      ]
+    },
+    {
+      "bgcolor": "#FF3F5159",
+      "id": 25,
+      "type": "RandomNoise",
+      "pos": {
+        "0": 479.0,
+        "1": 775.0
+      },
+      "size": {
+        "0": 315.0,
+        "1": 115.0
+      },
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "NOISE",
+          "type": "NOISE",
+          "links": [
+            7
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "RandomNoise"
+      },
+      "widgets_values": [
+        0,
+        "randomize"
+      ]
+    },
+    {
+      "id": 13,
+      "type": "SamplerCustomAdvanced",
+      "pos": {
+        "0": 870.4084,
+        "1": 253.68694
+      },
+      "size": {
+        "0": 272.3618,
+        "1": 326.0
+      },
+      "flags": {},
+      "order": 6,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "noise",
+          "type": "NOISE",
+          "link": 7
+        },
+        {
+          "name": "guider",
+          "type": "GUIDER",
+          "link": 6
+        },
+        {
+          "name": "sampler",
+          "type": "SAMPLER",
+          "link": 3
+        },
+        {
+          "name": "sigmas",
+          "type": "SIGMAS",
+          "link": 4
+        },
+        {
+          "name": "latent_image",
+          "type": "LATENT",
+          "link": 16
+        }
+      ],
+      "outputs": [
+        {
+          "name": "output",
+          "type": "LATENT",
+          "links": [
+            5
+          ],
+          "slot_index": 0
+        },
+        {
+          "name": "denoised_output",
+          "type": "LATENT",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "SamplerCustomAdvanced"
+      }
+    },
+    {
+      "id": 22,
+      "type": "BasicGuider",
+      "pos": {
+        "0": 589.17175,
+        "1": -38.557114
+      },
+      "size": {
+        "0": 222.34827,
+        "1": 127.0
+      },
+      "flags": {},
+      "order": 7,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 10
+        },
+        {
+          "name": "conditioning",
+          "type": "CONDITIONING",
+          "link": 9
+        }
+      ],
+      "outputs": [
+        {
+          "name": "GUIDER",
+          "type": "GUIDER",
+          "links": [
+            6
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "BasicGuider"
+      }
+    },
+    {
+      "bgcolor": "#FF335555",
+      "id": 26,
+      "type": "FluxGuidance",
+      "pos": {
+        "0": 494.29007,
+        "1": 107.89318
+      },
+      "size": {
+        "0": 317.40002,
+        "1": 121.0
+      },
+      "flags": {},
+      "order": 8,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "conditioning",
+          "type": "CONDITIONING",
+          "link": 8
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "links": [
+            9
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "FluxGuidance"
+      },
+      "widgets_values": [
+        4
+      ]
+    },
+    {
+      "bgcolor": "#FF553355",
+      "id": 34,
+      "title": "width",
+      "type": "PrimitiveNode",
+      "pos": {
+        "0": 381.11832,
+        "1": 477.34348
+      },
+      "size": {
+        "0": 210.0,
+        "1": 91.0
+      },
+      "flags": {},
+      "order": 9,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "INT",
+          "type": "INT",
+          "links": [
+            13,
+            15
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "PrimitiveNode"
+      },
+      "widgets_values": [
+        1024
+      ]
+    },
+    {
+      "bgcolor": "#FF553355",
+      "id": 35,
+      "title": "height",
+      "type": "PrimitiveNode",
+      "pos": {
+        "0": 602.5916,
+        "1": 477.4618
+      },
+      "size": {
+        "0": 210.0,
+        "1": 91.0
+      },
+      "flags": {},
+      "order": 10,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "INT",
+          "type": "INT",
+          "links": [
+            12,
+            14
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "PrimitiveNode"
+      },
+      "widgets_values": [
+        1024
+      ]
+    },
+    {
+      "id": 38,
+      "title": "Empty Latent Image",
+      "type": "EmptyLatentImage",
+      "pos": {
+        "0": 477.11832,
+        "1": 615.47327
+      },
+      "size": {
+        "0": 315.0,
+        "1": 151.0
+      },
+      "flags": {},
+      "order": 11,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "width",
+          "type": "INT",
+          "link": 15,
+          "widget": {
+            "name": "width"
+          },
+          "slot_index": 1
+        },
+        {
+          "name": "height",
+          "type": "INT",
+          "link": 14,
+          "widget": {
+            "name": "height"
+          },
+          "slot_index": 2
+        }
+      ],
+      "outputs": [
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "links": [
+            16
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "EmptyLatentImage"
+      },
+      "widgets_values": [
+        1344,
+        768,
+        1
+      ]
+    },
+    {
+      "id": 16,
+      "type": "KSamplerSelect",
+      "pos": {
+        "0": 480.0,
+        "1": 903.4469
+      },
+      "size": {
+        "0": 315.0,
+        "1": 91.0
+      },
+      "flags": {},
+      "order": 12,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "SAMPLER",
+          "type": "SAMPLER",
+          "links": [
+            3
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "KSamplerSelect"
+      },
+      "widgets_values": [
+        "heunpp2"
+      ]
+    },
+    {
+      "id": 30,
+      "type": "ModelSamplingFlux",
+      "pos": {
+        "0": 480.0,
+        "1": 1189.6335
+      },
+      "size": {
+        "0": 315.0,
+        "1": 205.0
+      },
+      "flags": {},
+      "order": 13,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 18
+        },
+        {
+          "name": "width",
+          "type": "INT",
+          "link": 13,
+          "widget": {
+            "name": "width"
+          },
+          "slot_index": 4
+        },
+        {
+          "name": "height",
+          "type": "INT",
+          "link": 12,
+          "widget": {
+            "name": "height"
+          },
+          "slot_index": 5
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            10,
+            11
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ModelSamplingFlux"
+      },
+      "widgets_values": [
+        0.6,
+        0.5,
+        1344,
+        768
+      ]
+    },
+    {
+      "bgcolor": "#FF335533",
+      "id": 6,
+      "title": "CLIP Text Encode (Positive Prompt)",
+      "type": "CLIPTextEncode",
+      "pos": {
+        "0": 384.0,
+        "1": 240.0
+      },
+      "size": {
+        "0": 422.84503,
+        "1": 221.0
+      },
+      "flags": {},
+      "order": 14,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 1
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "links": [
+            8
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CLIPTextEncode"
+      },
+      "widgets_values": [
+        "Amateur photography of a woman holding a sign that says \"THIS IS MANUAL\". The background shows a sunny outdoor setting with leafy green trees and a black metal fence, detailmaximizer, midjourneyv6.1. Casual and cheerful atmosphere. Natural imperfect textures with realistic details across all surfaces. On flickr in 2007, 2005 blog, 2007 blog. High definition, 4k, 8k photography full of details."
+      ]
+    },
+    {
+      "bgcolor": "#FF443366",
+      "id": 1,
+      "title": "Output",
+      "type": "M_Output",
+      "pos": {
+        "0": 1103.4467,
+        "1": 98.32582
+      },
+      "size": {
+        "0": 200.0,
+        "1": 145.0
+      },
+      "flags": {},
+      "order": 15,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "Result",
+          "type": "IMAGE",
+          "link": 19
+        },
+        {
+          "name": "Mask",
+          "type": "LAYER",
+          "link": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "M_Output"
+      },
+      "widgets_values": [
+        "Selected",
+        "Front"
+      ]
+    },
+    {
+      "id": 39,
+      "type": "LoraLoaderModelOnly",
+      "pos": {
+        "0": 50.0,
+        "1": 536.0
+      },
+      "size": {
+        "0": 315.0,
+        "1": 145.0
+      },
+      "flags": {},
+      "order": 16,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 17
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            18
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoraLoaderModelOnly"
+      },
+      "widgets_values": [
+        "flux-realism.safetensors",
+        0.7
+      ]
+    }
+  ],
+  "links": [
+    [
+      1,
+      11,
+      0,
+      6,
+      0,
+      "CLIP"
+    ],
+    [
+      2,
+      10,
+      0,
+      8,
+      1,
+      "VAE"
+    ],
+    [
+      3,
+      16,
+      0,
+      13,
+      2,
+      "SAMPLER"
+    ],
+    [
+      4,
+      17,
+      0,
+      13,
+      3,
+      "SIGMAS"
+    ],
+    [
+      5,
+      13,
+      0,
+      8,
+      0,
+      "LATENT"
+    ],
+    [
+      6,
+      22,
+      0,
+      13,
+      1,
+      "GUIDER"
+    ],
+    [
+      7,
+      25,
+      0,
+      13,
+      0,
+      "NOISE"
+    ],
+    [
+      8,
+      6,
+      0,
+      26,
+      0,
+      "CONDITIONING"
+    ],
+    [
+      9,
+      26,
+      0,
+      22,
+      1,
+      "CONDITIONING"
+    ],
+    [
+      10,
+      30,
+      0,
+      22,
+      0,
+      "MODEL"
+    ],
+    [
+      11,
+      30,
+      0,
+      17,
+      0,
+      "MODEL"
+    ],
+    [
+      12,
+      35,
+      0,
+      30,
+      2,
+      "ANY"
+    ],
+    [
+      13,
+      34,
+      0,
+      30,
+      1,
+      "ANY"
+    ],
+    [
+      14,
+      35,
+      0,
+      38,
+      1,
+      "INT"
+    ],
+    [
+      15,
+      34,
+      0,
+      38,
+      0,
+      "INT"
+    ],
+    [
+      16,
+      38,
+      0,
+      13,
+      4,
+      "LATENT"
+    ],
+    [
+      17,
+      12,
+      0,
+      39,
+      0,
+      "MODEL"
+    ],
+    [
+      18,
+      39,
+      0,
+      30,
+      0,
+      "MODEL"
+    ],
+    [
+      19,
+      8,
+      0,
+      1,
+      0,
+      "IMAGE"
+    ]
+  ],
+  "groups": [],
+  "config": {},
+  "extra": {
+    "manual_config": {
+      "preset_name": "txt2img_fast_testing",
+      "canvas_position": "0.5456768472529754,0,0,0.5456768472529754,305.88936348315514,6.797369861793343",
+      "prompt": null,
+      "drivers": [
+        {
+          "enabled": true,
+          "expressionCode": "Width",
+          "sources": [
+            {
+              "type": "Manual.Core.Nodes.Prompt, Manual",
+              "Source": "realistic",
+              "Name": "source"
+            }
+          ],
+          "target": {
+            "type": "Manual.Core.Nodes.NodeOption, Manual",
+            "Source": "txt2img_fast_testing;34;width",
+            "Name": "source"
+          },
+          "targetPropertyName": "FieldValue",
+          "twoWay": true,
+          "sourcePropertyName": "Width"
+        },
+        {
+          "enabled": true,
+          "expressionCode": "Height",
+          "sources": [
+            {
+              "type": "Manual.Core.Nodes.Prompt, Manual",
+              "Source": "realistic",
+              "Name": "source"
+            }
+          ],
+          "target": {
+            "type": "Manual.Core.Nodes.NodeOption, Manual",
+            "Source": "txt2img_fast_testing;35;height",
+            "Name": "source"
+          },
+          "targetPropertyName": "FieldValue",
+          "twoWay": true,
+          "sourcePropertyName": "Height"
+        },
+        {
+          "enabled": true,
+          "expressionCode": "Seed",
+          "sources": [
+            {
+              "type": "Manual.Core.Nodes.Prompt, Manual",
+              "Source": "realistic",
+              "Name": "source"
+            }
+          ],
+          "target": {
+            "type": "Manual.Core.Nodes.NodeOption, Manual",
+            "Source": "txt2img_fast_testing;25;noise_seed",
+            "Name": "source"
+          },
+          "targetPropertyName": "FieldValue",
+          "twoWay": true,
+          "sourcePropertyName": "Seed"
+        },
+        {
+          "enabled": true,
+          "expressionCode": "RealPositivePrompt",
+          "sources": [
+            {
+              "type": "Manual.Core.Nodes.Prompt, Manual",
+              "Source": "realistic",
+              "Name": "source"
+            }
+          ],
+          "target": {
+            "type": "Manual.Core.Nodes.NodeOption, Manual",
+            "Source": "txt2img_fast_testing;6;text",
+            "Name": "source"
+          },
+          "targetPropertyName": "FieldValue",
+          "twoWay": true,
+          "sourcePropertyName": "RealPositivePrompt"
+        },
+        {
+          "enabled": true,
+          "expressionCode": "FluxLora",
+          "sources": [
+            {
+              "type": "Manual.Core.Nodes.Prompt, Manual",
+              "Source": "realistic",
+              "Name": "source"
+            }
+          ],
+          "target": {
+            "type": "Manual.Core.Nodes.NodeOption, Manual",
+            "Source": "txt2img_fast_testing;39;lora_name",
+            "Name": "source"
+          },
+          "targetPropertyName": "FieldValue",
+          "twoWay": true,
+          "sourcePropertyName": "FluxLora"
+        },
+        {
+          "enabled": true,
+          "expressionCode": "FluxLoraStrength",
+          "sources": [
+            {
+              "type": "Manual.Core.Nodes.Prompt, Manual",
+              "Source": "realistic",
+              "Name": "source"
+            }
+          ],
+          "target": {
+            "type": "Manual.Core.Nodes.NodeOption, Manual",
+            "Source": "txt2img_fast_testing;39;strength_model",
+            "Name": "source"
+          },
+          "targetPropertyName": "FieldValue",
+          "twoWay": true,
+          "sourcePropertyName": "FluxLoraStrength"
+        }
+      ],
+      "promptNameId": "realistic",
+      "Pinned": false
+    }
+  },
+  "version": 0.4
+}

@@ -21,7 +21,7 @@ namespace ManualToolkit.Specific;
 public static class Constants
 {
 
-    public const string WebURL = "https://manualai.art";
+    public const string WebURL = "https://djsaikdjaskd.vercel.app"; //"https://manualai.art";
     public const string AuthToken = "mI7g49bgI9rm6osNsIEFsUFbkwIPGTXHoJsol2kaGXQztvXSb6";
     /// <summary>
     /// C:\Users\YO\source\repos\Manual\Manual
